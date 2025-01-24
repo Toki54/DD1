@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<h1>Register</h1>
+
+	{# Affichage des erreurs globales du formulaire #}
+	{{ form_errors(registrationForm) }}
+
+	{# Début du formulaire #}
+	{{ form_start(registrationForm) }}
+
+	{# Champ pour l'email #}
+	<div class="form-group">
+		{{ form_row(registrationForm.email) }}
+	</div>
+
+	{# Champ pour le mot de passe (plainPassword) #}
+	<div class="form-group">
+		{{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+	</div>
+
+	{# Case pour accepter les conditions d'utilisation #}
+	<div class="form-group">
+		{{ form_row(registrationForm.agreeTerms) }}
+	</div>
+
+	{# Bouton de soumission du formulaire #}
+	<button type="submit" class="btn btn-primary">Register</button>
+
+	{# Fin du formulaire #}
+	{{ form_end(registrationForm) }}
+
+{% endblock %}
+
