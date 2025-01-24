@@ -1,0 +1,58 @@
+/* Palette de couleurs */
+:root {
+    --violet: #6a0dad;
+    --gold: #FFD700;
+    --light-gray: #f7f7f7;
+    --dark-gray: #343a40;
+}
+
+/* Global */
+body {
+    background-color: var(--light-gray);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Formulaire */
+.form-register {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Champs de formulaire */
+.form-group .form-label {
+    font-weight: bold;
+    color: var(--dark-gray);
+}
+
+.form-control {
+    border-radius: 50px;
+    padding: 15px;
+    font-size: 1rem;
+    border: 2px solid var(--light-gray);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton de soumission */
+.btn-violet {
+    background-color: var(--violet);
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-violet:hover {
+    background-color: var(--gold);
+}
+
+/* Case à cocher */
+.form-check-input {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    color: var(--dark-gray);
+}

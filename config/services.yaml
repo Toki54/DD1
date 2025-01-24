@@ -1,0 +1,28 @@
+# config/services.yaml
+
+# Paramètres globaux pour l'application
+parameters:
+    # Répertoire pour stocker les avatars des utilisateurs
+    avatars_directory: "%kernel.project_dir%/public/uploads/avatars"
+
+# Configuration par défaut pour les services
+services:
+  # Configuration par défaut pour les services dans ce fichier
+  _defaults:
+    autowire: true   # Active l'autowiring (injection automatique des dépendances).
+    autoconfigure: true   # Active l'autoconfiguration (registre automatiquement les services comme commandes, abonnés à des événements, etc.)
+
+  # Registre des services pour les classes dans le dossier src/
+  App\:
+    resource: "../src/"  # Recherche les services dans le dossier src
+    exclude:
+      - "../src/DependencyInjection/"  # Exclut le dossier DependencyInjection de l'autoconfiguration
+      - "../src/Entity/"  # Exclut les entités pour éviter de les enregistrer comme services
+      - "../src/Kernel.php"  # Exclut Kernel.php (le fichier principal de l'application)
+
+  # Définir d'autres services spécifiques si nécessaire
+  # Exemple de service explicite (si tu veux ajouter un service non autowiré, par exemple) :
+  # App\Service\MonService:
+  #   arguments:
+  #     $argument1: 'value'
+  #     $argument2: 'another_value'

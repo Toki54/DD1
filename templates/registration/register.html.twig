@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+{% block stylesheets %}
+
+<link rel="stylesheet" href="{{ asset('css/register.css') }}"/>
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<h1 class="text-center mb-4">Register</h1>
+
+		{# Affichage des erreurs globales du formulaire #}
+		<div class="alert alert-danger" role="alert">
+			{{ form_errors(registrationForm) }}
+		</div>
+
+		{# Début du formulaire #}
+		{{ form_start(registrationForm, { 'attr': {'class': 'form-register'} }) }}
+
+		<div class="form-group mb-4">
+			{{ form_label(registrationForm.email, null, { 'attr': {'class': 'form-label text-dark'} }) }}
+			{{ form_widget(registrationForm.email, {
+                'attr': {
+                    'class': 'form-control form-control-lg shadow-sm border-0 rounded-pill',
+                    'placeholder': 'Email Address'
+                }
+            }) }}
+		</div>
+
+		<div class="form-group mb-4">
+			{{ form_label(registrationForm.plainPassword, 'Password', { 'attr': {'class': 'form-label text-dark'} }) }}
+			{{ form_widget(registrationForm.plainPassword, {
+                'attr': {
+                    'class': 'form-control form-control-lg shadow-sm border-0 rounded-pill',
+                    'placeholder': 'Password'
+                }
+            }) }}
+		</div>
+
+		<div class="form-group mb-4">
+			{{ form_label(registrationForm.agreeTerms, null, { 'attr': {'class': 'form-check-label text-dark'} }) }}
+			{{ form_widget(registrationForm.agreeTerms, {
+                'attr': {
+                    'class': 'form-check-input'
+                }
+            }) }}
+			<label for="agreeTerms" class="text-muted">I agree to the terms and conditions</label>
+		</div>
+
+		<div class="d-grid gap-2">
+			<button type="submit" class="btn btn-lg btn-violet text-white shadow rounded-pill">Register</button>
+		</div>
+
+		{# Fin du formulaire #}
+		{{ form_end(registrationForm) }}
+	</div>
+
+{% endblock %}
+
+
