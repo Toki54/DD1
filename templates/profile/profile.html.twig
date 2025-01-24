@@ -1,0 +1,22 @@
+{# templates/profile/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Profil
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier votre profil</h1>
+
+	{{ form_start(profileForm) }}
+	{{ form_row(profileForm.email) }}
+	{{ form_row(profileForm.sexe) }}
+	{{ form_row(profileForm.situation) }}
+	{{ form_row(profileForm.bio) }}
+	{{ form_row(profileForm.recherche) }}
+	{{ form_row(profileForm.avatar) }}
+	<button class="btn">Mettre à jour</button>
+	{{ form_end(profileForm) }}
+
+{% endblock %}
+
