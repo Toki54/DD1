@@ -36,7 +36,8 @@ class ProfileController extends AbstractController
                         $this->getParameter('avatars_directory'),
                         $newFilename
                     );
-                    // Met à jour le champ avatar dans l'utilisateur
+                    
+                    /** @var \App\Entity\User $user */
                     $user->setAvatar($newFilename);
                 } catch (FileException $e) {
                     // Gérer l'erreur d'upload
