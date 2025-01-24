@@ -57,5 +57,14 @@ class ProfileController extends AbstractController
             'profileForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/profile/view', name: 'app_profile_view')]
+    public function view(UserInterface $user): Response
+    {
+        // Affiche les informations de l'utilisateur sur la page
+        return $this->render('profile/view.html.twig', [
+            'user' => $user,
+        ]);
+    }
 }
 

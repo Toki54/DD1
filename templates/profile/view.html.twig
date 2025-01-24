@@ -1,0 +1,55 @@
+{# templates/profile/view.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir Mon Profil
+{% endblock %}
+
+{% block body %}
+	<h1>Mon Profil</h1>
+
+	<div class="profile-info">
+		<div>
+			<strong>Email:
+			</strong>
+			{{ user.email }}
+		</div>
+
+		<div>
+			<strong>Sexe:
+			</strong>
+			{{ user.sexe ?? 'Non spécifié' }}
+		</div>
+
+		<div>
+			<strong>Situation:
+			</strong>
+			{{ user.situation ?? 'Non spécifié' }}
+		</div>
+
+		<div>
+			<strong>Bio:
+			</strong>
+			{{ user.bio ?? 'Non spécifié' }}
+		</div>
+
+		<div>
+			<strong>Recherche:
+			</strong>
+			{{ user.recherche ?? 'Non spécifié' }}
+		</div>
+
+		{% if user.avatar %}
+			<div>
+				<strong>Avatar:
+				</strong>
+				<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
+			</div>
+		{% endif %}
+	</div>
+
+	<div>
+		<a href="{{ path('app_profile') }}" class="btn btn-secondary">Retour à mon profil</a>
+	</div>
+{% endblock %}
+
