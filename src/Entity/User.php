@@ -33,6 +33,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
+    private ?UserProfile $profile = null;
+
+    public function getProfile(): ?UserProfile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?UserProfile $profile): static
+    {
+        $this->profile = $profile;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

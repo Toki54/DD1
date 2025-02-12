@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Edit Your Profile</h1>
+
+		{# Affichage des messages flash si présents #}
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		{# Affichage du formulaire de profil #}
+		{{ form_start(form) }}
+
+		<div class="mb-3">
+			{{ form_label(form.avatar) }}
+			<div>
+				{{ form_widget(form.avatar) }}
+				<small>Upload a profile picture (JPG, PNG, GIF)</small>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			{{ form_label(form.photos) }}
+			<div>
+				{{ form_widget(form.photos) }}
+				<small>Upload up to 10 photos</small>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			{{ form_label(form.sex) }}
+			<div>
+				{{ form_widget(form.sex) }}
+			</div>
+		</div>
+
+		<div class="mb-3">
+			{{ form_label(form.situation) }}
+			<div>
+				{{ form_widget(form.situation) }}
+			</div>
+		</div>
+
+		<div class="mb-3">
+{{ form_label(form.biography) }}
+
+			<div>
+{{ form_widget(form.biography) }}
+
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<button type="submit" class="btn btn-primary">Save Changes</button>
+		</div>
+
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
+
