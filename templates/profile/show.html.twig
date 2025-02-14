@@ -4,50 +4,52 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Profile of
-		{{ app.user.email }}</h1>
+<h1>Profile of
+	{{ app.user.pseudo }}</h1>
 
-	<div class="profile-info">
-		<div class="avatar">
-			{% if userProfile.avatar %}
-				<img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar">
-			{% else %}
-				<p>No avatar uploaded.</p>
-			{% endif %}
-		</div>
-
-		<div class="bio">
-			<h3>Biography:</h3>
-			<p>{{ userProfile.biography ? userProfile.biography : 'No biography available.' }}</p>
-		</div>
-
-		<div class="sex">
-			<h3>Sex:</h3>
-			<p>{{ userProfile.sex }}</p>
-		</div>
-
-		<div class="situation">
-			<h3>Situation:</h3>
-			<p>{{ userProfile.situation ? userProfile.situation : 'Not provided.' }}</p>
-		</div>
-
-		<div class="research">
-			<h3>Research:</h3>
-			<p>{{ userProfile.research ? userProfile.research : 'Not specified.' }}</p>
-		</div>
-
-		<div class="photos">
-			<h3>Photos:</h3>
-			{% if userProfile.photos %}
-				<ul>
-					{% for photo in userProfile.photos %}
-						<li><img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo"></li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p>No photos uploaded.</p>
-			{% endif %}
-		</div>
+<div class="profile-info">
+	<div class="avatar">
+		{% if userProfile.avatar %}
+			<img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar">
+		{% else %}
+			<p>No avatar uploaded.</p>
+		{% endif %}
 	</div>
-{% endblock %}
 
+	<div class="bio">
+		<h3>A propos de moi:</h3>
+		<p>{{ userProfile.biography|default('No biography available.') }}</p>
+	</div>
+
+	<div class="sex">
+		<h3>Sexe:</h3>
+		<p>{{ userProfile.sex|default('Not specified.') }}</p>
+	</div>
+
+	<div class="situation">
+		<h3>Situation:</h3>
+		<p>{{ userProfile.situation|default('Not provided.') }}</p>
+	</div>
+
+	<div class="research">
+		<h3>Je recherche:</h3>
+		<p>{{ userProfile.research|default('Not specified.') }}</p>
+	</div>
+
+	<div class="photos">
+		<h3>Photos:</h3>
+		{% if userProfile.photos is not empty %}
+			<ul>
+				{% for photo in userProfile.photos %}
+					<li><img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo"></li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p>No photos uploaded.</p>
+		{% endif %}
+	</div>
+
+	<a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Edit Profile</a>
+</div
+
+{% endblock %}

@@ -4,20 +4,26 @@ namespace App\Controller;
 
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserProfileController extends AbstractController
 {
- #[Route('/profile', name: 'profile_show')]
- public function show()
+ #[Route('/profile', name: 'app_profile_show')]
+ public function show(EntityManagerInterface $entityManager): Response
  {
-  $userProfile = $this->getUser()->getProfile(); // Accède au profil de l'utilisateur
+  $user        = $this->getUser();
+  $userProfile = $user->getProfile();
 
-  // Si le profil n'existe pas, on redirige vers une page de création
   if (!$userProfile) {
-   return $this->redirectToRoute('profile_edit');
+   $userProfile = new UserProfile();
+   $userProfile->setUser($user);
+   $entityManager->persist($userProfile);
+   $entityManager->flush();
   }
 
   return $this->render('profile/show.html.twig', [
@@ -25,48 +31,45 @@ class UserProfileController extends AbstractController
   ]);
  }
 
- #[Route('/profile/edit', name: 'profile_edit')]
- public function edit(Request $request)
+ #[Route('/profile/edit', name: 'app_profile_edit')]
+ public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
  {
   $user        = $this->getUser();
   $userProfile = $user->getProfile();
 
-  // Si le profil n'existe pas, on en crée un pour l'utilisateur
   if (!$userProfile) {
    $userProfile = new UserProfile();
-   $userProfile->setUser($user); // Lier le profil à l'utilisateur
+   $userProfile->setUser($user);
+   $entityManager->persist($userProfile);
   }
 
   $form = $this->createForm(UserProfileType::class, $userProfile);
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
-   // Gérer les téléchargements d'avatar et de photos
-   $avatarFile = $form->get('avatar')->getData();
+   // Gestion de l'avatar
+   $avatarFile = $form->get('avatarFile')->getData();
    if ($avatarFile) {
     $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
     $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
-    $userProfile->setAvatar($avatarFilename); // Enregistrer l'avatar dans le profil
+    $userProfile->setAvatar($avatarFilename);
    }
 
-   $photos = $form->get('photos')->getData();
-   if ($photos) {
+   // Gestion des photos
+   $photoFiles = $form->get('photoFiles')->getData();
+   if ($photoFiles) {
     $photoPaths = [];
-    foreach ($photos as $photo) {
+    foreach ($photoFiles as $photo) {
      $photoFilename = uniqid() . '.' . $photo->guessExtension();
      $photo->move($this->getParameter('photos_directory'), $photoFilename);
-     $photoPaths[] = $photoFilename; // Enregistrer les chemins des photos dans le profil
+     $photoPaths[] = $photoFilename;
     }
     $userProfile->setPhotos($photoPaths);
    }
 
-   // Sauvegarder les données
-   $entityManager = $this->getDoctrine()->getManager();
-   $entityManager->persist($userProfile); // Persister le profil mis à jour
-   $entityManager->flush(); // Appliquer les changements en base
-
+   $entityManager->flush();
    $this->addFlash('success', 'Profile updated successfully!');
-   return $this->redirectToRoute('profile_show'); // Rediriger vers l'affichage du profil
+   return $this->redirectToRoute('app_profile_show');
   }
 
   return $this->render('profile/edit.html.twig', [
