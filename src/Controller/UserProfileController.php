@@ -69,7 +69,7 @@ class UserProfileController extends AbstractController
 
    $entityManager->flush();
    $this->addFlash('success', 'Profile updated successfully!');
-   return $this->redirectToRoute('app_profile_show');
+   return $this->redirectToRoute('app_profile_edit');
   }
 
   return $this->render('profile/edit.html.twig', [

@@ -3,7 +3,14 @@
 {% block title %}Profile
 {% endblock %}
 
+
+
 {% block body %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
+
 <h1>Profile of
 	{{ app.user.pseudo }}</h1>
 
