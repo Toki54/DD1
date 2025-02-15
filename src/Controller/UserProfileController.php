@@ -77,4 +77,21 @@ class UserProfileController extends AbstractController
    'form' => $form->createView(),
   ]);
  }
+
+ #[Route('/profiles/{id?}', name: 'app_profiles_list')]
+public function list(EntityManagerInterface $entityManager, ?int $id): Response
+{
+    $profiles = $entityManager->getRepository(UserProfile::class)->findAll();
+    
+    $selectedProfile = null;
+    if ($id) {
+        $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+    }
+
+    return $this->render('profile/list.html.twig', [
+        'profiles' => $profiles,
+        'selectedProfile' => $selectedProfile,
+    ]);
+}
+
 }

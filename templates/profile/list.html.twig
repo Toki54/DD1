@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+
+
+
+{% block title %}Liste des Profils
+{% endblock %}
+
+
+{% block body %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
+
+	<div class="container">
+		<div class="profile-list">
+			<h2>Utilisateurs inscrits</h2>
+			{% for profile in profiles %}
+				<div class="profile-card">
+					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+					<p>
+						<strong>Sexe:</strong>
+						{{ profile.sex|default('Non spécifié') }}</p>
+					<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
+				</div>
+			{% endfor %}
+		</div>
+
+		<div class="profile-detail">
+			{% if selectedProfile %}
+				<h2>Profil de
+					{{ selectedProfile.user.pseudo }}</h2>
+				<img src="{{ asset('uploads/avatars/' ~ selectedProfile.avatar) }}" alt="Avatar">
+				<p>
+					<strong>Sexe:</strong>
+					{{ selectedProfile.sex|default('Non spécifié') }}</p>
+				<p>
+					<strong>Situation:</strong>
+					{{ selectedProfile.situation|default('Non renseigné') }}</p>
+				<p>
+					<strong>Je recherche:</strong>
+					{{ selectedProfile.research|default('Non spécifié') }}</p>
+				<p>
+					<strong>Biographie:</strong>
+					{{ selectedProfile.biography|default('Aucune biographie') }}</p>
+
+				<h3>Photos</h3>
+				{% if selectedProfile.photos %}
+					<div class="photo-gallery">
+						{% for photo in selectedProfile.photos %}
+							<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo">
+						{% endfor %}
+					</div>
+				{% else %}
+					<p>Aucune photo ajoutée.</p>
+				{% endif %}
+			{% else %}
+				<p>Sélectionnez un profil pour voir les détails.</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
