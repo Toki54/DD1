@@ -64,7 +64,8 @@ class UserProfileController extends AbstractController
      $photo->move($this->getParameter('photos_directory'), $photoFilename);
      $photoPaths[] = $photoFilename;
     }
-    $userProfile->setPhotos($photoPaths);
+    $userProfile->setPhotos(array_merge($userProfile->getPhotos(), $photoPaths));
+
    }
 
    $entityManager->flush();

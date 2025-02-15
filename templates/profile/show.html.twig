@@ -4,7 +4,6 @@
 {% endblock %}
 
 
-
 {% block body %}
 
 {% block stylesheet %}
@@ -44,19 +43,21 @@
 	</div>
 
 	<div class="photos">
-		<h3>Photos:</h3>
-		{% if userProfile.photos is not empty %}
+		<h3>Photos :</h3>
+		{% set photos = userProfile.photos|default([]) %}
+		{# Assurer que c'est un tableau #}
+
+		{% if photos is not empty %}
 			<ul>
-				{% for photo in userProfile.photos %}
+				{% for photo in photos %}
 					<li><img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo"></li>
 				{% endfor %}
 			</ul>
 		{% else %}
-			<p>No photos uploaded.</p>
+			<p>Aucune photo uploadée.</p>
 		{% endif %}
 	</div>
 
-	<a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Edit Profile</a>
-</div
 
-{% endblock %}
+	<a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Edit Profile</a>
+</div {% endblock %}

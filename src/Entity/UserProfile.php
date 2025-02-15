@@ -127,7 +127,7 @@ class UserProfile
 
  public function getPhotos(): ?array
  {
-  return $this->photos;
+  return $this->photos ?? [];
  }
 
  public function setPhotos(?array $photos): static
