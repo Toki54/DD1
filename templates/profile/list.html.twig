@@ -13,19 +13,21 @@
 	<link rel="stylesheet" href="{{ asset('css/list.css') }}">
 {% endblock %}
 
-	<div class="container">
-		<div class="profile-list">
-			<h2>Utilisateurs inscrits</h2>
-			{% for profile in profiles %}
-				<div class="profile-card">
-					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
-					<p>
-						<strong>Sexe:</strong>
-						{{ profile.sex|default('Non spécifié') }}</p>
-					<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
-				</div>
-			{% endfor %}
-		</div>
+<div class="container d-flex">
+	<!-- Liste des profils avec scroll si plus de 5 -->
+	<div class="profile-list flex-grow-1">
+		<h2>Utilisateurs inscrits</h2>
+		{% for profile in profiles %}
+			<div class="profile-card">
+				<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+				<p>
+					<strong>Sexe:</strong>
+					{{ profile.sex|default('Non spécifié') }}</p>
+				<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
+			</div>
+		{% endfor %}
+	</div>
+
 
 		<div class="profile-detail">
 			{% if selectedProfile %}
