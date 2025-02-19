@@ -23,31 +23,39 @@
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
-					<div class="collapse navbar-collapse" id="navbarNav">
-						<ul
-							class="navbar-nav ms-auto">
-							{# Si l'utilisateur n'est pas connecté #}
-							{% if not app.user %}
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_login') }}">Login</a>
-								</li>
-							{% else %}
-								{# Si l'utilisateur est connecté #}
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_profile_show') }}">Mon Profil</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_profiles_list') }}">Liste des Profils</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link text-danger" href="{{ path('app_logout') }}">Logout</a>
-								</li>
-							{% endif %}
-						</ul>
-					</div>
+<div class="collapse navbar-collapse" id="navbarNav">
+	<ul class="navbar-nav ms-auto">
+		{% if not app.user %}
+			<li class="nav-item">
+				<a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{ path('app_login') }}">Login</a>
+			</li>
+		{% else %}
+			{# Liens utilisateur normal #}
+			<li class="nav-item">
+				<a class="nav-link" href="{{ path('app_profile_show') }}">Mon Profil</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{ path('app_profiles_list') }}">Liste des Profils</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-danger" href="{{ path('app_logout') }}">Logout</a>
+			</li>
+
+			{# Si l'utilisateur est un admin #}
+			{% if 'ROLE_ADMIN' in app.user.roles %}
+				<li class="nav-item">
+<a class="nav-link text-warning" href="{{ path('app_user_index') }}">Gérer Utilisateurs</a>
+
+				</li>
+				
+			{% endif %}
+		{% endif %}
+	</ul>
+</div>
+
 				</div>
 			</nav>
 		</header>
