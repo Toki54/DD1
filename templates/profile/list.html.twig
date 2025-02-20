@@ -4,25 +4,33 @@
 {% endblock %}
 
 {% block body %}
-
 	{% block stylesheets %}
 		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
 	{% endblock %}
 
-	<div class="container d-flex">
-
-		
-
+	<div
+		class="container d-flex">
 		<!-- Liste des profils -->
 		<div class="profile-list flex-grow-1">
-<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
-	<label for="sort">Trier par :</label>
-	<select name="sort" id="sort" onchange="this.form.submit()">
-		<option value="">-- Sélectionner --</option>
-		<option value="sex" {% if sort == 'sex' %} selected {% endif %}>Sexe</option>
-		<option value="situation" {% if sort == 'situation' %} selected {% endif %}>Situation</option>
-	</select>
-</form>
+			<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+				<div>
+					<label for="sex">Sexe:</label>
+					<input type="checkbox" name="sex" value="male" {% if sex == 'male' %} checked {% endif %}>
+					Homme
+					<input type="checkbox" name="sex" value="female" {% if sex == 'female' %} checked {% endif %}>
+					Femme
+				</div>
+				<div>
+					<label for="situation">Situation:</label>
+<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
+
+					Célibataire
+<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
+
+					En couple
+				</div>
+				<button type="submit">Appliquer le tri</button>
+			</form>
 
 			<h2>Utilisateurs inscrits</h2>
 			{% for profile in profiles %}
@@ -37,8 +45,6 @@
 					<p>
 						<strong>Recherche:</strong>
 						{{ profile.research|default('Non renseigné') }}</p>
-
-
 					<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
 				</div>
 			{% endfor %}
@@ -78,5 +84,5 @@
 			{% endif %}
 		</div>
 	</div>
-
 {% endblock %}
+

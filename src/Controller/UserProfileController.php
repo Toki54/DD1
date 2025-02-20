@@ -79,32 +79,36 @@ class UserProfileController extends AbstractController
  }
 
    #[Route('/profiles/{id?}', name: 'app_profiles_list')]
-    public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
-    {
-        // Récupérer le critère de tri
-        $sort = $request->query->get('sort', '');
+public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
+{
+    // Récupérer les critères de tri
+    $sortSex = $request->query->get('sex', null);
+    $sortSituation = $request->query->get('situation', null);
 
-        // Définir l'ordre de tri
-        $orderBy = [];
-        if ($sort === 'sex') {
-            $orderBy = ['sex' => 'ASC'];
-        } elseif ($sort === 'situation') {
-            $orderBy = ['situation' => 'ASC'];
-        }
-
-        // Récupérer les profils triés
-        $profiles = $entityManager->getRepository(UserProfile::class)->findBy([], $orderBy);
-
-        $selectedProfile = null;
-        if ($id) {
-            $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-        }
-
-        return $this->render('profile/list.html.twig', [
-            'profiles' => $profiles,
-            'selectedProfile' => $selectedProfile,
-            'sort' => $sort,
-        ]);
+    // Définir les critères de tri
+    $criteria = [];
+    if ($sortSex) {
+        $criteria['sex'] = $sortSex;
     }
+    if ($sortSituation) {
+        $criteria['situation'] = $sortSituation;
+    }
+
+    // Récupérer les profils triés
+    $profiles = $entityManager->getRepository(UserProfile::class)->findBy($criteria);
+
+    $selectedProfile = null;
+    if ($id) {
+        $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+    }
+
+    return $this->render('profile/list.html.twig', [
+        'profiles' => $profiles,
+        'selectedProfile' => $selectedProfile,
+        'sex' => $sortSex,
+        'situation' => $sortSituation,
+    ]);
+}
+
 
 }
