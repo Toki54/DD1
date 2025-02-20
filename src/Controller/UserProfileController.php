@@ -78,20 +78,33 @@ class UserProfileController extends AbstractController
   ]);
  }
 
- #[Route('/profiles/{id?}', name: 'app_profiles_list')]
-public function list(EntityManagerInterface $entityManager, ?int $id): Response
-{
-    $profiles = $entityManager->getRepository(UserProfile::class)->findAll();
-    
-    $selectedProfile = null;
-    if ($id) {
-        $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-    }
+   #[Route('/profiles/{id?}', name: 'app_profiles_list')]
+    public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
+    {
+        // Récupérer le critère de tri
+        $sort = $request->query->get('sort', '');
 
-    return $this->render('profile/list.html.twig', [
-        'profiles' => $profiles,
-        'selectedProfile' => $selectedProfile,
-    ]);
-}
+        // Définir l'ordre de tri
+        $orderBy = [];
+        if ($sort === 'sex') {
+            $orderBy = ['sex' => 'ASC'];
+        } elseif ($sort === 'situation') {
+            $orderBy = ['situation' => 'ASC'];
+        }
+
+        // Récupérer les profils triés
+        $profiles = $entityManager->getRepository(UserProfile::class)->findBy([], $orderBy);
+
+        $selectedProfile = null;
+        if ($id) {
+            $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+        }
+
+        return $this->render('profile/list.html.twig', [
+            'profiles' => $profiles,
+            'selectedProfile' => $selectedProfile,
+            'sort' => $sort,
+        ]);
+    }
 
 }

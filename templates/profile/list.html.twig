@@ -1,34 +1,50 @@
 {% extends 'base.html.twig' %}
 
-
-
-
 {% block title %}Liste des Profils
 {% endblock %}
 
-
 {% block body %}
 
-{% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('css/list.css') }}">
-{% endblock %}
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+	{% endblock %}
 
-<div class="container d-flex">
-	<!-- Liste des profils avec scroll si plus de 5 -->
-	<div class="profile-list flex-grow-1">
-		<h2>Utilisateurs inscrits</h2>
-		{% for profile in profiles %}
-			<div class="profile-card">
-				<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
-				<p>
-					<strong>Sexe:</strong>
-					{{ profile.sex|default('Non spécifié') }}</p>
-				<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
-			</div>
-		{% endfor %}
-	</div>
+	<div class="container d-flex">
+
+		
+
+		<!-- Liste des profils -->
+		<div class="profile-list flex-grow-1">
+<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+	<label for="sort">Trier par :</label>
+	<select name="sort" id="sort" onchange="this.form.submit()">
+		<option value="">-- Sélectionner --</option>
+		<option value="sex" {% if sort == 'sex' %} selected {% endif %}>Sexe</option>
+		<option value="situation" {% if sort == 'situation' %} selected {% endif %}>Situation</option>
+	</select>
+</form>
+
+			<h2>Utilisateurs inscrits</h2>
+			{% for profile in profiles %}
+				<div class="profile-card">
+					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+					<p>
+						<strong>Sexe:</strong>
+						{{ profile.sex|default('Non spécifié') }}</p>
+					<p>
+						<strong>Situation:</strong>
+						{{ profile.situation|default('Non renseigné') }}</p>
+					<p>
+						<strong>Recherche:</strong>
+						{{ profile.research|default('Non renseigné') }}</p>
 
 
+					<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
+				</div>
+			{% endfor %}
+		</div>
+
+		<!-- Détails du profil sélectionné -->
 		<div class="profile-detail">
 			{% if selectedProfile %}
 				<h2>Profil de
@@ -62,5 +78,5 @@
 			{% endif %}
 		</div>
 	</div>
-{% endblock %}
 
+{% endblock %}
