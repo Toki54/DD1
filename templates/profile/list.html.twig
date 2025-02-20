@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block body %}
-	{% block stylesheets %}
-		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+	{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+
 	{% endblock %}
 
-	<div
-		class="container d-flex">
+	<div class="container d-flex">
 		<!-- Liste des profils -->
 		<div class="profile-list flex-grow-1">
 			<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">

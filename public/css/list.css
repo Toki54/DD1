@@ -1,6 +1,6 @@
 /* Styles généraux */
 body {
-  background-color: #121212; /* Fond noir */
+  background-color: #121212; /* Fond sombre */
   font-family: "Roboto", sans-serif;
   color: #e0e0e0; /* Texte clair */
   margin: 0;
@@ -9,85 +9,152 @@ body {
 }
 
 /* Conteneur principal */
-.container {
+.profile-container {
   display: flex;
-  justify-content: space-between;
-  margin: 40px;
-  gap: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: #1f1f1f;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  color: #e0e0e0;
+  flex-direction: row;
+  gap: 30px;
+}
+
+/* Titre principal */
+h1 {
+  text-align: center;
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+/* Conteneur de recherche et filtres */
+.sort-form {
+  position: sticky;
+  top: 20px; /* Fixe le formulaire en haut de la page */
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #333;
+  background-color: #1f1f1f;
+}
+
+/* Champ de recherche */
+.sort-form label {
+  color: #d4af37; /* Doré */
+  font-size: 16px;
+}
+
+.sort-form input {
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #333;
+  color: #fff;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.sort-form button {
+  background-color: #8e44ad; /* Violet */
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.sort-form button:hover {
+  background-color: #732d91; /* Violet foncé */
 }
 
 /* Liste des profils */
 .profile-list {
-  flex: 0 0 30%; /* Prend environ 30% de la largeur */
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  max-height: 500px; /* Ajuste selon tes besoins */
-    overflow-y: auto;  /* Active le scroll si besoin */
-    padding-right: 10px;
-}
-
-.profile-list h2 {
-  color: #fff;
-  font-size: 26px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 20px;
+  width: 300px;
+  height: 500px;
+  overflow-y: auto; /* Ajout du défilement */
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  position: sticky;
 }
 
 .profile-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    background: #fff;
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 .profile-card:hover {
-  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .profile-card img {
-  width: 100px; /* Photos plus petites */
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   border: 3px solid #d4af37; /* Doré */
   object-fit: cover;
-  margin-bottom: 15px;
-  width: 50px;  /* Taille de l'avatar */
-  
+  margin-right: 20px; /* Espacement entre l'avatar et les infos */
 }
 
 .profile-card p {
   color: #d4af37; /* Doré */
   font-size: 14px;
-  margin-bottom: 10px;
+}
+
+.profile-card a {
+  display: inline-block;
+  background-color: #8e44ad; /* Violet */
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 30px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.profile-card a:hover {
+  background-color: #732d91; /* Violet foncé */
+  
 }
 
 /* Détails du profil */
 .profile-detail {
-  flex: 0 0 65%; /* Prend environ 65% de la largeur */
-  background-color: #1e1e1e;
+  flex-grow: 1;
+  background-color: #2a2a2a;
   padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-detail h2 {
-  color: #fff;
-  font-size: 30px;
-  font-weight: 600;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
 }
 
 .profile-detail img {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   border: 4px solid #d4af37; /* Doré */
   object-fit: cover;
@@ -103,7 +170,7 @@ body {
 .profile-detail h3 {
   color: #8e44ad; /* Violet */
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   margin-top: 30px;
 }
 
@@ -111,65 +178,68 @@ body {
 .photo-gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
   justify-content: center;
 }
 
 .photo-gallery img {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border-radius: 10px;
   border: 3px solid #d4af37; /* Doré */
   object-fit: cover;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
 }
 
 .photo-gallery img:hover {
-  transform: scale(1.1);
+  
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Bouton Voir Profil */
-.btn-primary {
-  display: inline-block;
-  width: 180px;
-  background-color: #8e44ad; /* Violet */
-  border: none;
-  padding: 10px;
-  color: #fff;
-  font-weight: bold;
-  border-radius: 30px;
-  text-align: center;
-  font-size: 14px;
-  letter-spacing: 1px;
-  margin-top: 15px;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background-color: #732d91; /* Violet foncé */
 }
 
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .container {
+  .profile-container {
     flex-direction: column;
-    align-items: center;
+    gap: 20px;
   }
 
-  .profile-list, .profile-detail {
+  .profile-list {
     width: 100%;
-    margin-bottom: 30px;
+    height: auto;
+    max-height: 400px;
+  }
+
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .profile-card img {
-    width: 80px;
-    height: 80px;
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 
   .profile-detail img {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
+  }
+
+  .profile-detail p {
+    font-size: 14px;
+  }
+
+  .photo-gallery img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .sort-form {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .sort-form button {
+    width: 100%;
   }
 }
