@@ -5,84 +5,135 @@
 
 {% block body %}
 	{% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('css/list.css') }}">
-
+		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
 	{% endblock %}
 
-	<div class="container d-flex">
-		<!-- Liste des profils -->
-		<div class="profile-list flex-grow-1">
-			<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
-				<div>
-					<label for="sex">Sexe:</label>
-					<input type="checkbox" name="sex" value="male" {% if sex == 'male' %} checked {% endif %}>
-					Homme
-					<input type="checkbox" name="sex" value="female" {% if sex == 'female' %} checked {% endif %}>
-					Femme
-				</div>
-				<div>
-					<label for="situation">Situation:</label>
-<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
+	<section
+		class="container">
+		<!-- Bloc de tri (Filtre) -->
+		<article class="sort-container">
+			<header class="sort-header">
+				<button class="toggle-sort-btn">Filtrer les profils</button>
+			</header>
+			<section class="sort-content">
+				<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+					<div>
+						<label for="sex">Sexe:</label>
+						<input type="checkbox" name="sex" value="male" {% if sex == 'male' %} checked {% endif %}>
+						Homme
+						<input type="checkbox" name="sex" value="female" {% if sex == 'female' %} checked {% endif %}>
+						Femme
+					</div>
+					<div>
+						<label for="situation">Situation:</label>
+						<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
+						Célibataire
+						<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
+						En couple
+					</div>
+					<button type="submit">Appliquer le tri</button>
+				</form>
+			</section>
+		</article>
 
-					Célibataire
-<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
+		<section
+			class="main-content">
+			<!-- Liste des profils -->
+			<article class="profile-list">
+				<h2>Utilisateurs inscrits</h2>
+				{% for profile in profiles %}
+					<article class="profile-card">
+						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+						<p>
+							<strong>Sexe:</strong>
+							{{ profile.sex|default('Non spécifié') }}</p>
+						<p>
+							<strong>Situation:</strong>
+							{{ profile.situation|default('Non renseigné') }}</p>
+						<p>
+							<strong>Recherche:</strong>
+							{{ profile.research|default('Non renseigné') }}</p>
+						<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
+					</article>
+				{% endfor %}
+			</article>
 
-					En couple
-				</div>
-				<button type="submit">Appliquer le tri</button>
-			</form>
-
-			<h2>Utilisateurs inscrits</h2>
-			{% for profile in profiles %}
-				<div class="profile-card">
-					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+			<!-- Détails du profil sélectionné -->
+			<article class="profile-detail">
+				{% if selectedProfile %}
+					<h2>Profil de
+						{{ selectedProfile.user.pseudo }}</h2>
+					<img src="{{ asset('uploads/avatars/' ~ selectedProfile.avatar) }}" alt="Avatar">
 					<p>
 						<strong>Sexe:</strong>
-						{{ profile.sex|default('Non spécifié') }}</p>
+						{{ selectedProfile.sex|default('Non spécifié') }}</p>
 					<p>
 						<strong>Situation:</strong>
-						{{ profile.situation|default('Non renseigné') }}</p>
+						{{ selectedProfile.situation|default('Non renseigné') }}</p>
 					<p>
-						<strong>Recherche:</strong>
-						{{ profile.research|default('Non renseigné') }}</p>
-					<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
-				</div>
-			{% endfor %}
-		</div>
+						<strong>Je recherche:</strong>
+						{{ selectedProfile.research|default('Non spécifié') }}</p>
+					<p>
+						<strong>Biographie:</strong>
+						{{ selectedProfile.biography|default('Aucune biographie') }}</p>
 
-		<!-- Détails du profil sélectionné -->
-		<div class="profile-detail">
-			{% if selectedProfile %}
-				<h2>Profil de
-					{{ selectedProfile.user.pseudo }}</h2>
-				<img src="{{ asset('uploads/avatars/' ~ selectedProfile.avatar) }}" alt="Avatar">
-				<p>
-					<strong>Sexe:</strong>
-					{{ selectedProfile.sex|default('Non spécifié') }}</p>
-				<p>
-					<strong>Situation:</strong>
-					{{ selectedProfile.situation|default('Non renseigné') }}</p>
-				<p>
-					<strong>Je recherche:</strong>
-					{{ selectedProfile.research|default('Non spécifié') }}</p>
-				<p>
-					<strong>Biographie:</strong>
-					{{ selectedProfile.biography|default('Aucune biographie') }}</p>
+					<h3>Photos</h3>
+					{% if selectedProfile.photos %}
+						<section class="photo-gallery">
+							{% for photo in selectedProfile.photos %}
+								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
+							{% endfor %}
+						</section>
 
-				<h3>Photos</h3>
-				{% if selectedProfile.photos %}
-					<div class="photo-gallery">
-						{% for photo in selectedProfile.photos %}
-							<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo">
-						{% endfor %}
-					</div>
+						<!-- CAROUSEL MODAL -->
+						<section class="modal fade" id="photoCarousel" tabindex="-1">
+							<section class="modal-dialog modal-fullscreen">
+								<section class="modal-content">
+									<header class="modal-header">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</header>
+									<section class="modal-body">
+										<section id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+											<section class="carousel-inner">
+												{% for photo in selectedProfile.photos %}
+													<section class="carousel-item {% if loop.first %}active{% endif %}">
+														<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo">
+													</section>
+												{% endfor %}
+											</section>
+											<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Previous</span>
+											</button>
+											<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+												<span class="carousel-control-next-icon" aria-hidden="true"></span>
+												<span class="visually-hidden">Next</span>
+											</button>
+										</section>
+									</section>
+								</section>
+							</section>
+						</section>
+					{% else %}
+						<p>Aucune photo ajoutée.</p>
+					{% endif %}
 				{% else %}
-					<p>Aucune photo ajoutée.</p>
+					<p>Sélectionnez un profil pour voir les détails.</p>
 				{% endif %}
-			{% else %}
-				<p>Sélectionnez un profil pour voir les détails.</p>
-			{% endif %}
-		</div>
-	</div>
+			</article>
+		</section>
+	</section>
+
+	 <script>
+			document.addEventListener("DOMContentLoaded", function () {
+				let toggleButton = document.querySelector(".toggle-sort-btn");
+				let sortContent = document.querySelector(".sort-content");
+				sortContent.style.display = "none";
+	
+				toggleButton.addEventListener("click", function () {
+					sortContent.style.display = sortContent.style.display === "none" ? "block" : "none";
+				});
+			});
+		</script>
 {% endblock %}
 
