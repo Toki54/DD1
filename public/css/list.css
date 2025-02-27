@@ -1,4 +1,4 @@
-/* Styles généraux */
+/* ====== STYLES GÉNÉRAUX ====== */
 body {
   background-color: #121212;
   font-family: "Roboto", sans-serif;
@@ -8,44 +8,44 @@ body {
   box-sizing: border-box;
 }
 
-/* Conteneur principal */
+/* ====== CONTENEUR PRINCIPAL ====== */
 .container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin: 30px auto;
+  padding: 20px;
   max-width: 1200px;
+  margin: auto;
 }
 
-/* ====== TRI (Filtre) ====== */
+/* ====== TRI (FILTRE) ====== */
 .sort-container {
   width: 100%;
   text-align: center;
-  background: #2c2c2c;
-  padding: 10px;
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+  padding: 15px;
   border-radius: 10px;
   position: sticky;
   top: 0;
   z-index: 10;
+  box-shadow: 0 0 15px rgba(217, 7, 255, 0.5);
   margin-bottom: 20px;
 }
 
 .sort-header button {
   background: #8e44ad;
   color: white;
-  padding: 8px 20px;
+  padding: 10px 25px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
 }
 
 .sort-header button:hover {
-  background: #732d91;
-}
-
-.sort-container label {
-  font-weight: bold;
-  color: #d4af37;
+  background: #b13bd0;
+  transform: scale(1.05);
 }
 
 .sort-form {
@@ -57,134 +57,234 @@ body {
 .sort-form button {
   background: #8e44ad;
   border: none;
-  padding: 8px;
+  padding: 10px;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
 }
 
 .sort-form button:hover {
-  background: #732d91;
+  background: #b13bd0;
+  transform: scale(1.05);
 }
 
-.main-content {
-  display: flex;
-  justify-content: space-around;
-}
-/* ====== LISTE DES PROFILS ====== */
-.profile-list {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-  width: 450px;
-  box-shadow: 0px 4px 10px rgba(255, 193, 7, 0.3);
-  height: 500px;
-  overflow-y: scroll;
+.sort-container label {
+  font-weight: bold;
+  color: #d4af37;
 }
 
+/* ====== PROFIL CARD ====== */
 .profile-card {
-  background: #2c2c2c;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 15px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    background: linear-gradient(359deg, #230431, #000000);
+    box-shadow: 0 0 6px 6px rgb(0 0 0 / 80%);
+    margin-bottom: 25px;
+    transition: all 0.3s ease-in-out;
 }
 
 .profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 0px 10px rgba(255, 193, 7, 0.5);
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(217, 7, 255, 1);
 }
 
 .profile-card img {
-  width: 50px;
-  height: 50px;
+  width: 250px;
+  height: 250px;
   border-radius: 10px;
-  border: 1px solid #d4af37;
+  border: 3px solid #d4af37;
   object-fit: cover;
-  margin-right: 10px;
+  transition: all 0.3s ease-in-out;
 }
 
-.profile-card p {
-  margin: 3px 0;
-  font-size: 14px;
-  color: #d4af37;
+.profile-card img:hover {
+  transform: scale(1.05);
 }
 
-.btn-primary, p {
-  background-color: #12121200;
-  align-items: center;
+.avatar-container {
+  margin-top: 10px;
 }
 
-
-/* ====== DÉTAILS DU PROFIL SÉLECTIONNÉ ====== */
-.profile-detail {
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
+.profile-info {
   flex-grow: 1;
-  max-width: 500px;
-  box-shadow: 0px 4px 10px rgba(255, 193, 7, 0.3);
 }
 
-.profile-detail h2 {
+.profile-info p {
+  margin: 5px 0;
+  font-size: 15px;
   color: #d4af37;
-  text-align: center;
 }
 
-.profile-detail img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 4px solid #d4af37;
-  object-fit: cover;
-  display: block;
-  margin: 10px auto;
+.profile-actions {
+  text-align: center;
+  margin-top: 10px;
 }
 
-.profile-detail p {
-  font-size: 14px;
-  color: #d4af37;
-  text-align: center;
+.btn-toggle-photos {
+  padding: 8px 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-toggle-photos:hover {
+  background: #0056b3;
+  transform: scale(1.05);
 }
 
 /* ====== GALERIE PHOTOS ====== */
 .photo-gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .photo-gallery img {
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  border: 2px solid #d4af37;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  transition: transform 0.3s ease-in-out;
+  border-radius: 8px;
   cursor: pointer;
+  border: 3px solid #d4af37;
+  transition: all 0.3s ease-in-out;
 }
 
 .photo-gallery img:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
 }
 
-/* Responsive 
-@media screen and (max-width: 1024px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
+/* ====== CAROUSEL MODAL ====== */
+.modal-content {
+  background: black;
+  border: 3px solid #8e44ad;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(217, 7, 255, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.modal-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-inner {
+  
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-item {
+  text-align: center !important;
+}
+
+/* Correction : Centrer et limiter la taille des images */
+.carousel-item img {
+  width: 600px !important;
+  height: 600px !important;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid #d4af37;
+  display: block !important;
+  margin: auto !important;
+}
+
+.btn-close{
+  color: white !important;
+}
+/* Positionne les flèches aux bords de l'écran */
+/* Permet aux flèches de rester fixées aux bords de l'écran */
+.carousel-control-prev,
+.carousel-control-next {
+  position: fixed;
+  /* Fixé sur l'écran */
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  padding: 20px;
+  z-index: 1050;
+  /* Priorité pour être au-dessus des images */
+}
+
+/* Flèche gauche au bord gauche */
+.carousel-control-prev {
+  left: 20px;
+}
+
+/* Flèche droite au bord droit */
+.carousel-control-next {
+  right: 20px;
+}
+
+/* Effet de survol */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* Icônes en blanc et plus grandes */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  
+  width: 60px;
+  height: 60px;
+}
+
+/* Style du bouton de fermeture (croix) */
+.modal-header .btn-close {
+  filter: invert(100%);
+  /* Rend la croix blanche */
+  opacity: 1;
+  /* La rendre bien visible */
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Effet de zoom au survol */
+.modal-header .btn-close:hover {
+  transform: scale(1.2);
+}
+/* ====== RESPONSIVE ====== 
+@media screen and (max-width: 600px) {
+  .carousel-item img {
+    width: 100%;
+    height: auto;
   }
 
-  .profile-list {
-    width: 100%;
+  .profile-card img {
+    width: 150px;
+    height: 150px;
   }
 
-  .profile-detail {
+  .photo-gallery img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .carousel-item img {
     width: 100%;
+    height: auto;
   }
 }

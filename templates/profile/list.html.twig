@@ -36,14 +36,19 @@
 			</section>
 		</article>
 
-		<section
-			class="main-content">
-			<!-- Liste des profils -->
-			<article class="profile-list">
-				<h2>Utilisateurs inscrits</h2>
-				{% for profile in profiles %}
-					<article class="profile-card">
+		<!-- Liste des profils -->
+		<section class="profile-container">
+			{% for profile in profiles %}
+				<article
+					class="profile-card">
+					<!-- Avatar -->
+					<section class="avatar-container">
 						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'images/default-avatar.png') }}" alt="Avatar">
+					</section>
+
+					<!-- Informations -->
+					<section class="info-container">
+						<h2>{{ profile.user.pseudo }}</h2>
 						<p>
 							<strong>Sexe:</strong>
 							{{ profile.sex|default('Non spécifié') }}</p>
@@ -51,89 +56,102 @@
 							<strong>Situation:</strong>
 							{{ profile.situation|default('Non renseigné') }}</p>
 						<p>
-							<strong>Recherche:</strong>
-							{{ profile.research|default('Non renseigné') }}</p>
-						<a href="{{ path('app_profiles_list', { id: profile.id }) }}" class="btn btn-primary">Voir Profil</a>
-					</article>
-				{% endfor %}
-			</article>
+							<strong>Je recherche:</strong>
+							{{ profile.research|default('Non spécifié') }}</p>
+						<p>
+							<strong>Biographie:</strong>
+							{{ profile.biography|default('Aucune biographie') }}</p>
 
-			<!-- Détails du profil sélectionné -->
-			<article class="profile-detail">
-				{% if selectedProfile %}
-					<h2>Profil de
-						{{ selectedProfile.user.pseudo }}</h2>
-					<img src="{{ asset('uploads/avatars/' ~ selectedProfile.avatar) }}" alt="Avatar">
-					<p>
-						<strong>Sexe:</strong>
-						{{ selectedProfile.sex|default('Non spécifié') }}</p>
-					<p>
-						<strong>Situation:</strong>
-						{{ selectedProfile.situation|default('Non renseigné') }}</p>
-					<p>
-						<strong>Je recherche:</strong>
-						{{ selectedProfile.research|default('Non spécifié') }}</p>
-					<p>
-						<strong>Biographie:</strong>
-						{{ selectedProfile.biography|default('Aucune biographie') }}</p>
+						<!-- Bouton pour afficher/masquer les photos -->
+						<button class="toggle-photos-btn" data-profile-id="{{ profile.id }}">Afficher les photos</button>
+					</section>
 
-					<h3>Photos</h3>
-					{% if selectedProfile.photos %}
-						<section class="photo-gallery">
-							{% for photo in selectedProfile.photos %}
+					<!-- Galerie de photos -->
+					<section class="photo-gallery" id="gallery-{{ profile.id }}" style="display: none;">
+						{% if profile.photos %}
+							{% for photo in profile.photos %}
 								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
 							{% endfor %}
-						</section>
-
-						<!-- CAROUSEL MODAL -->
-						<section class="modal fade" id="photoCarousel" tabindex="-1">
-							<section class="modal-dialog modal-fullscreen">
-								<section class="modal-content">
-									<header class="modal-header">
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-									</header>
-									<section class="modal-body">
-										<section id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-											<section class="carousel-inner">
-												{% for photo in selectedProfile.photos %}
-													<section class="carousel-item {% if loop.first %}active{% endif %}">
-														<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo">
-													</section>
-												{% endfor %}
-											</section>
-											<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-												<span class="visually-hidden">Previous</span>
-											</button>
-											<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-												<span class="carousel-control-next-icon" aria-hidden="true"></span>
-												<span class="visually-hidden">Next</span>
-											</button>
-										</section>
-									</section>
-								</section>
-							</section>
-						</section>
-					{% else %}
-						<p>Aucune photo ajoutée.</p>
-					{% endif %}
-				{% else %}
-					<p>Sélectionnez un profil pour voir les détails.</p>
-				{% endif %}
-			</article>
+						{% else %}
+							<p>Aucune photo ajoutée.</p>
+						{% endif %}
+					</section>
+				</article>
+			{% endfor %}
 		</section>
 	</section>
 
-	 <script>
-			document.addEventListener("DOMContentLoaded", function () {
-				let toggleButton = document.querySelector(".toggle-sort-btn");
-				let sortContent = document.querySelector(".sort-content");
-				sortContent.style.display = "none";
-	
-				toggleButton.addEventListener("click", function () {
-					sortContent.style.display = sortContent.style.display === "none" ? "block" : "none";
-				});
-			});
-		</script>
-{% endblock %}
+	<!-- MODAL CAROUSEL -->
+	<section class="modal fade" id="photoCarousel" tabindex="-1">
+		<section class="modal-dialog modal-fullscreen">
+			<section class="modal-content">
+				<header class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</header>
+				<section class="modal-body">
+					<section id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+						<section class="carousel-inner">
+							{% for profile in profiles %}
+								{% for photo in profile.photos %}
+									<section class="carousel-item {% if loop.first %}active{% endif %}">
+										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block" alt="User Photo">
 
+									</section>
+								{% endfor %}
+							{% endfor %}
+						</section>
+<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+	<span class="carousel-control-next-icon" aria-hidden="true"></span>
+	<span class="visually-hidden">Next</span>
+</button>
+
+					</section>
+				</section>
+			</section>
+		</section>
+	</section>
+
+	<!-- Script corrigé -->
+	 <script defer>
+		        document.addEventListener("DOMContentLoaded", function () {
+		            // Gestion du filtre
+		            let toggleButton = document.querySelector(".toggle-sort-btn");
+		            let sortContent = document.querySelector(".sort-content");
+		
+		            if (sortContent) {
+		                sortContent.style.display = "none";
+		                if (toggleButton) {
+		                    toggleButton.addEventListener("click", function () {
+		                        sortContent.style.display = sortContent.style.display === "none" ? "block" : "none";
+		                    });
+		                }
+		            }
+		
+		            // Gestion de l'affichage des photos pour chaque profil
+		            document.querySelectorAll(".toggle-photos-btn").forEach(button => {
+		                button.addEventListener("click", function () {
+		                    let profileId = this.getAttribute("data-profile-id");
+		                    let gallery = document.getElementById("gallery-" + profileId);
+		
+		                    if (gallery) {
+		                        let isHidden = gallery.style.display === "none" || gallery.style.display === "";
+		                        gallery.style.display = isHidden ? "flex" : "none";
+		                        this.textContent = isHidden ? "Masquer les photos" : "Afficher les photos";
+		                    }
+		                });
+		            });
+		
+		            // Gestion du modal pour afficher l'image cliquée en premier
+		            document.querySelectorAll(".photo-thumbnail").forEach((img, index) => {
+		                img.addEventListener("click", function () {
+		                    let carousel = new bootstrap.Carousel(document.querySelector("#carouselExample"));
+		                    carousel.to(index);
+		                });
+		            });
+		        });
+		    </script>
+{% endblock %}
