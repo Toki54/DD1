@@ -64,6 +64,11 @@
 
 						<!-- Bouton pour afficher/masquer les photos -->
 						<button class="toggle-photos-btn" data-profile-id="{{ profile.id }}">Afficher les photos</button>
+
+				
+						<a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
+
+
 					</section>
 
 					<!-- Galerie de photos -->
@@ -100,14 +105,14 @@
 								{% endfor %}
 							{% endfor %}
 						</section>
-<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-	<span class="visually-hidden">Previous</span>
-</button>
-<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-	<span class="carousel-control-next-icon" aria-hidden="true"></span>
-	<span class="visually-hidden">Next</span>
-</button>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
 
 					</section>
 				</section>
@@ -115,43 +120,8 @@
 		</section>
 	</section>
 
-	<!-- Script corrigé -->
-	 <script defer>
-		        document.addEventListener("DOMContentLoaded", function () {
-		            // Gestion du filtre
-		            let toggleButton = document.querySelector(".toggle-sort-btn");
-		            let sortContent = document.querySelector(".sort-content");
-		
-		            if (sortContent) {
-		                sortContent.style.display = "none";
-		                if (toggleButton) {
-		                    toggleButton.addEventListener("click", function () {
-		                        sortContent.style.display = sortContent.style.display === "none" ? "block" : "none";
-		                    });
-		                }
-		            }
-		
-		            // Gestion de l'affichage des photos pour chaque profil
-		            document.querySelectorAll(".toggle-photos-btn").forEach(button => {
-		                button.addEventListener("click", function () {
-		                    let profileId = this.getAttribute("data-profile-id");
-		                    let gallery = document.getElementById("gallery-" + profileId);
-		
-		                    if (gallery) {
-		                        let isHidden = gallery.style.display === "none" || gallery.style.display === "";
-		                        gallery.style.display = isHidden ? "flex" : "none";
-		                        this.textContent = isHidden ? "Masquer les photos" : "Afficher les photos";
-		                    }
-		                });
-		            });
-		
-		            // Gestion du modal pour afficher l'image cliquée en premier
-		            document.querySelectorAll(".photo-thumbnail").forEach((img, index) => {
-		                img.addEventListener("click", function () {
-		                    let carousel = new bootstrap.Carousel(document.querySelector("#carouselExample"));
-		                    carousel.to(index);
-		                });
-		            });
-		        });
-		    </script>
+
+	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
+
+
 {% endblock %}

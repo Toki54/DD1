@@ -1,0 +1,18 @@
+/* public/css/app.css */
+.card {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+}
+
+.list-group-item {
+    border: 0;
+    padding: 10px 15px;
+}
+
+.text-end {
+    text-align: right;
+}

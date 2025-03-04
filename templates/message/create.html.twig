@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envoyer un message
+{% endblock %}
+
+{% block body %}
+	<h1>Envoyer un message à
+		{{ receiver.pseudo }}</h1>
+
+	{{ form_start(form) }}
+	{{ form_row(form.content) }}
+	<button type="submit">Envoyer</button>
+	{{ form_end(form) }}
+{% endblock %}
+

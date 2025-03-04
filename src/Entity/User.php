@@ -15,7 +15,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
  #[ORM\Id]
  #[ORM\GeneratedValue]
- #[ORM\Column]
+ #[ORM\Column(type: 'integer')]
  private ?int $id = null;
 
  #[ORM\Column(length: 180)]
@@ -24,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  /**
   * @var list<string> The user roles
   */
- #[ORM\Column]
+ #[ORM\Column(type: 'json')]
  private array $roles = [];
 
  /**
@@ -133,17 +133,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  /**
   * Get the value of pseudo
   */
- public function getPseudo()
+ public function getPseudo(): ?string
  {
   return $this->pseudo;
  }
 
  /**
   * Set the value of pseudo
-  *
-  * @return  self
   */
- public function setPseudo($pseudo)
+ public function setPseudo(string $pseudo): static
  {
   $this->pseudo = $pseudo;
 
