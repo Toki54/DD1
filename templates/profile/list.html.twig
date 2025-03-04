@@ -68,6 +68,9 @@
 				
 <a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
 
+<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">
+	Demander une discussion
+</a>
 
 
 					</section>

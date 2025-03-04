@@ -22,17 +22,27 @@
 					Afficher/Masquer la discussion
 				</button>
 			</div>
-			<div
-				class="card-body" id="conversation-{{ userGroup.user.id }}" style="display: none;">
+			<div class="card-body" id="conversation-{{ userGroup.user.id }}" style="display: none;">
 				<!-- Affiche les messages échangés -->
-				<ul class="list-group">
-					{% for message in userGroup.messages %}
-						<li class="list-group-item {% if message.sender == app.user %}text-end{% endif %}">
-							<strong>{{ message.sender.pseudo }}:</strong>
-							{{ message.content }}
-						</li>
-					{% endfor %}
-				</ul>
+<ul class="list-group">
+	{% for message in userGroup.messages %}
+		<li class="list-group-item {% if message.sender == app.user %}text-end{% endif %}">
+			<strong>{{ message.sender.pseudo }}:</strong>
+			{{ message.content }}
+
+{% if message.isChatRequest %}
+	<span class="badge bg-warning">Demande de discussion</span>
+	{% if app.user == message.receiver %}
+		<form action="{{ path('app_message_accept', {'id': message.id}) }}" method="POST">
+			<button type="submit" class="btn btn-success btn-sm mt-2">Accepter</button>
+		</form>
+	{% endif %}
+{% endif %}
+
+		</li>
+	{% endfor %}
+</ul>
+
 
 				<!-- Formulaire pour envoyer un message -->
 				<form action="{{ path('app_message_create', {'id': userGroup.user.id}) }}" method="POST">

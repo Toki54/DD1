@@ -28,13 +28,16 @@ class Message
  #[ORM\Column(type: 'datetime')]
  private \DateTimeInterface $sentAt;
 
+ // Indique si le message est une demande de discussion
+ #[ORM\Column(type: 'boolean')]
+ private bool $isChatRequest = false;
+
  public function __construct()
  {
   $this->sentAt = new \DateTime();
  }
 
  // Getters et setters
-
  public function getId(): ?int
  {
   return $this->id;
@@ -84,6 +87,18 @@ class Message
  public function setSentAt(\DateTimeInterface $sentAt): self
  {
   $this->sentAt = $sentAt;
+
+  return $this;
+ }
+
+ public function isChatRequest(): bool
+ {
+  return $this->isChatRequest;
+ }
+
+ public function setIsChatRequest(bool $isChatRequest): self
+ {
+  $this->isChatRequest = $isChatRequest;
 
   return $this;
  }
