@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Form;
 
 use App\Entity\Message;
@@ -10,20 +11,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MessageType extends AbstractType
 {
- public function buildForm(FormBuilderInterface $builder, array $options): void
+ public function buildForm(FormBuilderInterface $builder, array $options)
  {
   $builder
    ->add('content', TextareaType::class, [
-    'label'    => 'Message',
-    'required' => true,
-    'attr'     => [
-     'placeholder' => 'Écrivez votre message...',
-     'rows'        => 5,
-    ],
+    'label' => 'Message',
+    'attr'  => ['placeholder' => 'Écrivez votre message...'],
    ]);
  }
 
- public function configureOptions(OptionsResolver $resolver): void
+ public function configureOptions(OptionsResolver $resolver)
  {
   $resolver->setDefaults([
    'data_class' => Message::class,

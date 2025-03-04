@@ -1,24 +1,24 @@
-{# templates/message/list.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Messages
+{% block title %}Liste des Conversations
 {% endblock %}
 
 {% block body %}
+
 {% block stylesheet %}
 	<link rel="stylesheet" href="{{ asset('css/listMess.css') }}">
 {% endblock %}
 
 	<h1>Mes conversations</h1>
 
+<section class="conversation-container">
 	{% for userGroup in groupedMessages %}
 		<div class="card mb-3">
 			<div class="card-header">
 				<h5>{{ userGroup.user.pseudo }}</h5>
-				<!-- Affiche le nom de l'utilisateur -->
 			</div>
 			<div class="card-body">
+				<!-- Affiche les messages échangés -->
 				<ul class="list-group">
 					{% for message in userGroup.messages %}
 						<li class="list-group-item {% if message.sender == app.user %}text-end{% endif %}">
@@ -27,11 +27,22 @@
 						</li>
 					{% endfor %}
 				</ul>
-				<a href="{{ path('app_message_create', {'id': userGroup.user.id}) }}" class="btn btn-primary mt-3">Envoyer un message</a>
+
+				<!-- Formulaire pour envoyer un message -->
+				<form action="{{ path('app_message_create', {'id': userGroup.user.id}) }}" method="POST">
+					{{ form_start(forms[userGroup.user.id]) }}
+					{{ form_row(forms[userGroup.user.id].content) }}
+					<button type="submit" class="btn btn-primary mt-3">Envoyer un message</button>
+					{{ form_end(forms[userGroup.user.id]) }}
+				</form>
 			</div>
 		</div>
 	{% else %}
-		<p>Vous n'avez pas encore de messages.</p>
+		<p>Vous n'avez pas encore de conversations.</p>
 	{% endfor %}
+</section>
+
 {% endblock %}
+
+
 
