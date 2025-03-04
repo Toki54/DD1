@@ -49,23 +49,25 @@
 </section>
 
  <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const toggleButtons = document.querySelectorAll('.toggle-conversation');
-            
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = button.getAttribute('data-target');
-                    const targetElement = document.getElementById(targetId);
-                    
-                    if (targetElement.style.display === "none" || targetElement.style.display === "") {
-                        targetElement.style.display = "block";  // Afficher la discussion
-                    } else {
-                        targetElement.style.display = "none";   // Masquer la discussion
-                    }
-                });
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleButtons = document.querySelectorAll('.toggle-conversation');
+        
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = button.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                
+                // Bascule de l'affichage de la discussion
+                if (targetElement.style.display === "none" || targetElement.style.display === "") {
+                    targetElement.style.display = "block";  // Affiche la discussion
+                } else {
+                    targetElement.style.display = "none";   // Masque la discussion
+                }
             });
         });
-    </script>
+    });
+</script>
+
 	
 	{% endblock %}
 

@@ -1,18 +1,148 @@
-/* public/css/app.css */
+/* ====== STYLES GÉNÉRAUX ====== */
+body {
+    background-color: #121212;
+    font-family: "Roboto", sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ====== CONTENEUR DES CONVERSATIONS ====== */
+.conversation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ====== CARDS DES CONVERSATIONS ====== */
 .card {
-    border: 1px solid #ddd;
-    margin-bottom: 15px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0 25px rgba(217, 7, 255, 0.8);
 }
 
 .card-header {
-    background-color: #f8f9fa;
+    background: #2c2c2c;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d4af37;
+    font-weight: bold;
 }
 
-.list-group-item {
-    border: 0;
-    padding: 10px 15px;
+.card-header h5 {
+    margin: 0;
 }
 
-.text-end {
+.card-body {
+    background: #121212;
+    padding: 15px;
+    color: #e0e0e0;
+}
+
+.card-body ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.card-body li {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.card-body .text-end {
     text-align: right;
+}
+
+.card-body .text-end strong {
+    color: #f83df8;
+}
+
+.card-body form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body form button {
+    background-color: #f83df8;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.card-body form button:hover {
+    background-color: #b13bd0;
+    transform: scale(1.05);
+}
+
+/* ====== BOUTON D'AFFICHAGE/MASQUAGE ====== */
+.toggle-conversation {
+    background-color: #8e44ad;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.toggle-conversation:hover {
+    background-color: #6d3381;
+    transform: scale(1.05);
+}
+
+/* ====== PRÉVISUALISATION DES MESSAGES ====== */
+.message-preview {
+    display: block;
+    color: #f83df8;
+}
+
+.message-preview p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.message-preview strong {
+    font-weight: bold;
+}
+
+/* ====== RESPONSIVE ====== */
+@media screen and (max-width: 768px) {
+    .conversation-container {
+        padding: 15px;
+    }
+
+    .card {
+        margin-bottom: 15px;
+    }
+
+    .card-header {
+        font-size: 18px;
+    }
+
+    .card-body form button {
+        padding: 8px;
+    }
+
+    .toggle-conversation {
+        font-size: 14px;
+    }
 }
