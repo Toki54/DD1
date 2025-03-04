@@ -11,13 +11,19 @@
 
 	<h1>Mes conversations</h1>
 
+<!-- Liste des conversations -->
 <section class="conversation-container">
 	{% for userGroup in groupedMessages %}
 		<div class="card mb-3">
 			<div class="card-header">
 				<h5>{{ userGroup.user.pseudo }}</h5>
+				<!-- Bouton pour afficher/masquer les messages -->
+				<button class="btn btn-secondary toggle-conversation" data-target="conversation-{{ userGroup.user.id }}">
+					Afficher/Masquer la discussion
+				</button>
 			</div>
-			<div class="card-body">
+			<div
+				class="card-body" id="conversation-{{ userGroup.user.id }}" style="display: none;">
 				<!-- Affiche les messages échangés -->
 				<ul class="list-group">
 					{% for message in userGroup.messages %}
@@ -42,7 +48,27 @@
 	{% endfor %}
 </section>
 
-{% endblock %}
+ <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleButtons = document.querySelectorAll('.toggle-conversation');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = button.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement.style.display === "none" || targetElement.style.display === "") {
+                        targetElement.style.display = "block";  // Afficher la discussion
+                    } else {
+                        targetElement.style.display = "none";   // Masquer la discussion
+                    }
+                });
+            });
+        });
+    </script>
+	
+	{% endblock %}
+
 
 
 
