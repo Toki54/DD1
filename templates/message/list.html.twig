@@ -60,22 +60,91 @@
 
  <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const toggleButtons = document.querySelectorAll('.toggle-conversation');
-        
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const targetId = button.getAttribute('data-target');
-                const targetElement = document.getElementById(targetId);
-                
-                // Bascule de l'affichage de la discussion
-                if (targetElement.style.display === "none" || targetElement.style.display === "") {
-                    targetElement.style.display = "block";  // Affiche la discussion
-                } else {
-                    targetElement.style.display = "none";   // Masque la discussion
-                }
-            });
+    // ✅ Gestion de l'affichage des discussions ouvertes
+    document.querySelectorAll(".toggle-conversation").forEach(button => {
+        button.addEventListener("click", function() {
+            let targetId = this.getAttribute("data-target");
+            let targetElement = document.getElementById(targetId);
+
+            if (targetElement.style.display === "none" || targetElement.style.display === "") {
+                targetElement.style.display = "block"; // Affiche la discussion
+                saveOpenConversations(targetId, true); // Sauvegarde l'état
+            } else {
+                targetElement.style.display = "none";  // Masque la discussion
+                saveOpenConversations(targetId, false); // Sauvegarde l'état
+            }
         });
     });
+
+    // ✅ Restaurer les discussions ouvertes après un rafraîchissement
+    restoreOpenConversations();
+
+    // ✅ Gestion de l'envoi des messages en AJAX
+    document.querySelectorAll(".message-form").forEach(form => {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            let input = this.querySelector(".message-input");
+            let content = input.value.trim();
+            let conversationId = this.dataset.conversationId;
+
+            if (content === "") return;
+
+            fetch(this.action, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content: content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let messageList = document.querySelector(`#conversation-${conversationId} .list-group`);
+
+                    let newMessage = document.createElement("li");
+                    newMessage.classList.add("list-group-item", "text-end", "fade-in");
+                    newMessage.innerHTML = `<strong>${data.message.sender}:</strong> ${data.message.content} <span class="text-muted">${data.message.sentAt}</span>`;
+
+                    messageList.appendChild(newMessage);
+                    input.value = ""; // Réinitialise le champ
+                    scrollToBottom(messageList);
+                } else {
+                    console.error("Erreur: La réponse du serveur ne contient pas de message valide.");
+                }
+            })
+            .catch(error => console.error("Erreur lors de l'envoi:", error));
+        });
+    });
+});
+
+/**
+ * ✅ Sauvegarde l'état des discussions ouvertes dans localStorage
+ */
+function saveOpenConversations(id, isOpen) {
+    let openConversations = JSON.parse(localStorage.getItem("openConversations")) || {};
+    openConversations[id] = isOpen;
+    localStorage.setItem("openConversations", JSON.stringify(openConversations));
+}
+
+/**
+ * ✅ Restaure les discussions ouvertes après un rafraîchissement
+ */
+function restoreOpenConversations() {
+    let openConversations = JSON.parse(localStorage.getItem("openConversations")) || {};
+    Object.keys(openConversations).forEach(id => {
+        if (openConversations[id]) {
+            let targetElement = document.getElementById(id);
+            if (targetElement) targetElement.style.display = "block";
+        }
+    });
+}
+
+/**
+ * ✅ Scroll automatique vers le bas après l'ajout d'un message
+ */
+function scrollToBottom(element) {
+    element.scrollTop = element.scrollHeight;
+}
+
 </script>
 
 	
