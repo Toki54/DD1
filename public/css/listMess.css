@@ -1,7 +1,7 @@
 /* ====== STYLES GÉNÉRAUX ====== */
 body {
-    background-color: #121212;
-    font-family: "Roboto", sans-serif;
+    background-color: #0d0d0d;
+    font-family: "Poppins", sans-serif;
     color: #e0e0e0;
     margin: 0;
     padding: 0;
@@ -12,54 +12,61 @@ body {
 .conversation-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 30px auto;
     padding: 20px;
 }
 
 /* ====== CARDS DES CONVERSATIONS ====== */
 .card {
-    background: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #1e1e1e, #252525);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-    box-shadow: 0 0 25px rgba(217, 7, 255, 0.8);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(250, 0, 255, 0.7);
 }
 
+/* ====== EN-TÊTE DES CARTES ====== */
 .card-header {
-    background: #2c2c2c;
+    background: rgba(255, 255, 255, 0.05);
     padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #d4af37;
-    font-weight: bold;
+    color: #ff6bcb;
+    font-weight: 600;
+    font-size: 18px;
 }
 
 .card-header h5 {
     margin: 0;
 }
 
+/* ====== CORPS DES CARTES ====== */
 .card-body {
-    background: #121212;
-    padding: 15px;
+    padding: 20px;
     color: #e0e0e0;
 }
 
 .card-body ul {
     list-style-type: none;
     padding-left: 0;
-    margin-bottom: 20px;
 }
 
 .card-body li {
-    padding: 10px;
-    border-bottom: 1px solid #444;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s;
+}
+
+.card-body li:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .card-body .text-end {
@@ -67,37 +74,62 @@ body {
 }
 
 .card-body .text-end strong {
-    color: #f83df8;
+    color: #ff6bcb;
 }
 
-.card-body form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* ====== CHAMP DE TEXTE ====== */
+.card-body form textarea {
+    width: 100%;
+    padding: 12px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #e0e0e0;
+    resize: none;
+    transition: border 0.3s ease;
 }
 
-.card-body form button {
-    background-color: #f83df8;
-    color: white;
-    padding: 10px;
+.card-body form textarea:focus {
+    border: 1px solid #ff6bcb;
+    outline: none;
+}
+
+/* ====== BOUTONS ====== */
+button,
+.btn {
+    padding: 10px 16px;
     border: none;
     border-radius: 8px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease;
 }
 
-.card-body form button:hover {
-    background-color: #b13bd0;
-    transform: scale(1.05);
-}
-
-/* ====== BOUTON D'AFFICHAGE/MASQUAGE ====== */
-.toggle-conversation {
-    background-color: #8e44ad;
+.btn-primary {
+    background: #ff6bcb;
     color: white;
-    padding: 8px 20px;
-    border: none;
+}
+
+.btn-primary:hover {
+    background: #d14aaa;
+}
+
+.btn-success {
+    background: #4caf50;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #388e3c;
+}
+
+/* ====== BOUTON TOGGLE CONVERSATION ====== */
+.toggle-conversation {
+    background: #ff6bcb;
+    color: white;
+    padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -105,23 +137,18 @@ body {
 }
 
 .toggle-conversation:hover {
-    background-color: #6d3381;
+    background: #d14aaa;
     transform: scale(1.05);
 }
 
-/* ====== PRÉVISUALISATION DES MESSAGES ====== */
-.message-preview {
-    display: block;
-    color: #f83df8;
-}
-
-.message-preview p {
-    margin: 0;
-    font-size: 14px;
-}
-
-.message-preview strong {
+/* ====== BADGE DEMANDE DE DISCUSSION ====== */
+.badge.bg-warning {
+    background: linear-gradient(135deg, #ffdd57, #ffb347);
+    color: #333;
+    padding: 6px 10px;
+    border-radius: 6px;
     font-weight: bold;
+    font-size: 14px;
 }
 
 /* ====== RESPONSIVE ====== */
@@ -135,11 +162,12 @@ body {
     }
 
     .card-header {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .card-body form button {
-        padding: 8px;
+        padding: 10px;
+        font-size: 14px;
     }
 
     .toggle-conversation {
