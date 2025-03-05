@@ -61,18 +61,18 @@
 						<p>
 							<strong>Biographie:</strong>
 							{{ profile.biography|default('Aucune biographie') }}</p>
+						<p>
+							<strong>Département:</strong>
+							{{ profile.department|default('Non spécifié') }}</p>
+						<p>
+							<strong>Ville:</strong>
+							{{ profile.city|default('Non spécifiée') }}</p>
 
 						<!-- Bouton pour afficher/masquer les photos -->
 						<button class="toggle-photos-btn" data-profile-id="{{ profile.id }}">Afficher les photos</button>
 
-				
-<a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
-
-<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">
-	Demander une discussion
-</a>
-
-
+						<a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
+						<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">Demander une discussion</a>
 					</section>
 
 					<!-- Galerie de photos -->
@@ -90,42 +90,7 @@
 		</section>
 	</section>
 
-	<!-- MODAL CAROUSEL -->
-	<section class="modal fade" id="photoCarousel" tabindex="-1">
-		<section class="modal-dialog modal-fullscreen">
-			<section class="modal-content">
-				<header class="modal-header">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</header>
-				<section class="modal-body">
-					<section id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-						<section class="carousel-inner">
-							{% for profile in profiles %}
-								{% for photo in profile.photos %}
-									<section class="carousel-item {% if loop.first %}active{% endif %}">
-										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block" alt="User Photo">
-
-									</section>
-								{% endfor %}
-							{% endfor %}
-						</section>
-						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Previous</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Next</span>
-						</button>
-
-					</section>
-				</section>
-			</section>
-		</section>
-	</section>
-
-
 	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
 
-
 {% endblock %}
+

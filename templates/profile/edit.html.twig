@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Profile{% endblock %}
+{% block title %}Modifier votre profil
+{% endblock %}
 
 {% block body %}
 	<div class="container">
-		<h1>Edit Your Profile</h1>
+		<h1 class="my-4">Modifier votre profil</h1>
 
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">
@@ -12,49 +13,66 @@
 			</div>
 		{% endfor %}
 
-		{{ form_start(form) }}
+		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="mb-3">
+					{{ form_label(form.sex) }}
+					{{ form_widget(form.sex, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.situation) }}
+					{{ form_widget(form.situation, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.biography) }}
+					{{ form_widget(form.biography, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.research) }}
+					{{ form_widget(form.research, {'attr': {'class': 'form-control'}}) }}
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="mb-3">
+					{{ form_label(form.avatarFile) }}
+					{{ form_widget(form.avatarFile, {'attr': {'class': 'form-control'}}) }}
+					<small class="text-muted">Téléchargez une photo de profil (JPG, PNG, GIF)</small>
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.photoFiles) }}
+					{{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
+					<small class="text-muted">Ajoutez jusqu'à 10 photos</small>
+				</div>
+
+				<div class="mb-3">
+					<label for="postalCode" class="form-label">Code Postal</label>
+					<input type="text" id="postalCode" class="form-control autocomplete-postal">
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.city) }}
+					{{ form_widget(form.city, {'attr': {'class': 'form-control autocomplete-city'}}) }}
+					<small class="text-muted">Vous pouvez saisir la ville manuellement</small>
+				</div>
+			</div>
+		</div>
 
 		
 
-		<div class="mb-3">
-			{{ form_label(form.sex) }}
-			{{ form_widget(form.sex) }}
-		</div>
-
-		<div class="mb-3">
-			{{ form_label(form.situation) }}
-			{{ form_widget(form.situation) }}
-		</div>
-
-		<div class="mb-3">
-			{{ form_label(form.biography) }}
-			{{ form_widget(form.biography) }}
-		</div>
-
-<div class="mb-3">
-	{{ form_label(form.research) }}
-	{{ form_widget(form.research) }}
-</div>
-
-<div class="mb-3">
-	{{ form_label(form.avatarFile) }}
-	{{ form_widget(form.avatarFile) }}
-	<small>Upload a profile picture (JPG, PNG, GIF)</small>
-</div>
-
-<div class="mb-3">
-	{{ form_label(form.photoFiles) }}
-	{{ form_widget(form.photoFiles) }}
-	<small>Upload up to 10 photos</small>
-</div>
-
-
-
-		<div class="mb-3">
-			<button type="submit" class="btn btn-primary">Save Changes</button>
-		</div>
-
 		{{ form_end(form) }}
+
+<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+
 	</div>
+
+	 
+
 {% endblock %}
 

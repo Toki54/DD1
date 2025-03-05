@@ -34,7 +34,7 @@ class UserProfile
   mimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
   mimeTypesMessage: 'Please upload a valid image file (JPEG, PNG, GIF)'
  )]
- private ?File $avatarFile = null; // Propriété temporaire pour le fichier uploadé
+ private ?File $avatarFile = null;
 
  #[ORM\Column(type: 'json', nullable: true)]
  private ?array $photos = [];
@@ -46,115 +46,78 @@ class UserProfile
     mimeTypesMessage: 'Each photo must be a valid image file (JPEG, PNG, GIF).'
    ),
   ])]
- private array $photoFiles = []; // Propriété temporaire pour gérer les fichiers uploadés
+ private array $photoFiles = [];
+
+ #[ORM\Column(type: 'string', length: 100, nullable: true)]
+ private ?string $department = null;
+
+
+
+ #[ORM\Column(type: 'string', length: 100, nullable: true)]
+ private ?string $city = null;
 
  #[ORM\OneToOne(inversedBy: 'profile', targetEntity: User::class, cascade: ['persist', 'remove'])]
  #[ORM\JoinColumn(nullable: false)]
  private ?User $user = null;
 
- // 🔹 Getters et Setters 🔹
+
 
  public function getId(): ?int
- {
-  return $this->id;
- }
-
+ {return $this->id;}
  public function getSex(): ?string
- {
-  return $this->sex;
- }
-
+ {return $this->sex;}
  public function setSex(?string $sex): static
- {
-  $this->sex = $sex;
-  return $this;
- }
+ { $this->sex = $sex;return $this;}
 
  public function getSituation(): ?string
- {
-  return $this->situation;
- }
-
+ {return $this->situation;}
  public function setSituation(?string $situation): static
- {
-  $this->situation = $situation;
-  return $this;
- }
+ { $this->situation = $situation;return $this;}
 
  public function getResearch(): ?string
- {
-  return $this->research;
- }
-
+ {return $this->research;}
  public function setResearch(?string $research): static
- {
-  $this->research = $research;
-  return $this;
- }
+ { $this->research = $research;return $this;}
 
  public function getBiography(): ?string
- {
-  return $this->biography;
- }
-
+ {return $this->biography;}
  public function setBiography(?string $biography): static
- {
-  $this->biography = $biography;
-  return $this;
- }
+ { $this->biography = $biography;return $this;}
 
  public function getAvatar(): ?string
- {
-  return $this->avatar;
- }
-
+ {return $this->avatar;}
  public function setAvatar(?string $avatar): static
- {
-  $this->avatar = $avatar;
-  return $this;
- }
+ { $this->avatar = $avatar;return $this;}
 
  public function getAvatarFile(): ?File
- {
-  return $this->avatarFile;
- }
-
+ {return $this->avatarFile;}
  public function setAvatarFile(?File $avatarFile): static
- {
-  $this->avatarFile = $avatarFile;
-  return $this;
- }
+ { $this->avatarFile = $avatarFile;return $this;}
 
  public function getPhotos(): ?array
- {
-  return $this->photos ?? [];
- }
-
+ {return $this->photos ?? [];}
  public function setPhotos(?array $photos): static
- {
-  $this->photos = $photos;
-  return $this;
- }
+ { $this->photos = $photos;return $this;}
 
  public function getPhotoFiles(): array
- {
-  return $this->photoFiles;
- }
-
+ {return $this->photoFiles;}
  public function setPhotoFiles(array $photoFiles): static
- {
-  $this->photoFiles = $photoFiles;
-  return $this;
- }
+ { $this->photoFiles = $photoFiles;return $this;}
+
+ public function getDepartment(): ?string
+ {return $this->department;}
+ public function setDepartment(?string $department): static
+ { $this->department = $department;return $this;}
+
+ 
+
+ public function getCity(): ?string
+ {return $this->city;}
+ public function setCity(?string $city): static
+ { $this->city = $city;return $this;}
 
  public function getUser(): ?User
- {
-  return $this->user;
- }
-
+ {return $this->user;}
  public function setUser(User $user): static
- {
-  $this->user = $user;
-  return $this;
- }
+ { $this->user = $user;return $this;}
 }

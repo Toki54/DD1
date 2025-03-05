@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile
+{% block title %}Profil
 {% endblock %}
 
 {% block body %}
@@ -33,23 +33,31 @@
 
 				<h3>Je recherche :</h3>
 				<p>{{ userProfile.research|default('Non spécifié.') }}</p>
+
+				<h3>Département :</h3>
+				<p>{{ userProfile.department|default('Non spécifié.') }}</p>
+
+				<h3>Ville :</h3>
+				<p>{{ userProfile.city|default('Non spécifiée.') }}</p>
 			</div>
+<div class="photos">
+	<h3>Photos :</h3>
+	{% set photos = userProfile.photos|default([]) %}
+
+	{% if photos is not empty %}
+		<div class="photo-gallery">
+			{% for photo in photos %}
+				<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
+			{% endfor %}
+		</div>
+	{% else %}
+		<p>Aucune photo uploadée.</p>
+	{% endif %}
+</div>
+
 		</div>
 
-		<div class="photos">
-			<h3>Photos :</h3>
-			{% set photos = userProfile.photos|default([]) %}
-
-			{% if photos is not empty %}
-				<div class="photo-gallery">
-					{% for photo in photos %}
-						<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
-					{% endfor %}
-				</div>
-			{% else %}
-				<p>Aucune photo uploadée.</p>
-			{% endif %}
-		</div>
+		
 
 		<a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Éditer mon profil</a>
 	</div>

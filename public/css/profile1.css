@@ -1,6 +1,6 @@
 /* ====== STYLES GÉNÉRAUX ====== */
 body {
-  background-color: #121212;
+  background-color: #1f1f1f;
   font-family: "Roboto", sans-serif;
   color: #e0e0e0;
   margin: 0;
@@ -8,149 +8,111 @@ body {
   box-sizing: border-box;
 }
 
-/* ====== CONTENEUR PRINCIPAL ====== */
-.container {
+/* ====== CONTAINER DU PROFIL ====== */
+.profile-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px;
   max-width: 1200px;
   margin: auto;
+  background: #2e2e2e;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* ====== TRI (FILTRE) ====== */
-.sort-container {
-  width: 100%;
+/* ====== TITRE DU PROFIL ====== */
+.profile-container h1 {
   text-align: center;
-  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
-  padding: 15px;
+  color: #d4af37;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* ====== SECTION INFOS ET AVATAR ====== */
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  margin-bottom: 30px;
+  background: #333333;
+  padding: 20px;
   border-radius: 10px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 0 15px rgba(217, 7, 255, 0.5);
+  box-shadow: 0 0 9px rgba(255, 255, 255, 0.1);
+}
+
+/* ====== AVATAR ====== */
+.avatar {
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 4px solid #d4af37;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin-right: 20px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatar img:hover {
+  transform: scale(1.05);
+}
+
+/* ====== DIVISOR ENTRE L'AVATAR ET LES INFOS ====== */
+.profile-info::before {
+  content: '';
+  display: block;
+  width: 1px;
+  background-color: #d4af37;
+  height: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+/* ====== DÉTAILS DU PROFIL ====== */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  color: #d4af37;
+}
+
+.profile-details h3 {
+  font-size: 1.3rem;
+  color: #f83df8;
+  font-weight: 600;
+}
+
+.profile-details p {
+  font-size: 1.1rem;
+  color: #f0f0f0;
+  margin: 5px 0;
+}
+
+/* ====== GALERIE DE PHOTOS ====== */
+.photos {
+  margin-top: 30px;
+}
+
+.photos h3 {
+  text-align: center;
+  color: #d4af37;
+  font-size: 1.6rem;
   margin-bottom: 20px;
 }
 
-.sort-header button {
-  background: #f83df8;
-  color: white;
-  padding: 10px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-}
-
-.sort-header button:hover {
-  background: #b13bd0;
-  transform: scale(1.05);
-}
-
-.sort-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sort-form button {
-  background: #8e44ad;
-  border: none;
-  padding: 10px;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease-in-out;
-}
-
-.sort-form button:hover {
-  background: #b13bd0;
-  transform: scale(1.05);
-}
-
-.sort-container label {
-  font-weight: bold;
-  color: #d4af37;
-}
-
-/* ====== PROFIL CARD ====== */
-.profile-card {
-  display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 12px;
-    background: linear-gradient(359deg, #230431, #000000);
-    box-shadow: 0 0 6px 6px rgb(0 0 0 / 80%);
-    margin-bottom: 25px;
-    transition: all 0.3s ease-in-out;
-}
-
-.profile-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 25px rgba(217, 7, 255, 1);
-}
-
-.profile-card img {
-  width: 250px;
-  height: 250px;
-  border-radius: 10px;
-  border: 3px solid #d4af37;
-  object-fit: cover;
-  transition: all 0.3s ease-in-out;
-}
-
-.profile-card img:hover {
-  transform: scale(1.05);
-}
-
-.avatar-container {
-  margin-top: 10px;
-}
-
-.profile-info {
-  flex-grow: 1;
-}
-
-.profile-info p {
-  margin: 5px 0;
-  font-size: 15px;
-  color: #d4af37;
-}
-
-.profile-actions {
-  text-align: center;
-  margin-top: 10px;
-}
-
-.btn-toggle-photos {
-  padding: 8px 15px;
-  background: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.3s ease-in-out;
-}
-
-.btn-toggle-photos:hover {
-  background: #0056b3;
-  transform: scale(1.05);
-}
-
-/* ====== GALERIE PHOTOS ====== */
 .photo-gallery {
   display: flex;
+  gap: 15px;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
+  justify-content: space-evenly;
 }
 
 .photo-gallery img {
@@ -160,12 +122,31 @@ body {
   border-radius: 8px;
   cursor: pointer;
   border: 3px solid #d4af37;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .photo-gallery img:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+/* ====== BOUTON D'EDITION DU PROFIL ====== */
+a.btn {
+  text-align: center;
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: #8e44ad;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  display: inline-block;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+a.btn:hover {
+  background: #b13bd0;
+  transform: scale(1.05);
 }
 
 /* ====== CAROUSEL MODAL ====== */
@@ -188,7 +169,6 @@ body {
 }
 
 .carousel-inner {
-  
   align-items: center;
   justify-content: center;
 }
@@ -210,9 +190,10 @@ body {
   margin: auto !important;
 }
 
-.btn-close{
+.btn-close {
   color: white !important;
 }
+
 /* Positionne les flèches aux bords de l'écran */
 /* Permet aux flèches de rester fixées aux bords de l'écran */
 .carousel-control-prev,
@@ -246,7 +227,6 @@ body {
 /* Icônes en blanc et plus grandes */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  
   width: 60px;
   height: 60px;
 }
@@ -267,14 +247,14 @@ body {
   transform: scale(1.2);
 }
 
-
+/* ====== RESPONSIVE ====== */
 @media screen and (max-width: 600px) {
   .carousel-item img {
     width: 100%;
     height: auto;
   }
 
-  .profile-card img {
+  .profile-info .avatar img {
     width: 150px;
     height: 150px;
   }
@@ -284,8 +264,12 @@ body {
     height: 80px;
   }
 
-  .carousel-item img {
-    width: 100%;
-    height: auto;
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-info::before {
+    display: none;
   }
 }
