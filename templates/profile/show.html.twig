@@ -9,7 +9,7 @@
 	{% endblock %}
 
 	<div class="profile-container">
-		<h1>Profil de
+		<h1 class="pseudo">Profil de
 			{{ app.user.pseudo }}</h1>
 
 		<div class="profile-card">
@@ -19,47 +19,54 @@
 				{% else %}
 					<p>Aucun avatar uploadé.</p>
 				{% endif %}
-<div class="profile-header">
-	<h3>À propos de moi :</h3>
-</div>
+				<div class="profile-header">
+					<h3>Description</h3>
 <p>{{ userProfile.biography|default('Aucune biographie disponible.') }}</p>
 
+				</div>
+				
 			</div>
 
 			<div class="info-section">
-				
-
-				<div class="profile-header">
-					<h3>Sexe :</h3>
+				<div class="info-item">
+					<div class="info-header">
+						<h3>Sexe</h3>
+					</div>
+					<p>{{ userProfile.sex|default('Non spécifié.') }}</p>
 				</div>
-				<p>{{ userProfile.sex|default('Non spécifié.') }}</p>
 
-				<div class="profile-header">
-					<h3>Situation :</h3>
+				<div class="info-item">
+					<div class="info-header">
+						<h3>Situation</h3>
+					</div>
+					<p>{{ userProfile.situation|default('Non renseigné.') }}</p>
 				</div>
-				<p>{{ userProfile.situation|default('Non renseigné.') }}</p>
 
-				<div class="profile-header">
-					<h3>Je recherche :</h3>
-					
+				<div class="info-item">
+					<div class="info-header">
+						<h3>Recherche</h3>
+					</div>
+					<p>{{ userProfile.research|default('Non spécifié.') }}</p>
 				</div>
-				<p>{{ userProfile.research|default('Non spécifié.') }}</p>
 
-				<div class="profile-header">
-					<h3>Département :</h3>
+				<div class="info-item">
+					<div class="info-header">
+						<h3>Département</h3>
+					</div>
+					<p>{{ userProfile.department|default('Non spécifié.') }}</p>
 				</div>
-				<p>{{ userProfile.department|default('Non spécifié.') }}</p>
 
-				<div class="profile-header">
-					<h3>Ville :</h3>
+				<div class="info-item">
+					<div class="info-header">
+						<h3>Ville</h3>
+					</div>
+					<p>{{ userProfile.city|default('Non spécifiée.') }}</p>
 				</div>
-				<p>{{ userProfile.city|default('Non spécifiée.') }}</p>
 			</div>
-			
 		</div>
 
 		<div class="photos">
-			<h3>Photos :</h3>
+			<h3>Photos</h3>
 			{% set photos = userProfile.photos|default([]) %}
 
 			{% if photos is not empty %}
@@ -73,7 +80,7 @@
 			{% endif %}
 		</div>
 
-		<a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Éditer mon profil</a>
+		<a href="{{ path('app_profile_edit') }}" class="btn">Éditer mon profil</a>
 	</div>
 
 	{# CAROUSEL MODAL #}
@@ -105,6 +112,5 @@
 			</div>
 		</div>
 	</div>
-
 {% endblock %}
 
