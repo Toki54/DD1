@@ -1,6 +1,6 @@
 /* ====== STYLES GÉNÉRAUX ====== */
 body {
-  background-color: #1f1f1f;
+  background-color: #121212;
   font-family: "Roboto", sans-serif;
   color: #e0e0e0;
   margin: 0;
@@ -12,91 +12,81 @@ body {
 .profile-container {
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 20px;
   max-width: 1200px;
   margin: auto;
-  background: #2e2e2e;
-  border-radius: 12px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* ====== TITRE DU PROFIL ====== */
 .profile-container h1 {
   text-align: center;
   color: #d4af37;
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin-bottom: 30px;
-  font-weight: 600;
 }
 
-/* ====== SECTION INFOS ET AVATAR ====== */
-.profile-info {
+/* ====== CARTE DE PROFIL ====== */
+.profile-card {
   display: flex;
-  flex-direction: row;
-  gap: 40px;
-  margin-bottom: 30px;
-  background: #333333;
+  background: #1e1e1e;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 9px rgba(255, 255, 255, 0.1);
-}
-
-/* ====== AVATAR ====== */
-.avatar {
-  width: 300px;
-  height: 300px;
-  flex-shrink: 0;
   border-radius: 12px;
-  border: 4px solid #d4af37;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  margin-right: 20px;
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.5);
+  border: 3px solid #8e44ad;
 }
 
-.avatar img {
-  width: 100%;
-  height: 100%;
+.avatar-section {
+  flex: 1;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  border: 3px solid #d4af37;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.avatar img:hover {
-  transform: scale(1.05);
+.avatar:hover {
+  transform: scale(1.1);
 }
 
-/* ====== DIVISOR ENTRE L'AVATAR ET LES INFOS ====== */
-.profile-info::before {
-  content: '';
-  display: block;
-  width: 1px;
-  background-color: #d4af37;
-  height: 100%;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-/* ====== DÉTAILS DU PROFIL ====== */
-.profile-details {
+.info-section {
+  flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   justify-content: center;
-  color: #d4af37;
+  padding: 20px;
+  background-color: #2c2c2c;
+  border-radius: 8px;
+  border: 2px solid #d4af37;
 }
 
-.profile-details h3 {
-  font-size: 1.3rem;
+.profile-header h3 {
   color: #f83df8;
-  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
 }
 
-.profile-details p {
-  font-size: 1.1rem;
-  color: #f0f0f0;
-  margin: 5px 0;
+.profile-header {
+  margin-bottom: 16px;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 8px;
 }
 
-/* ====== GALERIE DE PHOTOS ====== */
+.info-section p {
+  color: #d4af37;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* ====== GALERIE PHOTOS ====== */
 .photos {
   margin-top: 30px;
 }
@@ -104,13 +94,13 @@ body {
 .photos h3 {
   text-align: center;
   color: #d4af37;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   margin-bottom: 20px;
 }
 
 .photo-gallery {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
@@ -126,7 +116,7 @@ body {
 }
 
 .photo-gallery img:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
 }
 
@@ -190,86 +180,19 @@ a.btn:hover {
   margin: auto !important;
 }
 
-.btn-close {
-  color: white !important;
-}
-
-/* Positionne les flèches aux bords de l'écran */
-/* Permet aux flèches de rester fixées aux bords de l'écran */
-.carousel-control-prev,
-.carousel-control-next {
-  position: fixed;
-  /* Fixé sur l'écran */
-  top: 50%;
-  transform: translateY(-50%);
-  width: auto;
-  padding: 20px;
-  z-index: 1050;
-  /* Priorité pour être au-dessus des images */
-}
-
-/* Flèche gauche au bord gauche */
-.carousel-control-prev {
-  left: 20px;
-}
-
-/* Flèche droite au bord droit */
-.carousel-control-next {
-  right: 20px;
-}
-
-/* Effet de survol */
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  transform: translateY(-50%) scale(1.2);
-}
-
-/* Icônes en blanc et plus grandes */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 60px;
-  height: 60px;
-}
-
-/* Style du bouton de fermeture (croix) */
-.modal-header .btn-close {
-  filter: invert(100%);
-  /* Rend la croix blanche */
-  opacity: 1;
-  /* La rendre bien visible */
-  width: 30px;
-  height: 30px;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* Effet de zoom au survol */
-.modal-header .btn-close:hover {
-  transform: scale(1.2);
-}
-
 /* ====== RESPONSIVE ====== */
-@media screen and (max-width: 600px) {
-  .carousel-item img {
-    width: 100%;
-    height: auto;
+@media screen and (max-width: 768px) {
+  .profile-card {
+    flex-direction: column;
   }
 
-  .profile-info .avatar img {
+  .avatar {
     width: 150px;
     height: 150px;
   }
 
   .photo-gallery img {
-    width: 80px;
-    height: 80px;
-  }
-
-  .profile-info {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-info::before {
-    display: none;
+    width: 100px;
+    height: 100px;
   }
 }
