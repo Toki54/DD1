@@ -6,7 +6,6 @@ use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,79 +15,83 @@ class UserProfileController extends AbstractController
 {
  #[Route('/profile', name: 'app_profile_show')]
  public function show(EntityManagerInterface $entityManager): Response
-{
-    $user = $this->getUser();
-    
-    if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
-        return $this->redirectToRoute('app_login'); // Redirige vers la page de connexion
-    }
+ {
+  $user = $this->getUser();
 
-    $userProfile = $user->getProfile();
+  if (!$user) {
+   $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
+   return $this->redirectToRoute('app_login'); // Redirige vers la page de connexion
+  }
 
-    if (!$userProfile) {
-        $userProfile = new UserProfile();
-        $userProfile->setUser($user);
-        $entityManager->persist($userProfile);
-        $entityManager->flush();
-    }
+  // Assure-toi que le profil existe
+  $userProfile = $user->getProfile();
 
-    return $this->render('profile/show.html.twig', [
-        'userProfile' => $userProfile,
-    ]);
-}
+  if (!$userProfile) {
+   $userProfile = new UserProfile();
+   $userProfile->setUser($user);
+   $entityManager->persist($userProfile);
+   $entityManager->flush();
+  }
+
+  return $this->render('profile/show.html.twig', [
+   'userProfile' => $userProfile,
+  ]);
+ }
 
  #[Route('/profile/edit', name: 'app_profile_edit')]
  public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-{
-    $user = $this->getUser();
-    
-    if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour modifier votre profil.');
-        return $this->redirectToRoute('app_login');
+ {
+  $user = $this->getUser();
+
+  if (!$user) {
+   $this->addFlash('error', 'Vous devez être connecté pour modifier votre profil.');
+   return $this->redirectToRoute('app_login');
+  }
+
+  // Vérifie si le profil existe, sinon crée-le
+  $userProfile = $user->getProfile();
+
+  if (!$userProfile) {
+   $userProfile = new UserProfile();
+   $userProfile->setUser($user);
+   $entityManager->persist($userProfile);
+   $entityManager->flush();
+  }
+
+  $form = $this->createForm(UserProfileType::class, $userProfile);
+  $form->handleRequest($request);
+
+  if ($form->isSubmitted() && $form->isValid()) {
+   // Gestion de l'avatar
+   $avatarFile = $form->get('avatarFile')->getData();
+   if ($avatarFile) {
+    $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
+    $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
+    $userProfile->setAvatar($avatarFilename);
+   }
+
+   // Gestion des photos
+   $photoFiles = $form->get('photoFiles')->getData();
+   if ($photoFiles) {
+    $photoPaths = [];
+    foreach ($photoFiles as $photo) {
+     $photoFilename = uniqid() . '.' . $photo->guessExtension();
+     $photo->move($this->getParameter('photos_directory'), $photoFilename);
+     $photoPaths[] = $photoFilename;
     }
+    $userProfile->setPhotos(array_merge($userProfile->getPhotos(), $photoPaths));
+   }
 
-    $userProfile = $user->getProfile();
+   $entityManager->flush();
+   $this->addFlash('success', 'Profil mis à jour avec succès !');
+   return $this->redirectToRoute('app_profile_edit');
+  }
 
-    if (!$userProfile) {
-        $userProfile = new UserProfile();
-        $userProfile->setUser($user);
-        $entityManager->persist($userProfile);
-    }
-
-    $form = $this->createForm(UserProfileType::class, $userProfile);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Gestion de l'avatar
-        $avatarFile = $form->get('avatarFile')->getData();
-        if ($avatarFile) {
-            $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
-            $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
-            $userProfile->setAvatar($avatarFilename);
-        }
-
-        // Gestion des photos
-        $photoFiles = $form->get('photoFiles')->getData();
-        if ($photoFiles) {
-            $photoPaths = [];
-            foreach ($photoFiles as $photo) {
-                $photoFilename = uniqid() . '.' . $photo->guessExtension();
-                $photo->move($this->getParameter('photos_directory'), $photoFilename);
-                $photoPaths[] = $photoFilename;
-            }
-            $userProfile->setPhotos(array_merge($userProfile->getPhotos(), $photoPaths));
-        }
-
-        $entityManager->flush();
-        $this->addFlash('success', 'Profil mis à jour avec succès !');
-        return $this->redirectToRoute('app_profile_edit');
-    }
-
-    return $this->render('profile/edit.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
+  return $this->render('profile/edit.html.twig', [
+   'form'        => $form->createView(),
+   'userProfile' => $userProfile, // Assure-toi que la variable userProfile est passée à la vue
+  ]);
+ }
 
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
  public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
@@ -118,6 +121,4 @@ class UserProfileController extends AbstractController
    'situation'       => $sortSituation,
   ]);
  }
-
- 
 }

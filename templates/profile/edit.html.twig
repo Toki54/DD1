@@ -4,10 +4,9 @@
 {% endblock %}
 
 {% block body %}
-
-{% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('css/edit.css') }}">
-{% endblock %}
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{{ asset('css/edit.css') }}">
+	{% endblock %}
 	<div class="container">
 		<h1 class="my-4 text-center">Modifier votre profil</h1>
 
@@ -64,6 +63,23 @@
 					{{ form_label(form.photoFiles) }}
 					{{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
 					<small class="text-muted">Ajoutez jusqu'à 10 photos</small>
+				</div>
+
+				{# Affichage des photos déjà téléchargées #}
+				<div class="mb-3">
+
+					<h5>Photos déjà téléchargées</h5>
+					{% if userProfile.photos is not empty %}
+						<div class="photo-gallery">
+							{% for photo in userProfile.photos %}
+								<div class="photo-thumbnail">
+									<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="img-thumbnail"/>
+								</div>
+							{% endfor %}
+						</div>
+					{% else %}
+						<p>Aucune photo téléchargée pour le moment.</p>
+					{% endif %}
 				</div>
 			</div>
 		</div>
