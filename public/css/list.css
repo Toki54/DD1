@@ -1,3 +1,4 @@
+
 /* ====== STYLES GÉNÉRAUX ====== */
 body {
   background-color: #121212;
@@ -79,16 +80,16 @@ body {
 /* ====== PROFIL CARD ====== */
 .profile-card {
   display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 12px;
-    background: linear-gradient(359deg, #230431, #000000);
-    box-shadow: 0 0 6px 6px rgb(0 0 0 / 80%);
-    margin-bottom: 25px;
-    transition: all 0.3s ease-in-out;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(359deg, #230431, #000000);
+  box-shadow: 0 0 6px 6px rgb(0 0 0 / 80%);
+  margin-bottom: 25px;
+  transition: all 0.3s ease-in-out;
 }
 
 .profile-card:hover {
@@ -188,7 +189,7 @@ body {
 }
 
 .carousel-inner {
-  
+
   align-items: center;
   justify-content: center;
 }
@@ -210,9 +211,10 @@ body {
   margin: auto !important;
 }
 
-.btn-close{
+.btn-close {
   color: white !important;
 }
+
 /* Positionne les flèches aux bords de l'écran */
 /* Permet aux flèches de rester fixées aux bords de l'écran */
 .carousel-control-prev,
@@ -246,7 +248,7 @@ body {
 /* Icônes en blanc et plus grandes */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  
+
   width: 60px;
   height: 60px;
 }
@@ -267,7 +269,7 @@ body {
   transform: scale(1.2);
 }
 
-
+/* ====== RESPONSIVE ====== 
 @media screen and (max-width: 600px) {
   .carousel-item img {
     width: 100%;

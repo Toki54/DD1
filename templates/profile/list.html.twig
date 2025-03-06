@@ -51,35 +51,36 @@
 						<h2>{{ profile.user.pseudo }}</h2>
 						<p>
 							<strong>Sexe:</strong>
-							{{ profile.sex|default('Non spécifié') }}</p>
+							{{ profile.sex|default('Non spécifié') }}
+						</p>
 						<p>
 							<strong>Situation:</strong>
-							{{ profile.situation|default('Non renseigné') }}</p>
+							{{ profile.situation|default('Non renseigné') }}
+						</p>
 						<p>
 							<strong>Je recherche:</strong>
-							{{ profile.research|default('Non spécifié') }}</p>
+							{{ profile.research|default('Non spécifié') }}
+						</p>
 						<p>
 							<strong>Biographie:</strong>
-							{{ profile.biography|default('Aucune biographie') }}</p>
-						<p>
-							<strong>Département:</strong>
-							{{ profile.department|default('Non spécifié') }}</p>
-						<p>
-							<strong>Ville:</strong>
-							{{ profile.city|default('Non spécifiée') }}</p>
+							{{ profile.biography|default('Aucune biographie') }}
+						</p>
 
 						<!-- Bouton pour afficher/masquer les photos -->
-						<button class="toggle-photos-btn" data-profile-id="{{ profile.id }}">Afficher les photos</button>
+						<button class="toggle-photos-btn" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}">Afficher les photos</button>
 
 						<a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
-						<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">Demander une discussion</a>
+
+						<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">
+							Demander une discussion
+						</a>
 					</section>
 
 					<!-- Galerie de photos -->
 					<section class="photo-gallery" id="gallery-{{ profile.id }}" style="display: none;">
 						{% if profile.photos %}
 							{% for photo in profile.photos %}
-								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
+								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
 							{% endfor %}
 						{% else %}
 							<p>Aucune photo ajoutée.</p>
@@ -90,7 +91,38 @@
 		</section>
 	</section>
 
-	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
+	<!-- Modal pour afficher les photos (modifiée pour chaque profil spécifique) -->
+	{% for profile in profiles %}
+		<div class="modal fade" id="photoCarousel-{{ profile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
+			<div class="modal-dialog modal-fullscreen">
+				<div class="modal-content" style="background-color: black;">
+					<div class="modal-header">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div id="carouselExample{{ profile.id }}" class="carousel slide" data-bs-ride="carousel">
+							<div class="carousel-inner">
+								{% for photo in profile.photos %}
+									<div class="carousel-item {% if loop.first %}active{% endif %}">
+										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
+									</div>
+								{% endfor %}
+							</div>
+							<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ profile.id }}" data-bs-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Précédent</span>
+							</button>
+							<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ profile.id }}" data-bs-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Suivant</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 
+	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
 {% endblock %}
 
