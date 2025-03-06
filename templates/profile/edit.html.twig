@@ -4,16 +4,20 @@
 {% endblock %}
 
 {% block body %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/edit.css') }}">
+{% endblock %}
 	<div class="container">
-		<h1 class="my-4">Modifier votre profil</h1>
+		<h1 class="my-4 text-center">Modifier votre profil</h1>
 
 		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">
+			<div class="alert alert-success text-center">
 				{{ message }}
 			</div>
 		{% endfor %}
 
-		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'profile-form'}}) }}
 
 		<div class="row">
 			<div class="col-md-6">
@@ -46,33 +50,29 @@
 				</div>
 
 				<div class="mb-3">
-					{{ form_label(form.photoFiles) }}
-					{{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
-					<small class="text-muted">Ajoutez jusqu'à 10 photos</small>
-				</div>
-
-				<div class="mb-3">
-					<label for="postalCode" class="form-label">Code Postal</label>
-					<input type="text" id="postalCode" class="form-control autocomplete-postal">
+					{{ form_label(form.department) }}
+					{{ form_widget(form.department, {'attr': {'class': 'form-control'}}) }}
 				</div>
 
 				<div class="mb-3">
 					{{ form_label(form.city) }}
-					{{ form_widget(form.city, {'attr': {'class': 'form-control autocomplete-city'}}) }}
+					{{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
 					<small class="text-muted">Vous pouvez saisir la ville manuellement</small>
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.photoFiles) }}
+					{{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
+					<small class="text-muted">Ajoutez jusqu'à 10 photos</small>
 				</div>
 			</div>
 		</div>
 
-		
+		<div class="text-center mt-4">
+			<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+		</div>
 
 		{{ form_end(form) }}
-
-<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
-
 	</div>
-
-	 
-
 {% endblock %}
 
