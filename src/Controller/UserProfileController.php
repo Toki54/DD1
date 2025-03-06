@@ -121,4 +121,43 @@ class UserProfileController extends AbstractController
    'situation'       => $sortSituation,
   ]);
  }
+
+
+#[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
+public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+    
+    if (!$user) {
+        $this->addFlash('error', 'Vous devez être connecté pour supprimer une photo.');
+        return $this->redirectToRoute('app_login');
+    }
+
+    $userProfile = $user->getProfile();
+
+    if (!$userProfile) {
+        $this->addFlash('error', 'Profil non trouvé.');
+        return $this->redirectToRoute('app_profile_show');
+    }
+
+    // Vérifie si la photo existe dans le profil
+    if (in_array($photoFilename, $userProfile->getPhotos())) {
+        // Retirer la photo du tableau
+        $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
+
+        // Supprimer le fichier de l'upload
+        $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
+        if (file_exists($photoPath)) {
+            unlink($photoPath);
+        }
+
+        $entityManager->flush();
+        $this->addFlash('success', 'Photo supprimée avec succès.');
+    } else {
+        $this->addFlash('error', 'Photo non trouvée.');
+    }
+
+    return $this->redirectToRoute('app_profile_edit');
+}
+
 }

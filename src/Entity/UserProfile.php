@@ -51,8 +51,6 @@ class UserProfile
  #[ORM\Column(type: 'string', length: 100, nullable: true)]
  private ?string $department = null;
 
-
-
  #[ORM\Column(type: 'string', length: 100, nullable: true)]
  private ?string $city = null;
 
@@ -60,17 +58,18 @@ class UserProfile
  #[ORM\JoinColumn(nullable: false)]
  private ?User $user = null;
 
-
-
  public function getId(): ?int
  {return $this->id;}
+
  public function getSex(): ?string
  {return $this->sex;}
+
  public function setSex(?string $sex): static
  { $this->sex = $sex;return $this;}
 
  public function getSituation(): ?string
  {return $this->situation;}
+
  public function setSituation(?string $situation): static
  { $this->situation = $situation;return $this;}
 
@@ -81,6 +80,7 @@ class UserProfile
 
  public function getBiography(): ?string
  {return $this->biography;}
+
  public function setBiography(?string $biography): static
  { $this->biography = $biography;return $this;}
 
@@ -101,23 +101,46 @@ class UserProfile
 
  public function getPhotoFiles(): array
  {return $this->photoFiles;}
+
  public function setPhotoFiles(array $photoFiles): static
  { $this->photoFiles = $photoFiles;return $this;}
 
  public function getDepartment(): ?string
  {return $this->department;}
+
  public function setDepartment(?string $department): static
  { $this->department = $department;return $this;}
 
- 
-
  public function getCity(): ?string
  {return $this->city;}
+
  public function setCity(?string $city): static
  { $this->city = $city;return $this;}
 
  public function getUser(): ?User
  {return $this->user;}
+
  public function setUser(User $user): static
  { $this->user = $user;return $this;}
+
+ public function removePhoto(string $photoFilename): void
+ {
+  // Si la photo existe dans le tableau
+  if (in_array($photoFilename, $this->photos)) {
+   // Retirer la photo du tableau
+   $this->photos = array_diff($this->photos, [$photoFilename]);
+
+   // Supprimer le fichier photo du serveur
+   $photoPath = $this->getUploadDir() . '/' . $photoFilename;
+   if (file_exists($photoPath)) {
+    unlink($photoPath);
+   }
+  }
+ }
+
+ public function getUploadDir(): string
+ {
+  return __DIR__ . '/../../public/uploads/photos'; // Adapté selon ton environnement
+ }
+
 }

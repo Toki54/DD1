@@ -67,28 +67,23 @@
 
 				{# Affichage des photos déjà téléchargées #}
 				<div class="mb-3">
-
-					<h5>Photos déjà téléchargées</h5>
-					{% if userProfile.photos is not empty %}
-						<div class="photo-gallery">
-							{% for photo in userProfile.photos %}
-								<div class="photo-thumbnail">
-									<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="img-thumbnail"/>
-								</div>
-							{% endfor %}
-						</div>
-					{% else %}
-						<p>Aucune photo téléchargée pour le moment.</p>
-					{% endif %}
+					<label for="photos" class="form-label">Photos</label>
+					<div class="photo-gallery">
+						{% for photo in userProfile.photos %}
+							<div class="photo-item">
+								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" width="100">
+								<a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')">Supprimer</a>
+							</div>
+						{% endfor %}
+					</div>
 				</div>
+
 			</div>
+
+			<div class="text-center mt-4">
+				<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
+			</div>
+
+			{{ form_end(form) }}
 		</div>
-
-		<div class="text-center mt-4">
-			<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
-		</div>
-
-		{{ form_end(form) }}
-	</div>
-{% endblock %}
-
+	{% endblock %}

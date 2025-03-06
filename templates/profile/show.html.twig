@@ -73,6 +73,7 @@
 				<div class="photo-gallery">
 					{% for photo in photos %}
 						<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
+						
 					{% endfor %}
 				</div>
 			{% else %}
