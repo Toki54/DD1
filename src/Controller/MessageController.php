@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class MessageController extends AbstractController
 {
  #[Route('/messages', name: 'app_messages')]
@@ -123,5 +124,38 @@ public function acceptMessage(Message $message, EntityManagerInterface $entityMa
     return $this->redirectToRoute('app_messages');
 }
 
+#[Route('/message/delete/conversation/{id}', name: 'app_message_delete_conversation', methods: ['POST'])]
+    public function deleteConversation(int $id, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
 
+        // Récupérer tous les messages entre l'utilisateur actuel et l'utilisateur concerné
+        $messages = $messageRepository->findBy([
+            'sender' => $user,
+            'receiver' => $id,
+        ]);
+
+        if (empty($messages)) {
+            $messages = $messageRepository->findBy([
+                'sender' => $id,
+                'receiver' => $user,
+            ]);
+        }
+
+        // Supprimer tous les messages trouvés
+        foreach ($messages as $message) {
+            $entityManager->remove($message);
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La conversation a été supprimée.');
+
+        return $this->redirectToRoute('app_messages');
+    }
+
+    
 }
+
+
+
