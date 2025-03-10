@@ -18,9 +18,19 @@
 					<ul class="list-group">
 						{% for conversation in conversations %}
 							<li class="list-group-item">
-								<a href="{{ path('app_messages', { id: conversation.user.id }) }}">
-									{{ conversation.user.pseudo }}
+								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}">
+									<strong>{{ conversation.user.pseudo }}</strong>
 								</a>
+
+								<!-- Afficher les 2 derniers messages -->
+								<div class="small text-muted">
+									{% for message in conversation.messages|slice(0, 2) %}
+										<p>
+											<strong>{{ message.sender.pseudo }}:</strong>
+											{{ message.content }}
+										</p>
+									{% endfor %}
+								</div>
 							</li>
 						{% endfor %}
 					</ul>
@@ -38,8 +48,10 @@
 								{% for message in messages %}
 									<div class="message {% if message.sender == app.user %}text-end{% endif %}">
 										<p>
-											<strong>{{ message.sender.pseudo }}</strong>:
-											{{ message.content }}</p>
+											<strong>{{ message.sender.pseudo }}</strong>
+											:
+											{{ message.content }}
+										</p>
 										<small>{{ message.sentAt|date('d/m/Y H:i') }}</small>
 									</div>
 								{% endfor %}
@@ -47,7 +59,7 @@
 						</div>
 
 						<div class="card-footer">
-							<form action="{{ path('app_message_send', { id: receiver.id }) }}" method="POST">
+							<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST">
 								<div class="input-group">
 									<input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
 									<button type="submit" class="btn btn-primary">Envoyer</button>

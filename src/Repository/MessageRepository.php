@@ -7,7 +7,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-
 class MessageRepository extends ServiceEntityRepository
 {
  public function __construct(ManagerRegistry $registry)
@@ -16,44 +15,60 @@ class MessageRepository extends ServiceEntityRepository
  }
 
  /**
-     * Récupère les conversations en regroupant les messages entre deux utilisateurs
-     */
-    public function findUserConversations(User $user): array
-    {
-        $qb = $this->createQueryBuilder('m')
-            ->where('m.sender = :user OR m.receiver = :user')
-            ->setParameter('user', $user)
-            ->orderBy('m.sentAt', 'DESC');
+  * Récupère les conversations en regroupant les messages entre deux utilisateurs
+  */
+ public function findUserConversations(User $user): array
+ {
+  $qb = $this->createQueryBuilder('m')
+   ->where('m.sender = :user OR m.receiver = :user')
+   ->setParameter('user', $user)
+   ->orderBy('m.sentAt', 'DESC');
 
-        $messages = $qb->getQuery()->getResult();
-        $conversations = [];
+  $messages      = $qb->getQuery()->getResult();
+  $conversations = [];
 
-        foreach ($messages as $message) {
-            $interlocutor = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
-            $interlocutorId = $interlocutor->getId();
+  foreach ($messages as $message) {
+   $interlocutor   = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
+   $interlocutorId = $interlocutor->getId();
 
-            if (!isset($conversations[$interlocutorId])) {
-                $conversations[$interlocutorId] = [
-                    'user' => $interlocutor,
-                    'messages' => [],
-                ];
-            }
+   // Si la conversation n'existe pas, on la crée
+   if (!isset($conversations[$interlocutorId])) {
+    $conversations[$interlocutorId] = [
+     'user'     => $interlocutor,
+     'messages' => [],
+    ];
+   }
 
-            $conversations[$interlocutorId]['messages'][] = $message;
-        }
+   // Ajout du message à la conversation
+   $conversations[$interlocutorId]['messages'][] = $message;
+  }
 
-        return $conversations;
-    }
+  return $conversations;
+ }
 
  /**
   * Récupère les messages envoyés ou reçus par un utilisateur
   */
- public function findBySenderOrReceiver($user)
+ public function findBySenderOrReceiver(User $user): array
  {
   return $this->createQueryBuilder('m')
    ->where('m.sender = :user OR m.receiver = :user')
    ->setParameter('user', $user)
    ->orderBy('m.sentAt', 'DESC')
+   ->getQuery()
+   ->getResult();
+ }
+
+ /**
+  * Récupère les derniers messages échangés entre deux utilisateurs
+  */
+ public function findLatestMessages(User $user1, User $user2, int $limit = 2): array
+ {
+  return $this->createQueryBuilder('m')
+   ->where('m.sender IN (:users) AND m.receiver IN (:users)')
+   ->setParameter('users', [$user1, $user2])
+   ->orderBy('m.sentAt', 'DESC')
+   ->setMaxResults($limit)
    ->getQuery()
    ->getResult();
  }

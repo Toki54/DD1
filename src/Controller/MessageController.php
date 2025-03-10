@@ -1,6 +1,8 @@
 <?php
 
 
+// src/Controller/MessageController.php
+
 namespace App\Controller;
 
 use App\Entity\Message;
@@ -19,37 +21,48 @@ class MessageController extends AbstractController
 {
  // Afficher la liste des conversations et les messages
  #[Route('/', name: 'app_messages')]
- public function index(MessageRepository $messageRepository, UserRepository $userRepository, Request $request): Response
- {
-  $user = $this->getUser();
+ // src/Controller/MessageController.php
 
-  // Récupérer toutes les conversations
-  $conversations = $messageRepository->findUserConversations($user);
+public function index(MessageRepository $messageRepository, UserRepository $userRepository, Request $request): Response
+{
+    $user = $this->getUser();
 
-  // Si un utilisateur spécifique est sélectionné, récupérer les messages
-  $receiver = null;
-  $messages = [];
+    // Récupérer toutes les conversations
+    $conversations = $messageRepository->findUserConversations($user);
 
-  if ($request->query->get('id')) {
-   $receiver = $userRepository->find($request->query->get('id'));
+    // Ajouter les deux derniers messages de chaque conversation
+    foreach ($conversations as $conversation) {
+        // Assurez-vous que $conversation est bien un objet contenant un champ 'user'
+        if (isset($conversation->user)) {
+            $conversation->latestMessages = $messageRepository->findLatestMessages($user, $conversation->user, 2); // 2 derniers messages
+        }
+    }
 
-   if ($receiver) {
-    $messages = $messageRepository->findBy(
-     [
-      'sender'   => $user,
-      'receiver' => $receiver,
-     ],
-     ['sentAt' => 'ASC']
-    );
-   }
-  }
+    // Si un utilisateur spécifique est sélectionné, récupérer les messages
+    $receiver = null;
+    $messages = [];
 
-  return $this->render('message/message.html.twig', [
-   'conversations' => $conversations,
-   'messages'      => $messages,
-   'receiver'      => $receiver,
-  ]);
- }
+    if ($request->query->get('id')) {
+        $receiver = $userRepository->find($request->query->get('id'));
+
+        if ($receiver) {
+            $messages = $messageRepository->findBy(
+                [
+                    'sender' => $user,
+                    'receiver' => $receiver,
+                ],
+                ['sentAt' => 'ASC']
+            );
+        }
+    }
+
+    return $this->render('message/messages.html.twig', [
+        'conversations' => $conversations,
+        'messages' => $messages,
+        'receiver' => $receiver,
+    ]);
+}
+
 
  // Envoyer un message
  #[Route('/send/{id}', name: 'app_message_send', methods: ['POST'])]
@@ -82,3 +95,4 @@ class MessageController extends AbstractController
   return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
  }
 }
+
