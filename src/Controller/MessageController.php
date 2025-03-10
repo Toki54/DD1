@@ -1,161 +1,84 @@
 <?php
 
-// src/Controller/MessageController.php
 
 namespace App\Controller;
 
 use App\Entity\Message;
-use App\Entity\User;
-use App\Form\MessageType;
 use App\Repository\MessageRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+#[Route('/messages')]
+#[IsGranted('ROLE_USER')]
 class MessageController extends AbstractController
 {
- #[Route('/messages', name: 'app_messages')]
- public function list(MessageRepository $messageRepository): Response
+ // Afficher la liste des conversations et les messages
+ #[Route('/', name: 'app_messages')]
+ public function index(MessageRepository $messageRepository, UserRepository $userRepository, Request $request): Response
  {
   $user = $this->getUser();
 
-  // Récupérer les messages envoyés et reçus par l'utilisateur
-  $messages = $messageRepository->findBySenderOrReceiver($user);
+  // Récupérer toutes les conversations
+  $conversations = $messageRepository->findUserConversations($user);
 
-  // Grouper les messages par utilisateur avec qui ils ont été échangés
-  $groupedMessages = [];
-  foreach ($messages as $message) {
-   $otherUser = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
-   if (!isset($groupedMessages[$otherUser->getId()])) {
-    $groupedMessages[$otherUser->getId()] = [
-     'user'     => $otherUser,
-     'messages' => [],
-    ];
+  // Si un utilisateur spécifique est sélectionné, récupérer les messages
+  $receiver = null;
+  $messages = [];
+
+  if ($request->query->get('id')) {
+   $receiver = $userRepository->find($request->query->get('id'));
+
+   if ($receiver) {
+    $messages = $messageRepository->findBy(
+     [
+      'sender'   => $user,
+      'receiver' => $receiver,
+     ],
+     ['sentAt' => 'ASC']
+    );
    }
-   $groupedMessages[$otherUser->getId()]['messages'][] = $message;
   }
 
-  // Préparer un formulaire pour chaque utilisateur
-  $forms = [];
-  foreach ($groupedMessages as $userGroup) {
-   $message = new Message();
-   $message->setSender($this->getUser());
-   $message->setReceiver($userGroup['user']);
-   $forms[$userGroup['user']->getId()] = $this->createForm(MessageType::class, $message)->createView();
-  }
-
-  return $this->render('message/list.html.twig', [
-   'groupedMessages' => $groupedMessages,
-   'forms'           => $forms,
+  return $this->render('message/message.html.twig', [
+   'conversations' => $conversations,
+   'messages'      => $messages,
+   'receiver'      => $receiver,
   ]);
  }
 
- #[Route('/message/{id}', name: 'app_message_create')]
-public function create(User $receiver, Request $request, EntityManagerInterface $entityManager): Response
-{
-    $user = $this->getUser();
+ // Envoyer un message
+ #[Route('/send/{id}', name: 'app_message_send', methods: ['POST'])]
+ public function sendMessage(int $id, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+ {
+  $sender   = $this->getUser();
+  $receiver = $userRepository->find($id);
 
-    // Vérifie si c'est une demande de discussion
-    if ($request->query->get('chatRequest')) {
-        if ($user->getProfile()->getSex() === 'male' && $receiver->getProfile()->getSex() === 'female') {
-            $message = new Message();
-            $message->setSender($user);
-            $message->setReceiver($receiver);
-            $message->setContent("Demande de discussion envoyée !");
-            $message->setIsChatRequest(true); // On marque ce message comme une demande de chat
+  if (!$receiver) {
+   throw $this->createNotFoundException("Utilisateur non trouvé.");
+  }
 
-            $entityManager->persist($message);
-            $entityManager->flush();
+  $content = $request->request->get('content');
 
-            $this->addFlash('success', 'Demande de discussion envoyée !');
+  if (!$content) {
+   $this->addFlash('danger', 'Le message ne peut pas être vide.');
+   return $this->redirectToRoute('app_messages');
+  }
 
-            return $this->redirectToRoute('app_messages');
-        }
-    }
+  $message = new Message();
+  $message->setSender($sender);
+  $message->setReceiver($receiver);
+  $message->setContent($content);
+  $message->setSentAt(new \DateTimeImmutable());
+  $message->setIsChatRequest(false);
 
-    // Cas normal : envoi d'un message standard
-    $message = new Message();
-    $message->setSender($this->getUser());
-    $message->setReceiver($receiver);
+  $entityManager->persist($message);
+  $entityManager->flush();
 
-    // Créer le formulaire
-    $form = $this->createForm(MessageType::class, $message);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $message->setSentAt(new \DateTime());
-        $entityManager->persist($message);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_messages');
-    }
-
-    return $this->render('message/create.html.twig', [
-        'form'     => $form->createView(),
-        'receiver' => $receiver,
-    ]);
+  return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
+ }
 }
-
-#[Route('/message/accept/{id}', name: 'app_message_accept', methods: ['POST'])]
-public function acceptMessage(Message $message, EntityManagerInterface $entityManager): Response
-{
-    $user = $this->getUser();
-
-    if ($message->isChatRequest() && $message->getReceiver() === $user) {
-        // Marquer la demande comme acceptée en envoyant un message de confirmation
-        $confirmationMessage = new Message();
-        $confirmationMessage->setSender($user);
-        $confirmationMessage->setReceiver($message->getSender());
-        $confirmationMessage->setContent("Votre demande de discussion a été acceptée !");
-        $confirmationMessage->setSentAt(new \DateTime());
-
-        // On peut aussi supprimer le flag de demande de discussion
-        $message->setIsChatRequest(false);
-
-        $entityManager->persist($confirmationMessage);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Demande de discussion acceptée.');
-    }
-
-    return $this->redirectToRoute('app_messages');
-}
-
-#[Route('/message/delete/conversation/{id}', name: 'app_message_delete_conversation', methods: ['POST'])]
-    public function deleteConversation(int $id, MessageRepository $messageRepository, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-
-        // Récupérer tous les messages entre l'utilisateur actuel et l'utilisateur concerné
-        $messages = $messageRepository->findBy([
-            'sender' => $user,
-            'receiver' => $id,
-        ]);
-
-        if (empty($messages)) {
-            $messages = $messageRepository->findBy([
-                'sender' => $id,
-                'receiver' => $user,
-            ]);
-        }
-
-        // Supprimer tous les messages trouvés
-        foreach ($messages as $message) {
-            $entityManager->remove($message);
-        }
-
-        $entityManager->flush();
-
-        $this->addFlash('success', 'La conversation a été supprimée.');
-
-        return $this->redirectToRoute('app_messages');
-    }
-
-    
-}
-
-
-

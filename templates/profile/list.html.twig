@@ -69,11 +69,9 @@
 						<!-- Bouton pour afficher/masquer les photos -->
 						<button class="toggle-photos-btn" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}">Afficher les photos</button>
 
-						<a href="{{ path('app_message_create', {'id': profile.user.id}) }}" class="btn btn-primary">Envoyer un message</a>
+						<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
 
-						<a href="{{ path('app_message_create', {'id': profile.user.id, 'chatRequest': 1}) }}" class="btn btn-warning">
-							Demander une discussion
-						</a>
+
 					</section>
 
 					<!-- Galerie de photos -->
@@ -125,4 +123,3 @@
 
 	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
 {% endblock %}
-

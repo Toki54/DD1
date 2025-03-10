@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Discussions
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1 class="mb-4">Mes Discussions</h1>
+
+		<div
+			class="row">
+			<!-- Liste des Conversations -->
+			<div class="col-md-4">
+				<h3>Conversations</h3>
+				{% if conversations is empty %}
+					<p>Aucune conversation.</p>
+				{% else %}
+					<ul class="list-group">
+						{% for conversation in conversations %}
+							<li class="list-group-item">
+								<a href="{{ path('app_messages', { id: conversation.user.id }) }}">
+									{{ conversation.user.pseudo }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+
+			<!-- Détails de la conversation -->
+			<div class="col-md-8">
+				{% if receiver %}
+					<h3>Conversation avec
+						{{ receiver.pseudo }}</h3>
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="chat-box" style="max-height: 400px; overflow-y: auto;">
+								{% for message in messages %}
+									<div class="message {% if message.sender == app.user %}text-end{% endif %}">
+										<p>
+											<strong>{{ message.sender.pseudo }}</strong>:
+											{{ message.content }}</p>
+										<small>{{ message.sentAt|date('d/m/Y H:i') }}</small>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+
+						<div class="card-footer">
+							<form action="{{ path('app_message_send', { id: receiver.id }) }}" method="POST">
+								<div class="input-group">
+									<input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
+									<button type="submit" class="btn btn-primary">Envoyer</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				{% else %}
+					<p>Sélectionnez une conversation pour afficher les messages.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
