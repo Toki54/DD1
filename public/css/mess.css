@@ -12,16 +12,16 @@ body {
 .container {
     margin-top: 30px;
     margin-bottom: 30px;
-    
+    display: flex;
     gap: 30px;
+    flex-wrap: nowrap;
 }
 
 /* ====== TITRE PRINCIPAL ====== */
-h1.mb-4 {
-    font-size: 2.5rem;
+h3 {
+    font-size: 1.8rem;
     color: #9c27b0;
-    text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 /* ====== LAYOUT PRINCIPAL ====== */
@@ -29,6 +29,7 @@ h1.mb-4 {
     display: flex;
     gap: 30px;
     flex-wrap: nowrap;
+    width: 100%;
 }
 
 /* ====== CONVERSATION LIST À GAUCHE ====== */
@@ -37,94 +38,61 @@ h1.mb-4 {
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    height: 100%;
     max-width: 350px;
+    height: calc(100vh - 60px);
     overflow-y: auto;
 }
 
-/* ====== TITRE DE LA LISTE DES CONVERSATIONS ====== */
-.col-md-4 h3 {
-    font-size: 1.8rem;
-    color: #9c27b0;
-    margin-bottom: 20px;
-}
-
 /* ====== CARD POUR LA LISTE DES CONVERSATIONS ====== */
-.card {
-    background-color: #222222;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    color: #e0e0e0;
+.conversation-list {
     display: flex;
+    flex-direction: column;
     gap: 15px;
-    transition: background 0.3s ease;
-    cursor: pointer;
 }
 
-.card-group, p {
-    display: flex;
+.conversation-card {
+    background-color: #222222;
+        border-radius: 12px;
+        padding: 15px;
+        color: #e0e0e0;
+        display: flex;
+        gap: 15px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+        flex-direction: column;
 }
 
-.card:hover {
+.conversation-card:hover {
     background: #333333;
 }
 
-.card img {
+.conversation-card .card-header {
+    display: flex;
+    align-items: center;
+}
+
+.conversation-card img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 
-.card .pseudo {
+.conversation-card .pseudo {
     font-size: 1.3rem;
     font-weight: bold;
     color: #9c27b0;
 }
 
-.card .message-preview {
-    font-size: 1rem;
-    color: #bbb;
-    display: flex;
-}
-
-/* ====== CONVERSATION À DROITE ====== */
+/* ====== CONVERSATION DETAIL À DROITE ====== */
 .col-md-8 {
     background: #333333;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    height: 100%;
-    flex-grow: 1;
+    height: calc(100vh - 60px);
     overflow-y: auto;
-}
-
-/* ====== TITRE DE LA CONVERSATION À DROITE ====== */
-.col-md-8 h3 {
-    font-size: 1.8rem;
-    color: #9c27b0;
-    margin-bottom: 20px;
-}
-
-/* ====== CARD HEADER (PSEUDO ET AVATAR) ====== */
-.card-header {
-    align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    
-}
-
-.card-header img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.card-header .pseudo {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #9c27b0;
+    flex-grow: 1;
 }
 
 /* ====== MESSAGES DANS LA CONVERSATION ====== */
@@ -134,6 +102,7 @@ h1.mb-4 {
     gap: 20px;
     max-height: 400px;
     overflow-y: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
 }
 
 /* ====== STYLE DES MESSAGES ====== */
@@ -145,42 +114,38 @@ h1.mb-4 {
     font-size: 1rem;
     box-shadow: inset 0px 0px 9px 0px #000000;
     word-wrap: break-word;
-    position: relative;
 }
 
-.message .sender {
-    font-weight: bold;
-    color: #9c27b0;
-}
-
-/* ====== MESSAGES DE L'UTILISATEUR ACTUEL (À DROITE) ====== */
-.message.text-end {
-    background-color: #ffeb3b !important;
+.message.my-message {
+    background-color: #3eff3b3b;
     color: black;
     align-self: flex-end;
-    margin-left: auto;
 }
 
-/* ====== MESSAGES DE L'AUTRE UTILISATEUR (À GAUCHE) ====== */
-.message.text-start {
+.message.other-message {
     background-color: #9c27b0;
     align-self: flex-start;
 }
 
-/* ====== HORODATAGE DES MESSAGES ====== */
-.message small {
-    font-size: 0.8rem;
-    color: #bbb;
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
+/* ====== EN-TÊTE DE LA CONVERSATION ====== */
+.card-header h4 {
+    color: #fff;
 }
 
-/* ====== CHAMP DE TEXTE POUR LE MESSAGE ====== */
+.card-body{
+    display: flex;
+       
+        padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+        color: var(--bs-card-color);
+        flex-direction: column;
+        align-items: flex-start;
+}
+
+/* ====== ENVOI DE MESSAGES ====== */
 .card-footer {
-    padding: 15px;
-    background-color: #383838;
-    border-radius: 0 0 12px 12px;
+    margin-top: 15px;
+
+        background-color: #383838;
 }
 
 .card-footer .input-group {
@@ -221,7 +186,7 @@ p {
     font-size: 1.2rem;
 }
 
-/* ====== RÉACTIF POUR MOBILE ======/ */
+/* ====== RÉACTIF POUR MOBILE ====== */
 @media screen and (max-width: 768px) {
     .container {
         padding: 15px;
@@ -232,12 +197,9 @@ p {
         padding: 15px;
     }
 
-    h3 {
-        font-size: 1.5rem;
-    }
-
-    .card-footer .input-group input.form-control {
-        font-size: 14px;
+    .conversation-card {
+        flex-direction: row;
+        gap: 10px;
     }
 
     .message {
@@ -247,5 +209,9 @@ p {
     .card-header img {
         width: 40px;
         height: 40px;
+    }
+
+    .card-footer .input-group input.form-control {
+        font-size: 14px;
     }
 }

@@ -39,6 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
  private ?UserProfile $profile = null;
 
+
  public function getProfile(): ?UserProfile
  {
   return $this->profile;

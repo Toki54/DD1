@@ -4,9 +4,11 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1 class="mb-4">Mes Discussions</h1>
+	{% block stylesheet %}
+		<link rel="stylesheet" href="{{ asset('css/mess1.css') }}">
+	{% endblock %}
 
+	<div class="container">
 		<div
 			class="row">
 			<!-- Liste des Conversations -->
@@ -15,47 +17,59 @@
 				{% if conversations is empty %}
 					<p>Aucune conversation.</p>
 				{% else %}
-					<ul class="list-group">
+					<div class="conversation-list">
 						{% for conversation in conversations %}
-							<li class="list-group-item">
-								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}">
-									<strong>{{ conversation.user.pseudo }}</strong>
+							<div class="conversation-card">
+								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
+									<div class="card-header">
+										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'images/default-avatar.png') }}" alt="Avatar" class="avatar">
+										<strong class="pseudo">{{ conversation.user.pseudo }}</strong>
+									</div>
 								</a>
+								<!-- Séparation entre avatar et message -->
+								<hr
+								class="divider">
+								<!-- Derniers messages -->
+								<div class="card-body">
+									{% for message in conversation.messages|slice(0, 1) %}
+										<div class="message-preview">
+											<p>
+												<strong>{{ conversation.user.pseudo }}:</strong>
+												
+											</p>
+<p class="texte">{{ message.content }}</p>
 
-								<!-- Afficher les 2 derniers messages -->
-								<div class="small text-muted">
-									{% for message in conversation.messages|slice(0, 2) %}
-										<p>
-											<strong>{{ message.sender.pseudo }}:</strong>
-											{{ message.content }}
-										</p>
+										</div>
 									{% endfor %}
 								</div>
-							</li>
+							</div>
 						{% endfor %}
-					</ul>
+					</div>
 				{% endif %}
 			</div>
 
 			<!-- Détails de la conversation -->
 			<div class="col-md-8">
 				{% if receiver %}
-					<h3>Conversation avec
-						{{ receiver.pseudo }}</h3>
-					<div class="card mb-3">
-						<div class="card-body">
-							<div class="chat-box" style="max-height: 400px; overflow-y: auto;">
-								{% for message in messages %}
-									<div class="message {% if message.sender == app.user %}text-end{% endif %}">
-										<p>
-											<strong>{{ message.sender.pseudo }}</strong>
-											:
-											{{ message.content }}
-										</p>
-										<small>{{ message.sentAt|date('d/m/Y H:i') }}</small>
-									</div>
-								{% endfor %}
-							</div>
+					<div class="conversation-detail-card">
+						<div class="card-header">
+							<h4>Conversation avec
+								{{ receiver.pseudo }}</h4>
+						</div>
+						<div class="card-body chat-box">
+							{% for message in messages %}
+								<div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
+									<p>
+										<strong>
+											{% if message.sender == app.user %}Moi
+											{% else %}
+												{{ receiver.pseudo }}
+											{% endif %}:
+										</strong>
+										{{ message.content }}
+									</p>
+								</div>
+							{% endfor %}
 						</div>
 
 						<div class="card-footer">

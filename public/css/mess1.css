@@ -12,7 +12,6 @@ body {
 .container {
     margin-top: 30px;
     margin-bottom: 30px;
-    
     gap: 30px;
 }
 
@@ -49,43 +48,66 @@ h1.mb-4 {
     margin-bottom: 20px;
 }
 
-/* ====== CARD POUR LA LISTE DES CONVERSATIONS ====== */
-.card {
+/* ====== STYLE DES CARDS À GAUCHE ====== */
+.conversation-card {
     background-color: #222222;
     border-radius: 12px;
     padding: 15px;
     margin-bottom: 15px;
     color: #e0e0e0;
     display: flex;
-    gap: 15px;
+    flex-direction: column;
     transition: background 0.3s ease;
     cursor: pointer;
 }
 
-.card-group, p {
-    display: flex;
-}
-
-.card:hover {
+.conversation-card:hover {
     background: #333333;
 }
 
-.card img {
+.conversation-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.conversation-card .card-header .avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 
-.card .pseudo {
+.conversation-card .card-header .pseudo {
     font-size: 1.3rem;
     font-weight: bold;
     color: #9c27b0;
 }
 
-.card .message-preview {
+
+
+/* Séparation entre avatar et messages */
+.divider {
+    border: 1px solid #444;
+    margin: 10px 0;
+}
+
+/* Prévisualisation des derniers messages */
+.card-body .message-preview {
     font-size: 1rem;
     color: #bbb;
-    display: flex;
+    
+}
+
+.texte{
+    
+    padding: 12px 18px;
+        border-radius: 10px;
+        background-color: #3eff3b3b;
+        color: #fff;
+        font-size: 1rem;
+        box-shadow: inset 0px 0px 9px 0px #000000;
+        word-wrap: break-word;
 }
 
 /* ====== CONVERSATION À DROITE ====== */
@@ -106,34 +128,14 @@ h1.mb-4 {
     margin-bottom: 20px;
 }
 
-/* ====== CARD HEADER (PSEUDO ET AVATAR) ====== */
-.card-header {
-    align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        padding: 0;
-    
-}
-
-.card-header img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.card-header .pseudo {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #9c27b0;
-}
-
 /* ====== MESSAGES DANS LA CONVERSATION ====== */
 .chat-box {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-height: 400px;
-    overflow-y: auto;
+        flex-direction: column;
+        gap: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
 }
 
 /* ====== STYLE DES MESSAGES ====== */
@@ -154,29 +156,28 @@ h1.mb-4 {
 }
 
 /* ====== MESSAGES DE L'UTILISATEUR ACTUEL (À DROITE) ====== */
-.message.text-end {
-    background-color: #ffeb3b !important;
+.message.my-message {
+    background-color: #3eff3b3b;
     color: black;
     align-self: flex-end;
-    margin-left: auto;
 }
 
 /* ====== MESSAGES DE L'AUTRE UTILISATEUR (À GAUCHE) ====== */
-.message.text-start {
+.message.other-message {
     background-color: #9c27b0;
     align-self: flex-start;
 }
 
-/* ====== HORODATAGE DES MESSAGES ====== */
-.message small {
-    font-size: 0.8rem;
-    color: #bbb;
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
+/* ====== CHAMP DE TEXTE POUR LE MESSAGE ====== */
+.card-body {
+    display: flex;
+    /* flex: 1 1 auto; */
+    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+    color: var(--bs-card-color);
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-/* ====== CHAMP DE TEXTE POUR LE MESSAGE ====== */
 .card-footer {
     padding: 15px;
     background-color: #383838;
@@ -221,7 +222,7 @@ p {
     font-size: 1.2rem;
 }
 
-/* ====== RÉACTIF POUR MOBILE ======/ */
+/* ====== RÉACTIF POUR MOBILE ====== */
 @media screen and (max-width: 768px) {
     .container {
         padding: 15px;
@@ -234,10 +235,6 @@ p {
 
     h3 {
         font-size: 1.5rem;
-    }
-
-    .card-footer .input-group input.form-control {
-        font-size: 14px;
     }
 
     .message {
