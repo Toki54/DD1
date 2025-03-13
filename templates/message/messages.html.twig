@@ -54,24 +54,35 @@
 										</strong>
 										{{ message.content }}
 									</p>
+
+									{% if message.isChatRequest and message.content == 'Demande de discussion en attente...' and message.receiver == app.user %}
+										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'accept' }) }}" method="POST">
+											<button type="submit" class="btn btn-success">Accepter</button>
+										</form>
+										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'refuse' }) }}" method="POST">
+											<button type="submit" class="btn btn-danger">Refuser</button>
+										</form>
+									{% endif %}
 								</div>
 							{% endfor %}
 						</div>
 
 						<div class="card-footer">
-							<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST">
-								<div class="input-group">
+							{% if chatAccepted %}
+								<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST">
 									<input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
 									<button type="submit" class="btn btn-primary">Envoyer</button>
-								</div>
-							</form>
+								</form>
+							{% else %}
+								<form action="{{ path('app_message_request', { 'id': receiver.id }) }}" method="POST">
+									<button type="submit" class="btn btn-warning">Demander une discussion</button>
+								</form>
+							{% endif %}
 						</div>
 					</div>
-				{% else %}
-					<p>Sélectionnez une conversation pour afficher les messages.</p>
 				{% endif %}
+
 			</div>
 		</div>
 	</div>
 {% endblock %}
-

@@ -72,4 +72,29 @@ class MessageRepository extends ServiceEntityRepository
    ->getQuery()
    ->getResult();
  }
+
+  public function findByConversation(User $user, User $receiver): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('(m.sender = :user AND m.receiver = :receiver) OR (m.sender = :receiver AND m.receiver = :user)')
+            ->setParameter('user', $user)
+            ->setParameter('receiver', $receiver)
+            ->orderBy('m.sentAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function hasAcceptedChat(User $sender, User $receiver): bool
+    {
+        $result = $this->createQueryBuilder('m')
+            ->where('m.sender = :receiver AND m.receiver = :sender AND m.content = :accepted AND m.isChatRequest = true')
+            ->setParameter('sender', $sender)
+            ->setParameter('receiver', $receiver)
+            ->setParameter('accepted', 'ACCEPTED')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $result !== null;
+    }
 }

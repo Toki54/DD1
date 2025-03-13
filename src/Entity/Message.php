@@ -30,7 +30,7 @@ class Message
 
  // Indique si le message est une demande de discussion
  #[ORM\Column(type: 'boolean')]
- private bool $isChatRequest = false;
+    private bool $isChatRequest = false;
 
  public function __construct()
  {
@@ -92,14 +92,13 @@ class Message
  }
 
  public function isChatRequest(): bool
- {
-  return $this->isChatRequest;
- }
+    {
+        return $this->isChatRequest;
+    }
 
- public function setIsChatRequest(bool $isChatRequest): self
- {
-  $this->isChatRequest = $isChatRequest;
-
-  return $this;
- }
+    public function setIsChatRequest(bool $isChatRequest): self
+    {
+        $this->isChatRequest = $isChatRequest;
+        return $this;
+    }
 }
