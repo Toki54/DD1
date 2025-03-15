@@ -16,8 +16,12 @@
 			<div class="avatar-section">
 				{% if userProfile.avatar %}
 					<img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="avatar">
+
+
 				{% else %}
-					<p>Aucun avatar uploadé.</p>
+<img src="{{ asset('uploads/avatars/default-avatar.png' ~ userProfile.avatar) }}" alt="Avatar" class="avatar">
+
+
 				{% endif %}
 				<div class="profile-header">
 					<h3>Description</h3>

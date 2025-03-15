@@ -22,7 +22,8 @@
 							<div class="conversation-card">
 								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
 									<div class="card-header">
-										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'images/default-avatar.png') }}" alt="Avatar" class="avatar">
+<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar">
+
 										<strong class="pseudo">{{ conversation.user.pseudo }}</strong>
 									</div>
 								</a>
