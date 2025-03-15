@@ -73,28 +73,30 @@ class MessageRepository extends ServiceEntityRepository
    ->getResult();
  }
 
-  public function findByConversation(User $user, User $receiver): array
-    {
-        return $this->createQueryBuilder('m')
-            ->where('(m.sender = :user AND m.receiver = :receiver) OR (m.sender = :receiver AND m.receiver = :user)')
-            ->setParameter('user', $user)
-            ->setParameter('receiver', $receiver)
-            ->orderBy('m.sentAt', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+ public function findByConversation(User $user, User $receiver): array
+ {
+  return $this->createQueryBuilder('m')
+   ->where('(m.sender = :user AND m.receiver = :receiver) OR (m.sender = :receiver AND m.receiver = :user)')
+   ->setParameter('user', $user)
+   ->setParameter('receiver', $receiver)
+   ->orderBy('m.sentAt', 'ASC')
+   ->getQuery()
+   ->getResult();
+ }
 
-    public function hasAcceptedChat(User $sender, User $receiver): bool
-    {
-        $result = $this->createQueryBuilder('m')
-            ->where('m.sender = :receiver AND m.receiver = :sender AND m.content = :accepted AND m.isChatRequest = true')
-            ->setParameter('sender', $sender)
-            ->setParameter('receiver', $receiver)
-            ->setParameter('accepted', 'ACCEPTED')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+ public function hasAcceptedChat(User $user1, User $user2): bool
+ {
+  $result = $this->createQueryBuilder('m')
+   ->where('(m.sender = :user1 AND m.receiver = :user2 AND m.content = :accepted AND m.isChatRequest = true)')
+   ->orWhere('(m.sender = :user2 AND m.receiver = :user1 AND m.content = :accepted AND m.isChatRequest = true)')
+   ->setParameter('user1', $user1)
+   ->setParameter('user2', $user2)
+   ->setParameter('accepted', 'ACCEPTED')
+   ->setMaxResults(1)
+   ->getQuery()
+   ->getOneOrNullResult();
 
-        return $result !== null;
-    }
+  return $result !== null;
+ }
+
 }

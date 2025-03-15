@@ -128,12 +128,13 @@ class MessageController extends AbstractController
   }
 
   // Vérifier si la discussion a été acceptée avant d'envoyer un message
-  $acceptedRequest = $messageRepository->hasAcceptedChat($sender, $receiver);
+$acceptedRequest = $messageRepository->hasAcceptedChat($sender, $receiver);
 
-  if (!$acceptedRequest) {
-   $this->addFlash('danger', 'Vous ne pouvez pas envoyer de message tant que la demande n\'est pas acceptée.');
-   return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
-  }
+if (!$acceptedRequest) {
+ $this->addFlash('danger', 'Vous ne pouvez pas envoyer de message tant que la demande n\'est pas acceptée.');
+ return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
+}
+
 
   $message = new Message();
   $message->setSender($sender);
