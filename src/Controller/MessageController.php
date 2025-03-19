@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Repository\DeletedConversationRepository;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
-use App\Entity\DeletedConversation;
-use App\Repository\DeletedConversationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -151,7 +150,7 @@ class MessageController extends AbstractController
  }
 
  #[Route('/delete-conversation/{id}', name: 'app_delete_conversation', methods: ['POST'])]
- public function deleteConversation(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+ public function deleteConversation(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, DeletedConversationRepository $deletedConversationRepository): Response
  {
   $user         = $this->getUser();
   $interlocutor = $userRepository->find($id);
@@ -160,20 +159,8 @@ class MessageController extends AbstractController
    throw $this->createNotFoundException("Utilisateur non trouvé.");
   }
 
-  // Vérifier si la conversation a déjà été supprimée
-  $existingDeletion = $entityManager->getRepository(DeletedConversation::class)->findOneBy([
-   'user'        => $user,
-   'deletedWith' => $interlocutor,
-  ]);
-
-  if (!$existingDeletion) {
-   $deletedConversation = new DeletedConversation();
-   $deletedConversation->setUser($user);
-   $deletedConversation->setDeletedWith($interlocutor);
-
-   $entityManager->persist($deletedConversation);
-   $entityManager->flush();
-  }
+  // Utilisation du repository dédié pour supprimer la conversation
+  $deletedConversationRepository->deleteConversation($user, $interlocutor);
 
   $this->addFlash('success', 'La conversation a été supprimée de votre vue.');
   return $this->redirectToRoute('app_messages');

@@ -22,6 +22,9 @@ class DeletedConversation
  #[ORM\JoinColumn(nullable: false)]
  private ?User $deletedWith = null;
 
+ #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+private ?\DateTimeImmutable $deletedAt = null;
+
  public function getId(): ?int
  {
   return $this->id;
@@ -48,4 +51,15 @@ class DeletedConversation
   $this->deletedWith = $deletedWith;
   return $this;
  }
+
+ public function getDeletedAt(): ?\DateTimeImmutable
+{
+    return $this->deletedAt;
+}
+
+public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+{
+    $this->deletedAt = $deletedAt;
+    return $this;
+}
 }

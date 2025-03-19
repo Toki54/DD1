@@ -3,41 +3,35 @@
 namespace App\Repository;
 
 use App\Entity\DeletedConversation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<DeletedConversation>
- */
 class DeletedConversationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, DeletedConversation::class);
-    }
+ public function __construct(ManagerRegistry $registry)
+ {
+  parent::__construct($registry, DeletedConversation::class);
+ }
 
-    //    /**
-    //     * @return DeletedConversation[] Returns an array of DeletedConversation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+ public function deleteConversation(User $user, User $deletedWith): void
+ {
+  $entityManager = $this->getEntityManager();
 
-    //    public function findOneBySomeField($value): ?DeletedConversation
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+  $deletedConversation = $this->findOneBy([
+   'user'        => $user,
+   'deletedWith' => $deletedWith,
+  ]);
+
+  if (!$deletedConversation) {
+   $deletedConversation = new DeletedConversation();
+   $deletedConversation->setUser($user);
+   $deletedConversation->setDeletedWith($deletedWith);
+  }
+
+  $deletedConversation->setDeletedAt(new \DateTimeImmutable());
+
+  $entityManager->persist($deletedConversation);
+  $entityManager->flush();
+ }
 }

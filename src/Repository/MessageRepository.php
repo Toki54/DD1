@@ -19,45 +19,53 @@ class MessageRepository extends ServiceEntityRepository
   $this->entityManager = $entityManager;
  }
 
- /**
-  * Récupère les conversations en regroupant les messages entre deux utilisateurs
-  */
- public function findUserConversations(User $user): array
- {
-  $qb = $this->createQueryBuilder('m')
-   ->where('m.sender = :user OR m.receiver = :user')
-   ->setParameter('user', $user)
-   ->orderBy('m.sentAt', 'DESC');
+public function findUserConversations(User $user): array
+{
+    $qb = $this->createQueryBuilder('m')
+        ->where('m.sender = :user OR m.receiver = :user')
+        ->setParameter('user', $user)
+        ->orderBy('m.sentAt', 'DESC');
 
-  $messages      = $qb->getQuery()->getResult();
-  $conversations = [];
+    $messages = $qb->getQuery()->getResult();
+    $conversations = [];
 
-  // Correction ici : on utilise $this->entityManager
-  $deletedConversations = $this->entityManager->getRepository(DeletedConversation::class)
-   ->findBy(['user' => $user]);
+    // Récupérer les conversations supprimées avec l'EntityManager correct
+    $deletedConversations = $this->entityManager->getRepository(DeletedConversation::class)
+        ->findBy(['user' => $user]);
 
-  $deletedWithIds = array_map(fn($dc) => $dc->getDeletedWith()->getId(), $deletedConversations);
+    $deletedWithTimestamps = [];
+    foreach ($deletedConversations as $dc) {
+        $deletedWithTimestamps[$dc->getDeletedWith()->getId()] = $dc->getDeletedAt();
+    }
 
-  foreach ($messages as $message) {
-   $interlocutor   = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
-   $interlocutorId = $interlocutor->getId();
+    foreach ($messages as $message) {
+        $interlocutor = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
+        $interlocutorId = $interlocutor->getId();
 
-   if (in_array($interlocutorId, $deletedWithIds)) {
-    continue; // On ignore les conversations supprimées
-   }
+        // Vérifier si la conversation a été supprimée et ignorer seulement les anciens messages
+        if (isset($deletedWithTimestamps[$interlocutorId])) {
+            $deletedAt = $deletedWithTimestamps[$interlocutorId];
 
-   if (!isset($conversations[$interlocutorId])) {
-    $conversations[$interlocutorId] = [
-     'user'     => $interlocutor,
-     'messages' => [],
-    ];
-   }
+            if ($message->getSentAt() <= $deletedAt) {
+                continue; // On ignore seulement les anciens messages
+            }
+        }
 
-   $conversations[$interlocutorId]['messages'][] = $message;
-  }
+        if (!isset($conversations[$interlocutorId])) {
+            $conversations[$interlocutorId] = [
+                'user' => $interlocutor,
+                'messages' => [],
+            ];
+        }
 
-  return $conversations;
- }
+        $conversations[$interlocutorId]['messages'][] = $message;
+    }
+
+    return $conversations;
+}
+
+
+
 
  public function findBySenderOrReceiver(User $user): array
  {
@@ -108,6 +116,8 @@ class MessageRepository extends ServiceEntityRepository
 
   return $result !== null;
  }
+
+ 
 
 }
 
