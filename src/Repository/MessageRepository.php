@@ -2,16 +2,21 @@
 
 namespace App\Repository;
 
+use App\Entity\DeletedConversation;
 use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 class MessageRepository extends ServiceEntityRepository
 {
- public function __construct(ManagerRegistry $registry)
+ private EntityManagerInterface $entityManager;
+
+ public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
  {
   parent::__construct($registry, Message::class);
+  $this->entityManager = $entityManager;
  }
 
  /**
@@ -27,11 +32,20 @@ class MessageRepository extends ServiceEntityRepository
   $messages      = $qb->getQuery()->getResult();
   $conversations = [];
 
+  // Correction ici : on utilise $this->entityManager
+  $deletedConversations = $this->entityManager->getRepository(DeletedConversation::class)
+   ->findBy(['user' => $user]);
+
+  $deletedWithIds = array_map(fn($dc) => $dc->getDeletedWith()->getId(), $deletedConversations);
+
   foreach ($messages as $message) {
    $interlocutor   = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
    $interlocutorId = $interlocutor->getId();
 
-   // Si la conversation n'existe pas, on la crée
+   if (in_array($interlocutorId, $deletedWithIds)) {
+    continue; // On ignore les conversations supprimées
+   }
+
    if (!isset($conversations[$interlocutorId])) {
     $conversations[$interlocutorId] = [
      'user'     => $interlocutor,
@@ -39,16 +53,12 @@ class MessageRepository extends ServiceEntityRepository
     ];
    }
 
-   // Ajout du message à la conversation
    $conversations[$interlocutorId]['messages'][] = $message;
   }
 
   return $conversations;
  }
 
- /**
-  * Récupère les messages envoyés ou reçus par un utilisateur
-  */
  public function findBySenderOrReceiver(User $user): array
  {
   return $this->createQueryBuilder('m')
@@ -100,3 +110,4 @@ class MessageRepository extends ServiceEntityRepository
  }
 
 }
+

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
+use App\Entity\DeletedConversation;
+use App\Repository\DeletedConversationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,13 +130,12 @@ class MessageController extends AbstractController
   }
 
   // Vérifier si la discussion a été acceptée avant d'envoyer un message
-$acceptedRequest = $messageRepository->hasAcceptedChat($sender, $receiver);
+  $acceptedRequest = $messageRepository->hasAcceptedChat($sender, $receiver);
 
-if (!$acceptedRequest) {
- $this->addFlash('danger', 'Vous ne pouvez pas envoyer de message tant que la demande n\'est pas acceptée.');
- return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
-}
-
+  if (!$acceptedRequest) {
+   $this->addFlash('danger', 'Vous ne pouvez pas envoyer de message tant que la demande n\'est pas acceptée.');
+   return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
+  }
 
   $message = new Message();
   $message->setSender($sender);
@@ -148,4 +149,34 @@ if (!$acceptedRequest) {
 
   return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
  }
+
+ #[Route('/delete-conversation/{id}', name: 'app_delete_conversation', methods: ['POST'])]
+ public function deleteConversation(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+ {
+  $user         = $this->getUser();
+  $interlocutor = $userRepository->find($id);
+
+  if (!$interlocutor) {
+   throw $this->createNotFoundException("Utilisateur non trouvé.");
+  }
+
+  // Vérifier si la conversation a déjà été supprimée
+  $existingDeletion = $entityManager->getRepository(DeletedConversation::class)->findOneBy([
+   'user'        => $user,
+   'deletedWith' => $interlocutor,
+  ]);
+
+  if (!$existingDeletion) {
+   $deletedConversation = new DeletedConversation();
+   $deletedConversation->setUser($user);
+   $deletedConversation->setDeletedWith($interlocutor);
+
+   $entityManager->persist($deletedConversation);
+   $entityManager->flush();
+  }
+
+  $this->addFlash('success', 'La conversation a été supprimée de votre vue.');
+  return $this->redirectToRoute('app_messages');
+ }
+
 }
