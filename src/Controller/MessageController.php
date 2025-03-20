@@ -32,6 +32,8 @@ class MessageController extends AbstractController
    if ($receiver) {
     // Récupérer tous les messages envoyés et reçus entre les deux utilisateurs
     $messages = $messageRepository->findByConversation($user, $receiver);
+    $chatAccepted = $messageRepository->hasAcceptedChat($user, $receiver);
+
 
     // Vérifier si une demande de discussion a été acceptée
     foreach ($messages as $message) {
