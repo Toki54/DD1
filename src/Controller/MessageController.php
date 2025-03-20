@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Repository\DeletedConversationRepository;
+use App\Entity\DeletedMessage;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -152,20 +153,36 @@ class MessageController extends AbstractController
  }
 
  #[Route('/delete-conversation/{id}', name: 'app_delete_conversation', methods: ['POST'])]
- public function deleteConversation(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, DeletedConversationRepository $deletedConversationRepository): Response
- {
-  $user         = $this->getUser();
-  $interlocutor = $userRepository->find($id);
+public function deleteConversation(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, DeletedConversationRepository $deletedConversationRepository, MessageRepository $messageRepository): Response
+{
+    $user = $this->getUser();
+    $interlocutor = $userRepository->find($id);
 
-  if (!$interlocutor) {
-   throw $this->createNotFoundException("Utilisateur non trouvé.");
-  }
+    if (!$interlocutor) {
+        throw $this->createNotFoundException("Utilisateur non trouvé.");
+    }
 
-  // Utilisation du repository dédié pour supprimer la conversation
-  $deletedConversationRepository->deleteConversation($user, $interlocutor);
+    // Récupérer tous les messages échangés entre l'utilisateur et l'interlocuteur
+    $messages = $messageRepository->findByConversation($user, $interlocutor);
 
-  $this->addFlash('success', 'La conversation a été supprimée de votre vue.');
-  return $this->redirectToRoute('app_messages');
- }
+    // Sauvegarder les messages dans DeletedMessage avant de les supprimer
+    foreach ($messages as $message) {
+        $deletedMessage = new DeletedMessage();
+        $deletedMessage->setContent($message->getContent());
+        $deletedMessage->setSender($message->getSender());
+        $deletedMessage->setReceiver($message->getReceiver());
+        $deletedMessage->setSentAt($message->getSentAt());
+        $deletedMessage->setDeletedAt(new \DateTimeImmutable());
+
+        $entityManager->persist($deletedMessage);
+    }
+
+    // Utilisation du repository pour supprimer la conversation de la vue de l'utilisateur
+    $deletedConversationRepository->deleteConversation($user, $interlocutor);
+
+    $this->addFlash('success', 'La conversation a été supprimée de votre vue.');
+
+    return $this->redirectToRoute('app_messages');
+}
 
 }
