@@ -29,7 +29,7 @@ public function findUserConversations(User $user): array
     $messages = $qb->getQuery()->getResult();
     $conversations = [];
 
-    // Récupérer les conversations supprimées avec l'EntityManager correct
+    // Récupérer les conversations supprimées
     $deletedConversations = $this->entityManager->getRepository(DeletedConversation::class)
         ->findBy(['user' => $user]);
 
@@ -42,12 +42,12 @@ public function findUserConversations(User $user): array
         $interlocutor = ($message->getSender() === $user) ? $message->getReceiver() : $message->getSender();
         $interlocutorId = $interlocutor->getId();
 
-        // Vérifier si la conversation a été supprimée et ignorer seulement les anciens messages
+        // Vérifier si la conversation a été supprimée et ignorer tous les messages après la suppression
         if (isset($deletedWithTimestamps[$interlocutorId])) {
             $deletedAt = $deletedWithTimestamps[$interlocutorId];
 
             if ($message->getSentAt() <= $deletedAt) {
-                continue; // On ignore seulement les anciens messages
+                continue; // Ignorer les anciens messages qui ont été supprimés
             }
         }
 
@@ -63,6 +63,7 @@ public function findUserConversations(User $user): array
 
     return $conversations;
 }
+
 
 
 
@@ -91,16 +92,30 @@ public function findUserConversations(User $user): array
    ->getResult();
  }
 
- public function findByConversation(User $user, User $receiver): array
- {
-  return $this->createQueryBuilder('m')
-   ->where('(m.sender = :user AND m.receiver = :receiver) OR (m.sender = :receiver AND m.receiver = :user)')
-   ->setParameter('user', $user)
-   ->setParameter('receiver', $receiver)
-   ->orderBy('m.sentAt', 'ASC')
-   ->getQuery()
-   ->getResult();
- }
+public function findByConversation(User $user, User $receiver): array
+{
+    // Vérifier si la conversation a été supprimée
+    $deletedConversation = $this->entityManager->getRepository(DeletedConversation::class)
+        ->findOneBy([
+            'user' => $user,
+            'deletedWith' => $receiver,
+        ]);
+
+    $qb = $this->createQueryBuilder('m')
+        ->where('(m.sender = :user AND m.receiver = :receiver) OR (m.sender = :receiver AND m.receiver = :user)')
+        ->setParameter('user', $user)
+        ->setParameter('receiver', $receiver)
+        ->orderBy('m.sentAt', 'ASC');
+
+    // Si la conversation a été supprimée, exclure les messages avant la suppression
+    if ($deletedConversation) {
+        $qb->andWhere('m.sentAt > :deletedAt')
+            ->setParameter('deletedAt', $deletedConversation->getDeletedAt());
+    }
+
+    return $qb->getQuery()->getResult();
+}
+
 
  public function hasAcceptedChat(User $user1, User $user2): bool
  {
