@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\DeletedConversationRepository;
+use App\Repository\DeletedMessageRepository;
+
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,15 +28,19 @@ final class UserController extends AbstractController
  }
 
  #[Route('/deleted-conversations', name: 'app_deleted_conversations', methods: ['GET'])]
- #[IsGranted('ROLE_ADMIN')]
- public function deletedConversations(DeletedConversationRepository $deletedConversationRepository): Response
- {
-  $deletedConversations = $deletedConversationRepository->findAll();
+#[IsGranted('ROLE_ADMIN')]
+public function deletedConversations(
+    DeletedConversationRepository $deletedConversationRepository,
+    DeletedMessageRepository $deletedMessageRepository
+): Response {
+    $deletedConversations = $deletedConversationRepository->findAll();
+    $deletedMessages = $deletedMessageRepository->findAll();
 
-  return $this->render('user/deletedMess.html.twig', [
-   'deletedConversations' => $deletedConversations,
-  ]);
- }
+    return $this->render('user/deletedMess.html.twig', [
+        'deletedConversations' => $deletedConversations,
+        'deletedMessages' => $deletedMessages,
+    ]);
+}
 
  #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
  #[IsGranted('ROLE_ADMIN')]

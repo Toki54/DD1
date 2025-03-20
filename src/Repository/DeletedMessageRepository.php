@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\DeletedMessage;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,33 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DeletedMessageRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, DeletedMessage::class);
-    }
-
-    //    /**
-    //     * @return DeletedMessage[] Returns an array of DeletedMessage objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?DeletedMessage
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+ public function __construct(ManagerRegistry $registry)
+ {
+  parent::__construct($registry, DeletedMessage::class);
+ }
 }

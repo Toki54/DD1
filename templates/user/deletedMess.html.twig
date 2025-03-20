@@ -30,5 +30,36 @@
 			{% endfor %}
 		</tbody>
 	</table>
+
+	<h2>Messages échangés</h2>
+
+	<table border="1" cellpadding="10">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Expéditeur</th>
+				<th>Destinataire</th>
+				<th>Message</th>
+				<th>Date d'envoi</th>
+				<th>Date de suppression</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for message in deletedMessages %}
+				<tr>
+					<td>{{ message.id }}</td>
+					<td>{{ message.sender.email }}</td>
+					<td>{{ message.receiver.email }}</td>
+					<td>{{ message.content }}</td>
+					<td>{{ message.sentAt|date('d/m/Y H:i') }}</td>
+					<td>{{ message.deletedAt|date('d/m/Y H:i') }}</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">Aucun message supprimé.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}
 
