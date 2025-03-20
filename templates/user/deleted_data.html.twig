@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Données Supprimées
+{% endblock %}
+
+{% block body %}
+	<h1>Données Supprimées</h1>
+
+	<h2>Conversations Supprimées</h2>
+	<table border="1" cellpadding="10">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Utilisateur</th>
+				<th>Supprimé avec</th>
+				<th>Date de suppression</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for conversation in deletedConversations %}
+				<tr>
+					<td>{{ conversation.id }}</td>
+					<td>{{ conversation.user.email }}</td>
+					<td>{{ conversation.deletedWith.email }}</td>
+					<td>{{ conversation.deletedAt|date('d/m/Y H:i') }}</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="4">Aucune conversation supprimée.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<h2>Messages Supprimés</h2>
+	<table border="1" cellpadding="10">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Expéditeur</th>
+				<th>Destinataire</th>
+				<th>Contenu</th>
+				<th>Date de suppression</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for message in deletedMessages %}
+				<tr>
+					<td>{{ message.id }}</td>
+					<td>{{ message.sender.email }}</td>
+					<td>{{ message.receiver.email }}</td>
+					<td>{{ message.content }}</td>
+					<td>{{ message.deletedAt|date('d/m/Y H:i') }}</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">Aucun message supprimé.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+
