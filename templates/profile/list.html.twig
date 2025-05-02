@@ -5,25 +5,31 @@
 
 {% block body %}
 	{% block stylesheet %}
-		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/list2.css') }}">
 	{% endblock %}
 
 	<section
 		class="container">
-		<!-- Bloc de tri (Filtre) -->
+		<!-- Bloc de tri (Filtre) toujours visible sur la gauche -->
 		<article class="sort-container">
 			<header class="sort-header">
-				<button class="toggle-sort-btn">Filtrer les profils</button>
+				<h3>Filtrer les profils</h3>
 			</header>
 			<section class="sort-content">
-				<form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+				<form
+					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+					<!-- Filtre Sexe -->
 					<div>
 						<label for="sex">Sexe:</label>
-						<input type="checkbox" name="sex" value="male" {% if sex == 'male' %} checked {% endif %}>
+						<input type="checkbox" name="sex" value="Homme" {% if sex == 'Homme' %} checked {% endif %}>
 						Homme
-						<input type="checkbox" name="sex" value="female" {% if sex == 'female' %} checked {% endif %}>
+						<input type="checkbox" name="sex" value="Femme" {% if sex == 'Femme' %} checked {% endif %}>
 						Femme
+						<input type="checkbox" name="sex" value="Autre" {% if sex == 'Autre' %} checked {% endif %}>
+						Autre
 					</div>
+
+					<!-- Filtre Situation -->
 					<div>
 						<label for="situation">Situation:</label>
 						<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
@@ -31,20 +37,40 @@
 						<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
 						En couple
 					</div>
+
+					<!-- Filtre Recherche -->
+					<div>
+						<label for="research">Je recherche:</label>
+						<input type="checkbox" name="research" value="Homme" {% if research == 'Homme' %} checked {% endif %}>
+						Homme
+						<input type="checkbox" name="research" value="Femme" {% if research == 'Femme' %} checked {% endif %}>
+						Femme
+						<input type="checkbox" name="research" value="Couple" {% if research == 'Couple' %} checked {% endif %}>
+						Couple
+					</div>
+
+					
+
+					<!-- Filtre Ville -->
+					<div>
+						<label for="city">Ville:</label>
+						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
+					</div>
+
+					<!-- Bouton Appliquer les filtres -->
 					<button type="submit">Appliquer le tri</button>
 				</form>
 			</section>
 		</article>
 
-		<!-- Liste des profils -->
+		<!-- Liste des profils affichée horizontalement à droite -->
 		<section class="profile-container">
 			{% for profile in profiles %}
 				<article
 					class="profile-card">
 					<!-- Avatar -->
 					<section class="avatar-container">
-<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
-
+						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
 					</section>
 
 					<!-- Informations -->
@@ -52,31 +78,21 @@
 						<h2>{{ profile.user.pseudo }}</h2>
 						<p>
 							<strong>Sexe:</strong>
-							{{ profile.sex|default('Non spécifié') }}
-						</p>
+							{{ profile.sex|default('Non spécifié') }}</p>
 						<p>
 							<strong>Situation:</strong>
-							{{ profile.situation|default('Non renseigné') }}
-						</p>
+							{{ profile.situation|default('Non renseigné') }}</p>
 						<p>
 							<strong>Je recherche:</strong>
-							{{ profile.research|default('Non spécifié') }}
-						</p>
+							{{ profile.research|default('Non spécifié') }}</p>
 						<p>
 							<strong>Biographie:</strong>
-							{{ profile.biography|default('Aucune biographie') }}
-						</p>
-
-						<!-- Bouton pour afficher/masquer les photos -->
-						<button class="toggle-photos-btn" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}">Afficher les photos</button>
-
+							{{ profile.biography|default('Aucune biographie') }}</p>
 						<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
-
-
 					</section>
 
 					<!-- Galerie de photos -->
-					<section class="photo-gallery" id="gallery-{{ profile.id }}" style="display: none;">
+					<section class="photo-gallery" id="gallery-{{ profile.id }}">
 						{% if profile.photos %}
 							{% for photo in profile.photos %}
 								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
@@ -90,7 +106,7 @@
 		</section>
 	</section>
 
-	<!-- Modal pour afficher les photos (modifiée pour chaque profil spécifique) -->
+	<!-- Modal pour afficher les photos -->
 	{% for profile in profiles %}
 		<div class="modal fade" id="photoCarousel-{{ profile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
 			<div class="modal-dialog modal-fullscreen">
@@ -124,3 +140,4 @@
 
 	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
 {% endblock %}
+

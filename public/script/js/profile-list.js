@@ -1,17 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Gestion du filtre
-  let toggleButton = document.querySelector(".toggle-sort-btn");
+  // Les filtres sont maintenant toujours visibles, pas besoin de toggle
   let sortContent = document.querySelector(".sort-content");
 
-  if (sortContent) {
-    sortContent.style.display = "none";
-    if (toggleButton) {
-      toggleButton.addEventListener("click", function () {
-        sortContent.style.display =
-          sortContent.style.display === "none" ? "block" : "none";
-      });
-    }
-  }
+  // Tu n'as plus besoin de gestion du toggle pour les filtres, donc ce bloc est supprimé
 
   // Gestion de l'affichage des photos pour chaque profil
   document.querySelectorAll(".toggle-photos-btn").forEach((button) => {

@@ -94,33 +94,50 @@ class UserProfileController extends AbstractController
  }
 
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
- public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
- {
-  $sortSex       = $request->query->get('sex', null);
-  $sortSituation = $request->query->get('situation', null);
+    public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
+    {
+        // Récupération des filtres depuis la requête
+        $sortSex       = $request->query->get('sex', null);
+        $sortSituation = $request->query->get('situation', null);
+        $sortDepartment = $request->query->get('department', null);
+        $sortCity      = $request->query->get('city', null);
+        $sortResearch  = $request->query->get('research', null);
 
-  $criteria = [];
-  if ($sortSex) {
-   $criteria['sex'] = $sortSex;
-  }
-  if ($sortSituation) {
-   $criteria['situation'] = $sortSituation;
-  }
+        $criteria = [];
+        
+        // Application des filtres sur les critères
+        if ($sortSex) {
+            $criteria['sex'] = $sortSex;
+        }
+        if ($sortSituation) {
+            $criteria['situation'] = $sortSituation;
+        }
+        
+        if ($sortCity) {
+            $criteria['city'] = $sortCity;
+        }
+        if ($sortResearch) {
+            $criteria['research'] = $sortResearch;
+        }
 
-  $profiles = $entityManager->getRepository(UserProfile::class)->findBy($criteria);
+        // Récupération des profils filtrés
+        $profiles = $entityManager->getRepository(UserProfile::class)->findBy($criteria);
 
-  $selectedProfile = null;
-  if ($id) {
-   $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-  }
+        $selectedProfile = null;
+        if ($id) {
+            $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+        }
 
-  return $this->render('profile/list.html.twig', [
-   'profiles'        => $profiles,
-   'selectedProfile' => $selectedProfile,
-   'sex'             => $sortSex,
-   'situation'       => $sortSituation,
-  ]);
- }
+        return $this->render('profile/list.html.twig', [
+            'profiles'        => $profiles,
+            'selectedProfile' => $selectedProfile,
+            'sex'             => $sortSex,
+            'situation'       => $sortSituation,
+            
+            'city'            => $sortCity,
+            'research'        => $sortResearch,
+        ]);
+    }
 
 
 #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]

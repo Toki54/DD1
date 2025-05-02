@@ -1,0 +1,156 @@
+/* ====== STYLES GÉNÉRAUX ====== */
+body {
+    background-color: #121212;
+    font-family: "Roboto", sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ====== CONTENEUR PRINCIPAL ====== */
+.container {
+    display: flex;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* ====== SLIDE (FILTRE) À GAUCHE ====== */
+.sort-container {
+    width: 300px;
+    background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 20px;
+    box-shadow: 0 0 15px rgba(217, 7, 255, 0.4);
+    position: sticky;
+    top: 20px;
+}
+
+.sort-header h3 {
+    color: #d4af37;
+    font-size: 24px;
+}
+
+.sort-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sort-form button {
+    background: #8e44ad;
+    border: 2px solid #d4af37;
+    padding: 10px;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.sort-form button:hover {
+    background: #7a2b8c;
+    transform: scale(1.05);
+}
+
+.sort-container label {
+    font-weight: bold;
+    color: #d4af37;
+}
+
+/* ====== LISTE DES PROFILS À DROITE (HORIZONTALE) ====== */
+.profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    padding: 15px;
+    border-radius: 12px;
+    background: linear-gradient(359deg, #2a2a2a, #121212);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in-out;
+}
+
+.profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(217, 7, 255, 0.8);
+}
+
+.profile-card img {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    border: 3px solid #d4af37;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+}
+
+.profile-card img:hover {
+    transform: scale(1.05);
+}
+
+/* ====== GALERIE PHOTOS ====== */
+.photo-gallery {
+    border-top: 1px solid #d4af37;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+    margin-top: 15px;
+}
+
+.photo-gallery img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 3px solid #d4af37;
+    transition: all 0.3s ease-in-out;
+}
+
+.photo-gallery img:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+/* ====== CAROUSEL MODAL ====== */
+.modal-content {
+    background: #121212;
+    border: 3px solid #8e44ad;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.carousel-inner {
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #d4af37;
+}
