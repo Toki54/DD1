@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Subscription;
+use App\Form\SubscriptionType;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserProfileController extends AbstractController
 {
@@ -102,55 +105,61 @@ public function view(int $id, EntityManagerInterface $entityManager): Response
         throw $this->createNotFoundException('Profil non trouvé.');
     }
 
+    // Vérifie si l'utilisateur est abonné
+    $isSubscribed = $this->getUser() && $this->getUser()->getSubscription() ? true : false;
+
     return $this->render('profile/view.html.twig', [
         'userProfile' => $userProfile,
+        'isSubscribed' => $isSubscribed,
     ]);
 }
 
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
-    public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
-    {
-        // Récupération des filtres depuis la requête
-        $sortSex       = $request->query->get('sex', null);
-        $sortSituation = $request->query->get('situation', null);
-        
-        $sortCity      = $request->query->get('city', null);
-        $sortResearch  = $request->query->get('research', null);
+public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
+{
+    // Récupération des filtres depuis la requête
+    $sortSex       = $request->query->get('sex', null);
+    $sortSituation = $request->query->get('situation', null);
+    $sortCity      = $request->query->get('city', null);
+    $sortResearch  = $request->query->get('research', null);
 
-        $criteria = [];
-        
-        // Application des filtres sur les critères
-        if ($sortSex) {
-            $criteria['sex'] = $sortSex;
-        }
-        if ($sortSituation) {
-            $criteria['situation'] = $sortSituation;
-        }
-        
-        if ($sortCity) {
-            $criteria['city'] = $sortCity;
-        }
-        if ($sortResearch) {
-            $criteria['research'] = $sortResearch;
-        }
+    $criteria = [];
+    
+    // Application des filtres sur les critères
+    if ($sortSex) {
+        $criteria['sex'] = $sortSex;
+    }
+    if ($sortSituation) {
+        $criteria['situation'] = $sortSituation;
+    }
+    if ($sortCity) {
+        $criteria['city'] = $sortCity;
+    }
+    if ($sortResearch) {
+        $criteria['research'] = $sortResearch;
+    }
 
-        // Récupération des profils filtrés
-        $profiles = $entityManager->getRepository(UserProfile::class)->findBy($criteria);
+    // Récupération des profils filtrés
+    $profiles = $entityManager->getRepository(UserProfile::class)->findBy($criteria);
 
-        $selectedProfile = null;
-        if ($id) {
-            $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-        }
+    // Vérifie si l'utilisateur est abonné
+    $isSubscribed = $this->getUser() && $this->getUser()->getSubscription() ? true : false;
 
-        return $this->render('profile/list.html.twig', [
-            'profiles'        => $profiles,
-            'selectedProfile' => $selectedProfile,
-            'sex'             => $sortSex,
-            'situation'       => $sortSituation,
-            
-            'city'            => $sortCity,
-            'research'        => $sortResearch,
-        ]);
+    $selectedProfile = null;
+    if ($id) {
+        $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+    }
+
+    return $this->render('profile/list.html.twig', [
+        'profiles'        => $profiles,
+        'selectedProfile' => $selectedProfile,
+        'sex'             => $sortSex,
+        'situation'       => $sortSituation,
+        'city'            => $sortCity,
+        'research'        => $sortResearch,
+        'isSubscribed'    => $isSubscribed,
+    ]);
+
     }
 
 
@@ -190,5 +199,42 @@ public function deletePhoto(string $photoFilename, EntityManagerInterface $entit
 
     return $this->redirectToRoute('app_profile_edit');
 }
+
+#[Route('/profile/subscribe', name: 'app_subscription')]
+    public function subscribe(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        $user = $security->getUser(); // Récupère l'utilisateur connecté
+
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour vous abonner.');
+            return $this->redirectToRoute('app_login'); // Redirige vers la page de connexion
+        }
+
+        // Créer une nouvelle instance de Subscription
+        $subscription = new Subscription();
+        $subscription->setUser($user);
+
+        // Définir des dates par défaut (1 mois d'abonnement)
+        $subscription->setStartDate(new \DateTime());
+        $subscription->setEndDate((new \DateTime())->modify('+1 month'));
+        $subscription->setPlan('basic'); // Plan par défaut
+
+        // Créer le formulaire d'abonnement
+        $form = $this->createForm(SubscriptionType::class, $subscription);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Enregistrer l'abonnement en base de données
+            $entityManager->persist($subscription);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Abonnement effectué avec succès !');
+            return $this->redirectToRoute('app_profile_show'); // Redirige vers le profil de l'utilisateur
+        }
+
+        return $this->render('profile/subscribe.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
 }

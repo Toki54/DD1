@@ -10,7 +10,7 @@
 
 	<section
 		class="container">
-		<!-- Bloc de tri (Filtre) toujours visible sur la gauche -->
+		<!-- Bloc de tri -->
 		<article class="sort-container">
 			<header class="sort-header">
 				<h3>Filtrer les profils</h3>
@@ -20,9 +20,7 @@
 					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
 					<!-- Filtre Sexe -->
 					<label for="sex">Sexe:</label>
-
 					<div>
-
 						<input type="checkbox" name="sex" value="Homme" {% if sex == 'Homme' %} checked {% endif %}>
 						Homme
 						<input type="checkbox" name="sex" value="Femme" {% if sex == 'Femme' %} checked {% endif %}>
@@ -33,9 +31,7 @@
 
 					<!-- Filtre Situation -->
 					<label for="situation">Situation:</label>
-
 					<div>
-
 						<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
 						Célibataire
 						<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
@@ -44,9 +40,7 @@
 
 					<!-- Filtre Recherche -->
 					<label for="research">Je recherche:</label>
-
 					<div>
-
 						<input type="checkbox" name="research" value="Homme" {% if research == 'Homme' %} checked {% endif %}>
 						Homme
 						<input type="checkbox" name="research" value="Femme" {% if research == 'Femme' %} checked {% endif %}>
@@ -55,26 +49,20 @@
 						Couple
 					</div>
 
-
 					<!-- Filtre Ville -->
 					<label for="city">Ville:</label>
-
 					<div>
-
 						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
 					</div>
 
-					<!-- Bouton Appliquer les filtres -->
 					<button type="submit">Appliquer le tri</button>
 				</form>
 			</section>
 		</article>
 
-		<!-- Liste des profils affichée horizontalement à droite -->
+		<!-- Liste des profils -->
 		<section class="profile-container">
 			{% for profile in profiles %}
-
-
 				<article
 					class="profile-card">
 					<!-- Avatar -->
@@ -82,17 +70,11 @@
 						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
 					</section>
 
-
 					<!-- Informations -->
 					<section class="info-container">
-
-
-<h2>
-	<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
-		{{ profile.user.pseudo }}
-	</a>
-</h2>
-
+						<h2>
+							<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
+						</h2>
 						<p>
 							<strong>Sexe:</strong>
 							{{ profile.sex|default('Non spécifié') }}</p>
@@ -112,22 +94,18 @@
 					<section class="photo-gallery" id="gallery-{{ profile.id }}">
 						{% if profile.photos %}
 							{% for photo in profile.photos %}
-								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
+								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if not isSubscribed %}blurred-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
 							{% endfor %}
 						{% else %}
 							<p>Aucune photo ajoutée.</p>
 						{% endif %}
-
-					</article>
-
-				{% endfor %}
-			
-
+					</section>
+				</article>
+			{% endfor %}
 		</section>
 	</section>
 
-
-	<!-- Modal pour afficher les photos -->
+	<!-- Modals pour photos -->
 	{% for profile in profiles %}
 		<div class="modal fade" id="photoCarousel-{{ profile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
 			<div class="modal-dialog modal-fullscreen">
@@ -140,7 +118,7 @@
 							<div class="carousel-inner">
 								{% for photo in profile.photos %}
 									<div class="carousel-item {% if loop.first %}active{% endif %}">
-										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
+										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if not isSubscribed %}blurred-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
 									</div>
 								{% endfor %}
 							</div>
@@ -159,6 +137,14 @@
 		</div>
 	{% endfor %}
 
-
+	<!-- JS -->
 	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
-{% endblock %}
+
+	<!-- CSS flou pour les non abonnés -->
+		<style>
+.blurred-photo {
+	filter: blur(10px);
+	pointer-events: none;
+}
+</style>{% endblock %}
+

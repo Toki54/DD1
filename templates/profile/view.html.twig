@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-{% block stylesheet %}
-	<link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
-{% endblock %}
+	{% block stylesheet %}
+		<link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
+	{% endblock %}
 
 	<section class="profile-detail">
 		<h1>{{ userProfile.user.pseudo }}</h1>

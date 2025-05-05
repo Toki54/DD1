@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Souscription
+{% endblock %}
+
+{% block body %}
+	<h1>Souscrire à un abonnement</h1>
+
+	{{ form_start(form) }}
+	{{ form_row(form.plan) }}
+	{{ form_row(form.startDate) }}
+	{{ form_row(form.endDate) }}
+	<button type="submit" class="btn btn-primary">Souscrire</button>
+	{{ form_end(form) }}
+
+{% endblock %}
+
