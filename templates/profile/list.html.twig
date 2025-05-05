@@ -73,6 +73,8 @@
 		<!-- Liste des profils affichée horizontalement à droite -->
 		<section class="profile-container">
 			{% for profile in profiles %}
+
+
 				<article
 					class="profile-card">
 					<!-- Avatar -->
@@ -80,8 +82,11 @@
 						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
 					</section>
 
+
 					<!-- Informations -->
 					<section class="info-container">
+
+
 						<h2>{{ profile.user.pseudo }}</h2>
 						<p>
 							<strong>Sexe:</strong>
@@ -111,11 +116,10 @@
 					</article>
 
 				{% endfor %}
-			</section>
+			
 
 		</section>
 	</section>
-
 
 
 	<!-- Modal pour afficher les photos -->
