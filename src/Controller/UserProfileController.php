@@ -99,7 +99,7 @@ class UserProfileController extends AbstractController
         // Récupération des filtres depuis la requête
         $sortSex       = $request->query->get('sex', null);
         $sortSituation = $request->query->get('situation', null);
-        $sortDepartment = $request->query->get('department', null);
+        
         $sortCity      = $request->query->get('city', null);
         $sortResearch  = $request->query->get('research', null);
 

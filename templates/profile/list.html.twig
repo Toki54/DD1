@@ -19,8 +19,10 @@
 				<form
 					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
 					<!-- Filtre Sexe -->
+					<label for="sex">Sexe:</label>
+
 					<div>
-						<label for="sex">Sexe:</label>
+
 						<input type="checkbox" name="sex" value="Homme" {% if sex == 'Homme' %} checked {% endif %}>
 						Homme
 						<input type="checkbox" name="sex" value="Femme" {% if sex == 'Femme' %} checked {% endif %}>
@@ -30,8 +32,10 @@
 					</div>
 
 					<!-- Filtre Situation -->
+					<label for="situation">Situation:</label>
+
 					<div>
-						<label for="situation">Situation:</label>
+
 						<input type="checkbox" name="situation" value="Celibataire" {% if situation == 'Celibataire' %} checked {% endif %}>
 						Célibataire
 						<input type="checkbox" name="situation" value="En couple" {% if situation == 'En couple' %} checked {% endif %}>
@@ -39,8 +43,10 @@
 					</div>
 
 					<!-- Filtre Recherche -->
+					<label for="research">Je recherche:</label>
+
 					<div>
-						<label for="research">Je recherche:</label>
+
 						<input type="checkbox" name="research" value="Homme" {% if research == 'Homme' %} checked {% endif %}>
 						Homme
 						<input type="checkbox" name="research" value="Femme" {% if research == 'Femme' %} checked {% endif %}>
@@ -49,11 +55,12 @@
 						Couple
 					</div>
 
-					
 
 					<!-- Filtre Ville -->
+					<label for="city">Ville:</label>
+
 					<div>
-						<label for="city">Ville:</label>
+
 						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
 					</div>
 
@@ -100,11 +107,16 @@
 						{% else %}
 							<p>Aucune photo ajoutée.</p>
 						{% endif %}
-					</section>
-				</article>
-			{% endfor %}
+
+					</article>
+
+				{% endfor %}
+			</section>
+
 		</section>
 	</section>
+
+
 
 	<!-- Modal pour afficher les photos -->
 	{% for profile in profiles %}
@@ -138,6 +150,6 @@
 		</div>
 	{% endfor %}
 
+
 	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
 {% endblock %}
-

@@ -1,0 +1,47 @@
+/* ====== STYLES GÉNÉRAUX ====== */
+body {
+  background-color: #121212;
+  font-family: "Roboto", sans-serif;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ====== NAVBAR ====== */
+.navbar {
+  background-color: #4b0082;
+  /* violet foncé */
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand {
+  color: #fff;
+}
+
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+  color: #d4af37;
+}
+
+.btn-info {
+  background-color: #8e44ad;
+  border-color: #d4af37;
+  color: white;
+}
+
+.btn-info:hover {
+  background-color: #732d91;
+}
+
+/* ====== FOOTER TOUJOURS EN BAS ====== */
+footer {
+  background-color: #4b0082;
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: auto;
+}
