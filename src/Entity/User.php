@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
  private ?UserProfile $profile = null;
 
+ #[ORM\OneToOne(mappedBy: 'user', targetEntity: Subscription::class, cascade: ['persist', 'remove'])]
+private ?Subscription $subscription = null;
+
 
  public function getProfile(): ?UserProfile
  {
@@ -155,4 +158,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
   return $this;
  }
+
+ public function getSubscription(): ?Subscription
+{
+    return $this->subscription;
+}
+
+public function setSubscription(?Subscription $subscription): static
+{
+    $this->subscription = $subscription;
+
+    // Assure la cohérence des deux côtés
+    if ($subscription && $subscription->getUser() !== $this) {
+        $subscription->setUser($this);
+    }
+
+    return $this;
+}
 }
