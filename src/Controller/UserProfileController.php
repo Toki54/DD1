@@ -93,6 +93,20 @@ class UserProfileController extends AbstractController
   ]);
  }
 
+ #[Route('/profile/{id}', name: 'app_profile_view')]
+public function view(int $id, EntityManagerInterface $entityManager): Response
+{
+    $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+
+    if (!$userProfile) {
+        throw $this->createNotFoundException('Profil non trouvé.');
+    }
+
+    return $this->render('profile/view.html.twig', [
+        'userProfile' => $userProfile,
+    ]);
+}
+
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
     public function list(EntityManagerInterface $entityManager, Request $request, ?int $id): Response
     {

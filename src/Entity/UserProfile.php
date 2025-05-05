@@ -120,7 +120,7 @@ class UserProfile
  public function getUser(): ?User
  {return $this->user;}
 
- public function setUser(User $user): static
+ public function setUser(User $user): self
  { $this->user = $user;return $this;}
 
  public function removePhoto(string $photoFilename): void

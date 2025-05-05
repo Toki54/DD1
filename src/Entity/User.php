@@ -45,11 +45,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   return $this->profile;
  }
 
- public function setProfile(?UserProfile $profile): static
- {
-  $this->profile = $profile;
-  return $this;
- }
+
+ public function setProfile(?UserProfile $profile): self
+{
+    $this->profile = $profile;
+
+    // Assure la relation bidirectionnelle
+    if ($profile && $profile->getUser() !== $this) {
+        $profile->setUser($this);
+    }
+
+    return $this;
+}
 
  public function getId(): ?int
  {

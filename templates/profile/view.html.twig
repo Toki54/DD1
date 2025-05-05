@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de
+	{{ userProfile.user.pseudo }}
+{% endblock %}
+
+{% block body %}
+	<section class="profile-detail">
+		<h1>{{ userProfile.user.pseudo }}</h1>
+
+		<img src="{{ asset(userProfile.avatar ? 'uploads/avatars/' ~ userProfile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" width="150">
+
+		<p>
+			<strong>Sexe :</strong>
+			{{ userProfile.sex|default('Non spécifié') }}</p>
+		<p>
+			<strong>Situation :</strong>
+			{{ userProfile.situation|default('Non renseignée') }}</p>
+		<p>
+			<strong>Recherche :</strong>
+			{{ userProfile.research|default('Non spécifié') }}</p>
+		<p>
+			<strong>Ville :</strong>
+			{{ userProfile.city|default('Non renseignée') }}</p>
+		<p>
+			<strong>Biographie :</strong>
+			{{ userProfile.biography|default('Aucune biographie') }}</p>
+
+		<h3>Galerie de photos</h3>
+		<div class="photo-gallery">
+			{% for photo in userProfile.photos %}
+				<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" style="width: 100px;">
+			{% else %}
+				<p>Aucune photo</p>
+			{% endfor %}
+		</div>
+	</section>
+{% endblock %}
+

@@ -87,7 +87,12 @@
 					<section class="info-container">
 
 
-						<h2>{{ profile.user.pseudo }}</h2>
+<h2>
+	<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
+		{{ profile.user.pseudo }}
+	</a>
+</h2>
+
 						<p>
 							<strong>Sexe:</strong>
 							{{ profile.sex|default('Non spécifié') }}</p>
