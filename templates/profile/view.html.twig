@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block body %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
+{% endblock %}
+
 	<section class="profile-detail">
 		<h1>{{ userProfile.user.pseudo }}</h1>
 
@@ -27,13 +31,46 @@
 			{{ userProfile.biography|default('Aucune biographie') }}</p>
 
 		<h3>Galerie de photos</h3>
-		<div class="photo-gallery">
-			{% for photo in userProfile.photos %}
-				<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" style="width: 100px;">
+		<div class="photo-gallery" id="gallery-{{ userProfile.id }}">
+			{% if userProfile.photos %}
+				{% for photo in userProfile.photos %}
+					<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
+				{% endfor %}
 			{% else %}
 				<p>Aucune photo</p>
-			{% endfor %}
+			{% endif %}
 		</div>
 	</section>
+
+	<!-- Modal Bootstrap pour la galerie -->
+	<div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
+		<div class="modal-dialog modal-fullscreen">
+			<div class="modal-content" style="background-color: black;">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
+						<div class="carousel-inner">
+							{% for photo in userProfile.photos %}
+								<div class="carousel-item {% if loop.first %}active{% endif %}">
+									<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
+								</div>
+							{% endfor %}
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Précédent</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Suivant</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}
 
