@@ -83,7 +83,7 @@
 
 /* ====== MODAL CAROUSEL ====== */
 .modal-content {
-    background: #121212;
+    background: #470058;
     border: 3px solid #8e44ad;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
@@ -104,4 +104,9 @@
 
 .btn-close {
     filter: invert(1);
+    opacity: 1;
+    background-color: transparent;
+    border: none;
+    width: 2rem;
+    height: 2rem;
 }

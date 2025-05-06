@@ -177,7 +177,7 @@ body {
 
 /* ====== CAROUSEL MODAL ====== */
 .modal-content {
-  background: black;
+  background: rgb(59, 1, 66);
   border: 3px solid #8e44ad;
   border-radius: 10px;
   overflow: hidden;
@@ -207,7 +207,12 @@ body {
 }
 
 .btn-close {
-  color: white !important;
+  filter: invert(1);
+  opacity: 1;
+  background-color: transparent;
+  border: none;
+  width: 2rem;
+  height: 2rem;
 }
 
 /* Positionnement des flèches du carousel */
