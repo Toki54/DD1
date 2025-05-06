@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\UserProfile;
+use App\Entity\User;
 use App\Entity\Subscription;
 use App\Form\UserProfileType;
 use App\Form\SubscriptionType;
@@ -201,41 +202,6 @@ public function deletePhoto(string $photoFilename, EntityManagerInterface $entit
     return $this->redirectToRoute('app_profile_edit');
 }
 
-#[Route('/profile/subscribe', name: 'app_subscription')]
-    public function subscribe(Request $request, EntityManagerInterface $entityManager, Security $security): Response
-    {
-        $user = $security->getUser(); // Récupère l'utilisateur connecté
 
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour vous abonner.');
-            return $this->redirectToRoute('app_login'); // Redirige vers la page de connexion
-        }
-
-        // Créer une nouvelle instance de Subscription
-        $subscription = new Subscription();
-        $subscription->setUser($user);
-
-        // Définir des dates par défaut (1 mois d'abonnement)
-        $subscription->setStartDate(new \DateTime());
-        $subscription->setEndDate((new \DateTime())->modify('+1 month'));
-        $subscription->setPlan('basic'); // Plan par défaut
-
-        // Créer le formulaire d'abonnement
-        $form = $this->createForm(SubscriptionType::class, $subscription);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Enregistrer l'abonnement en base de données
-            $entityManager->persist($subscription);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Abonnement effectué avec succès !');
-            return $this->redirectToRoute('app_profile_show'); // Redirige vers le profil de l'utilisateur
-        }
-
-        return $this->render('profile/subscribe.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
 
 }

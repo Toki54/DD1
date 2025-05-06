@@ -28,7 +28,11 @@ class Subscription
 
  #[ORM\Column(length : 50)]
  #[Assert\NotBlank]
- private ?string $plan = null; // exemple : basic, premium...
+ private ?string $plan = null;
+
+ #[ORM\Column(type: 'float')]
+ #[Assert\PositiveOrZero]
+ private float $price = 0.0;
 
  #[ORM\Column(type: 'boolean')]
  private bool $active = true;
@@ -46,7 +50,6 @@ class Subscription
  public function setUser(?User $user): static
  {
   $this->user = $user;
-
   return $this;
  }
 
@@ -58,7 +61,6 @@ class Subscription
  public function setStartDate(\DateTimeInterface $startDate): static
  {
   $this->startDate = $startDate;
-
   return $this;
  }
 
@@ -70,7 +72,6 @@ class Subscription
  public function setEndDate(\DateTimeInterface $endDate): static
  {
   $this->endDate = $endDate;
-
   return $this;
  }
 
@@ -82,7 +83,17 @@ class Subscription
  public function setPlan(string $plan): static
  {
   $this->plan = $plan;
+  return $this;
+ }
 
+ public function getPrice(): float
+ {
+  return $this->price;
+ }
+
+ public function setPrice(float $price): static
+ {
+  $this->price = $price;
   return $this;
  }
 
@@ -94,7 +105,6 @@ class Subscription
  public function setActive(bool $active): static
  {
   $this->active = $active;
-
   return $this;
  }
 }
