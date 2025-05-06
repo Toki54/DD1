@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des abonnements
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des abonnements</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Utilisateur</th>
+				<th>Plan</th>
+				<th>Début</th>
+				<th>Fin</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for subscription in subscriptions %}
+				<tr>
+					<td>{{ subscription.id }}</td>
+					<td>{{ subscription.user.pseudo }}</td>
+					<td>{{ subscription.plan }}</td>
+					<td>{{ subscription.startDate|date('d/m/Y') }}</td>
+					<td>{{ subscription.endDate|date('d/m/Y') }}</td>
+					<td>
+						<a href="{{ path('admin_subscriptions_edit', {id: subscription.id}) }}">Modifier</a>
+						|
+						<a href="{{ path('admin_subscriptions_delete', {id: subscription.id}) }}" onclick="return confirm('Supprimer cet abonnement ?')">Supprimer</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">Aucun abonnement trouvé.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}
+

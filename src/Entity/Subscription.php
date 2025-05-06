@@ -91,11 +91,11 @@ class Subscription
   return $this->price;
  }
 
- public function setPrice(float $price): static
- {
-  $this->price = $price;
-  return $this;
- }
+ public function setPrice(float $price): self
+{
+    $this->price = $price;
+    return $this;
+}
 
  public function isActive(): bool
  {
