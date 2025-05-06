@@ -1,0 +1,241 @@
+/* ====== STYLES GÉNÉRAUX ====== */
+body {
+  background-color: #121212;
+  font-family: "Roboto", sans-serif;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ====== CONTAINER DU PROFIL ====== */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.profile-container h1 {
+  text-align: center;
+  color: #d4af37;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+/* ====== INFOS DU PROFIL ====== */
+.profile-info {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 30px;
+  background: linear-gradient(177deg, #2c2c2c, #14001c);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 9px 0px rgb(217 7 255 / 98%), inset 0px 0px 4px 0px rgb(215 0 253 / 55%);
+}
+
+.profile-info .avatar img {
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+  border: 3px solid #dbb22b;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.profile-info .avatar img:hover {
+  transform: scale(1.05);
+}
+
+.profile-details {
+  display: flex;
+  margin: 10px 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-details h3 {
+  font-size: 1.2rem;
+  color: #f83df8;
+}
+
+.profile-details p {
+  font-size: 1rem;
+  color: #d4af37;
+  margin: 10px 0;
+}
+
+.avatar {
+  padding-left: 10px;
+  padding-top: 2px;
+}
+
+/* ====== GALERIE PHOTOS ====== */
+.photos {
+  margin-top: 3px;
+}
+
+.photos h3 {
+  text-align: center;
+  color: #d4af37;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.photo-gallery {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.photo-gallery img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 3px solid #d4af37;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo-gallery img:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+}
+
+/* ====== BOUTON D'EDITION DU PROFIL ====== */
+a.btn {
+  text-align: center;
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: #8e44ad;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  display: inline-block;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+a.btn:hover {
+  background: #b13bd0;
+  transform: scale(1.05);
+}
+
+/* ====== CAROUSEL MODAL ====== */
+.modal-content {
+  background: black;
+  border: 3px solid #8e44ad;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(217, 7, 255, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.modal-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-inner {
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-item {
+  text-align: center !important;
+}
+
+/* Correction : Centrer et limiter la taille des images */
+.carousel-item img {
+  width: 600px !important;
+  height: 600px !important;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid #d4af37;
+  display: block !important;
+  margin: auto !important;
+}
+
+.btn-close {
+  color: white !important;
+}
+
+/* Positionne les flèches aux bords de l'écran */
+/* Permet aux flèches de rester fixées aux bords de l'écran */
+.carousel-control-prev,
+.carousel-control-next {
+  position: fixed;
+  /* Fixé sur l'écran */
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  padding: 20px;
+  z-index: 1050;
+  /* Priorité pour être au-dessus des images */
+}
+
+/* Flèche gauche au bord gauche */
+.carousel-control-prev {
+  left: 20px;
+}
+
+/* Flèche droite au bord droit */
+.carousel-control-next {
+  right: 20px;
+}
+
+/* Effet de survol */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* Icônes en blanc et plus grandes */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* Style du bouton de fermeture (croix) */
+.modal-header .btn-close {
+  filter: invert(100%);
+  /* Rend la croix blanche */
+  opacity: 1;
+  /* La rendre bien visible */
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Effet de zoom au survol */
+.modal-header .btn-close:hover {
+  transform: scale(1.2);
+}
+
+/* ====== RESPONSIVE ====== */
+@media screen and (max-width: 600px) {
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .profile-info .avatar img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .photo-gallery img {
+    width: 80px;
+    height: 80px;
+  }
+}

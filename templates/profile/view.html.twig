@@ -1,55 +1,90 @@
-{# templates/profile/view.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Voir Mon Profil
+{% block title %}Profil de
+	{{ userProfile.user.pseudo }}
 {% endblock %}
 
 {% block body %}
-	<h1>Mon Profil</h1>
+	{% block stylesheet %}
+		<link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
+	{% endblock %}
 
-	<div class="profile-info">
-		<div>
-			<strong>Email:
-			</strong>
-			{{ user.email }}
+	<section class="profile-detail">
+		<h1>{{ userProfile.user.pseudo }}</h1>
+
+		<img src="{{ asset(userProfile.avatar ? 'uploads/avatars/' ~ userProfile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" width="150">
+
+		<p>
+			<strong>Sexe :</strong>
+			{{ userProfile.sex|default('Non spécifié') }}</p>
+		<p>
+			<strong>Situation :</strong>
+			{{ userProfile.situation|default('Non renseignée') }}</p>
+		<p>
+			<strong>Recherche :</strong>
+			{{ userProfile.research|default('Non spécifié') }}</p>
+		<p>
+			<strong>Ville :</strong>
+			{{ userProfile.city|default('Non renseignée') }}</p>
+		<p>
+			<strong>Biographie :</strong>
+			{{ userProfile.biography|default('Aucune biographie') }}</p>
+
+		<h3>Galerie de photos</h3>
+		<div class="photo-gallery" id="gallery-{{ userProfile.id }}">
+			{% if userProfile.photos %}
+				{% for photo in userProfile.photos %}
+					{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
+					{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
+<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if blur %}blur-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
+
+
+				{% endfor %}
+			{% else %}
+				<p>Aucune photo</p>
+			{% endif %}
 		</div>
+	</section>
 
-		<div>
-			<strong>Sexe:
-			</strong>
-			{{ user.sexe ?? 'Non spécifié' }}
-		</div>
+	<!-- Modal Bootstrap pour la galerie -->
+	<div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
+		<div class="modal-dialog modal-fullscreen">
+			<div class="modal-content" style="background-color: black;">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
+						<div class="carousel-inner">
+							{% for photo in userProfile.photos %}
+								{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
+								{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
+								<div class="carousel-item {% if loop.first %}active{% endif %}">
+<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if blur %}blur-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
 
-		<div>
-			<strong>Situation:
-			</strong>
-			{{ user.situation ?? 'Non spécifié' }}
-		</div>
 
-		<div>
-			<strong>Bio:
-			</strong>
-			{{ user.bio ?? 'Non spécifié' }}
-		</div>
-
-		<div>
-			<strong>Recherche:
-			</strong>
-			{{ user.recherche ?? 'Non spécifié' }}
-		</div>
-
-		{% if user.avatar %}
-			<div>
-				<strong>Avatar:
-				</strong>
-				<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
+								</div>
+							{% endfor %}
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Précédent</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Suivant</span>
+						</button>
+					</div>
+				</div>
 			</div>
-		{% endif %}
+		</div>
 	</div>
 
-	<div>
-		<a href="{{ path('app_profile') }}" class="btn btn-secondary">Retour à mon profil</a>
-	</div>
+	<style>
+		.blur-photo {
+			filter: blur(10px);
+			pointer-events: none;
+		}
+	</style>
 {% endblock %}
 

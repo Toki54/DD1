@@ -1,0 +1,112 @@
+/* ====== SECTION PROFIL ====== */
+.profile-detail {
+    display: flex;
+    max-width: 800px;
+    margin: 40px auto;
+    background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+    align-items: center;
+    flex-direction: column;
+}
+
+.blurred {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+
+.blurred:hover {
+    filter: none;
+    /* Le flou disparaît au survol de l'image */
+}
+/* ====== TITRE PRINCIPAL ====== */
+.profile-detail h1 {
+    text-align: center;
+    color: #d4af37;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+/* ====== INFOS UTILISATEUR ====== */
+.profile-detail p {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.profile-detail strong {
+    color: #d4af37;
+}
+
+/* ====== AVATAR ====== */
+.profile-detail img[alt="Avatar"] {
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 33%;
+    border: 3px solid #8e44ad;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(217, 7, 255, 0.3);
+}
+
+/* ====== GALERIE DE PHOTOS ====== */
+.photo-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #ff00eb;
+}
+
+.photo-thumbnail {
+    border: 2px solid #8e44ad;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 8px rgba(217, 7, 255, 0.3);
+}
+
+.photo-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+/* ====== TITRE GALERIE ====== */
+.profile-detail h3 {
+    color: #d4af37;
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* ====== MODAL CAROUSEL ====== */
+.modal-content {
+    background: #470058;
+    border: 3px solid #8e44ad;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
+}
+
+.carousel-item img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    margin: auto;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #d4af37;
+    border-radius: 5px;
+}
+
+.btn-close {
+    filter: invert(1);
+    opacity: 1;
+    background-color: transparent;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+}
