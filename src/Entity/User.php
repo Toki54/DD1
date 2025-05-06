@@ -36,17 +36,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
  #[ORM\Column(length: 80)]
  private ?string $pseudo = null;
 
- #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
- private ?UserProfile $profile = null;
+ /**
+ * @method UserProfile|null getProfile()
+ */
+
+  #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserProfile $profile = null;
 
  #[ORM\OneToOne(mappedBy: 'user', targetEntity: Subscription::class, cascade: ['persist', 'remove'])]
 private ?Subscription $subscription = null;
 
 
  public function getProfile(): ?UserProfile
- {
-  return $this->profile;
- }
+    {
+        return $this->profile;
+    }
 
 
  public function setProfile(?UserProfile $profile): self

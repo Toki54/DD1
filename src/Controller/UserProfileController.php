@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Subscription;
-use App\Form\SubscriptionType;
 use App\Entity\UserProfile;
+use App\Entity\Subscription;
 use App\Form\UserProfileType;
+use App\Form\SubscriptionType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserProfileController extends AbstractController
 {
@@ -96,8 +96,9 @@ class UserProfileController extends AbstractController
   ]);
  }
 
- #[Route('/profile/{id}', name: 'app_profile_view')]
+ #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
 public function view(int $id, EntityManagerInterface $entityManager): Response
+
 {
     $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
 
