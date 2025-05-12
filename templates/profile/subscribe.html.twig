@@ -7,10 +7,66 @@
 	<h1>Souscrire à un abonnement</h1>
 
 	{{ form_start(form) }}
+
+	<!-- Affichage du champ plan (choix de l'abonnement) -->
 	{{ form_row(form.plan) }}
+
+	<!-- Affichage du résumé dynamique : durée et prix -->
+	<div id="subscription-summary">
+		<p>
+			<strong>Abonnement sélectionné :</strong>
+			<span id="plan-name">Aucun</span>
+		</p>
+		<p>
+			<strong>Durée :</strong>
+			<span id="plan-duration">Aucune</span>
+		</p>
+		<p>
+			<strong>Prix :</strong>
+			<span id="plan-price">0 €</span>
+		</p>
+	</div>
+
+	<!-- Les champs cachés pour la date de début et la date de fin -->
 	{{ form_row(form.startDate) }}
 	{{ form_row(form.endDate) }}
+
+	<!-- Bouton pour soumettre le formulaire -->
 	<button type="submit" class="btn btn-primary">Souscrire</button>
+
 	{{ form_end(form) }}
+
+	 <script>
+	        // Script pour mettre à jour le résumé dynamique en fonction du plan sélectionné
+	        const planField = document.querySelector('select[name="subscription[plan]"]');
+	        const planName = document.getElementById('plan-name');
+	        const planDuration = document.getElementById('plan-duration');
+	        const planPrice = document.getElementById('plan-price');
+	
+	        const plans = {
+	            '1 semaine - 5 €': { duration: '1 semaine', price: '5 €' },
+	            '1 mois - 15 €': { duration: '1 mois', price: '15 €' },
+	            '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
+	            '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
+	            '1 an - 80 €': { duration: '1 an', price: '80 €' },
+	        };
+	
+	        // Fonction pour mettre à jour le résumé
+	        function updateSummary() {
+	            const selectedPlan = planField.options[planField.selectedIndex].text;
+	            const selectedPlanDetails = plans[selectedPlan];
+	            if (selectedPlanDetails) {
+	                planName.textContent = selectedPlan;
+	                planDuration.textContent = selectedPlanDetails.duration;
+	                planPrice.textContent = selectedPlanDetails.price;
+	            }
+	        }
+	
+	        // Met à jour le résumé au chargement de la page
+	        updateSummary();
+	
+	        // Met à jour le résumé chaque fois que l'utilisateur change de plan
+	        planField.addEventListener('change', updateSummary);
+	    </script>
 {% endblock %}
 

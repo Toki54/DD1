@@ -27,12 +27,7 @@ class SubscriptionController extends AbstractController
   $subscription = new Subscription();
   $subscription->setUser($user);
 
-  // Définition des dates par défaut : aujourd'hui et +1 mois (valeurs par défaut dans le formulaire)
-  $subscription->setStartDate(new \DateTime());
-  $subscription->setEndDate((new \DateTime())->modify('+1 month'));
 
-  // Plan par défaut (sera écrasé par le formulaire)
-  $subscription->setPlan('basic');
 
   // Création du formulaire (celui que vous avez déjà configuré)
   $form = $this->createForm(SubscriptionType::class, $subscription);
