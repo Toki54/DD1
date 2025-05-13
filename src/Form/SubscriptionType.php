@@ -34,12 +34,14 @@ class SubscriptionType extends AbstractType
 
   $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($plans) {
    $data = $event->getData();
-   if (isset($data['plan']) && isset($plans[$data['plan']])) {
-    $startDate         = new \DateTime();
-    $endDate           = (clone $startDate)->modify($plans[$data['plan']]['duration']);
+   if (isset($data['plan'], $plans[$data['plan']])) {
+    $startDate = new \DateTime();
+    $endDate   = (clone $startDate)->modify($plans[$data['plan']]['duration']);
+
     $data['price']     = $plans[$data['plan']]['price'];
-    $data['startDate'] = $startDate->format('Y-m-d');
-    $data['endDate']   = $endDate->format('Y-m-d');
+    $data['startDate'] = $startDate; // objet DateTime
+    $data['endDate']   = $endDate; // objet DateTime
+
     $event->setData($data);
    }
   });

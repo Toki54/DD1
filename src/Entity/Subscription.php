@@ -19,12 +19,10 @@ class Subscription
  private ?User $user = null;
 
  #[ORM\Column(type: 'datetime')]
- #[Assert\NotNull]
- private ?\DateTimeInterface $startDate = null;
+private ?\DateTimeInterface $startDate = null;
 
- #[ORM\Column(type : 'datetime')]
- #[Assert\NotNull]
- private ?\DateTimeInterface $endDate = null;
+ #[ORM\Column(type: 'datetime')]
+private ?\DateTimeInterface $endDate = null;
 
  #[ORM\Column(length : 50)]
  #[Assert\NotBlank]
