@@ -71,17 +71,20 @@
 		</p>
 	</div>
 
-	<div class="form-container">
-		{{ form_start(form) }}
-		<!-- Champ caché pour envoyer la sélection du plan -->
-		{{ form_row(form.startDate) }}
-		{{ form_row(form.endDate) }}
-<button type="submit" class="btn btn-primary">Souscrire</button>
+<div class="form-container">
+	{{ form_start(form) }}
 
-		{{ form_end(form) }}
+	{{ form_row(form.plan) }}
+	{# affichera un champ caché automatiquement #}
+	{{ form_row(form.startDate) }}
+	{{ form_row(form.endDate) }}
+
+	<button type="submit" class="btn btn-primary">Souscrire</button>
+
+	{{ form_end(form) }}
+</div>
 
 
-	</div>
 
 	 <script>
 	        // Fonction pour mettre à jour le résumé et sélectionner le plan
@@ -105,8 +108,8 @@
 	                planPrice.textContent = plans[plan].price;
 	
 	                // Met à jour le champ caché du formulaire avec la sélection du plan
-	                const planField = document.querySelector('select[name="subscription[plan]"]');
-	                planField.value = plan; // Met à jour la valeur du champ
+	                const planField = document.querySelector('input[name="subscription[plan]"]');
+planField.value = plan;
 	            }
 	        }
 	    </script>

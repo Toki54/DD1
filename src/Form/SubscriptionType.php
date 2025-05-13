@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Subscription;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -24,10 +23,7 @@ class SubscriptionType extends AbstractType
   ];
 
   $builder
-   ->add('plan', ChoiceType::class, [
-    'choices' => array_combine(array_keys($plans), array_keys($plans)),
-    'label'   => 'Choisissez votre abonnement',
-   ])
+   ->add('plan', HiddenType::class)
    ->add('price', HiddenType::class)
    ->add('startDate', HiddenType::class)
    ->add('endDate', HiddenType::class);
@@ -39,8 +35,8 @@ class SubscriptionType extends AbstractType
     $endDate   = (clone $startDate)->modify($plans[$data['plan']]['duration']);
 
     $data['price']     = $plans[$data['plan']]['price'];
-    $data['startDate'] = $startDate; // objet DateTime
-    $data['endDate']   = $endDate; // objet DateTime
+    $data['startDate'] = $startDate;
+    $data['endDate']   = $endDate;
 
     $event->setData($data);
    }

@@ -1,241 +1,174 @@
-/* ====== STYLES GÉNÉRAUX ====== */
-body {
-  background-color: #121212;
-  font-family: "Roboto", sans-serif;
-  color: #e0e0e0;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* ====== CONTAINER DU PROFIL ====== */
+/* ====== SECTION PROFIL ====== */
 .profile-container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  max-width: 1200px;
-  margin: auto;
+  align-items: center;
+  max-width: 900px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.profile-container h1 {
+.profile-container h1.pseudo {
   text-align: center;
   color: #d4af37;
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: 2.5em;
+  margin-bottom: 20px;
 }
 
-/* ====== INFOS DU PROFIL ====== */
-.profile-info {
+/* ====== CARTE PROFIL ====== */
+.profile-card {
   display: flex;
-  gap: 40px;
-  margin-bottom: 30px;
-  background: linear-gradient(177deg, #2c2c2c, #14001c);
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
+  background: #1b1b1b;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 9px 0px rgb(217 7 255 / 98%), inset 0px 0px 4px 0px rgb(215 0 253 / 55%);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(217, 7, 255, 0.4);
 }
 
-.profile-info .avatar img {
-  width: 300px;
-  height: 300px;
-  border-radius: 10px;
-  border: 3px solid #dbb22b;
+/* ====== AVATAR + DESCRIPTION ====== */
+.avatar-section {
+  text-align: center;
+  flex: 1 1 250px;
+}
+
+.avatar-section img.avatar {
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 33%;
+  border: 3px solid #8e44ad;
+  width: 200px;
+  height: 200px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.3);
 }
 
-.profile-info .avatar img:hover {
-  transform: scale(1.05);
-}
-
-.profile-details {
-  display: flex;
-  margin: 10px 0;
-  flex-direction: column;
-  align-items: center;
-}
-
-.profile-details h3 {
-  font-size: 1.2rem;
-  color: #f83df8;
-}
-
-.profile-details p {
-  font-size: 1rem;
+.profile-header h3 {
   color: #d4af37;
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 
-.avatar {
-  padding-left: 10px;
-  padding-top: 2px;
+.profile-header p {
+  font-size: 1.1em;
+  color: #e0e0e0;
 }
 
-/* ====== GALERIE PHOTOS ====== */
+/* ====== INFOS UTILISATEUR ====== */
+.info-section {
+  flex: auto;
+}
+
+.info-item {
+  margin-bottom: 20px;
+}
+
+.info-header h3 {
+  color: #d4af37;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.info-item p {
+  font-size: 1.1em;
+}
+
+/* ====== GALERIE DE PHOTOS ====== */
 .photos {
-  margin-top: 3px;
+  width: 100%;
+  margin-top: 30px;
 }
 
 .photos h3 {
-  text-align: center;
   color: #d4af37;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .photo-gallery {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #ff00eb;
 }
 
-.photo-gallery img {
+.photo-thumbnail {
+  border: 2px solid #8e44ad;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 0 8px rgba(217, 7, 255, 0.3);
   width: 120px;
   height: 120px;
   object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 3px solid #d4af37;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.photo-gallery img:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+.photo-thumbnail:hover {
+  transform: scale(1.1);
 }
 
-/* ====== BOUTON D'EDITION DU PROFIL ====== */
+/* ====== BOUTON EDITER ====== */
 a.btn {
-  text-align: center;
-  margin-top: 30px;
-  padding: 12px 30px;
-  background: #8e44ad;
-  color: #fff;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 8px;
   display: inline-block;
-  transition: transform 0.3s ease, background 0.3s ease;
+  margin: 30px auto 0;
+  background-color: #8e44ad;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 a.btn:hover {
-  background: #b13bd0;
-  transform: scale(1.05);
+  background-color: #6c3483;
 }
 
-/* ====== CAROUSEL MODAL ====== */
+/* ====== MODAL CAROUSEL ====== */
 .modal-content {
-  background: black;
+  background: #470058;
   border: 3px solid #8e44ad;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(217, 7, 255, 1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
 }
 
-.modal-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.carousel-inner {
-  align-items: center;
-  justify-content: center;
-}
-
-.carousel-item {
-  text-align: center !important;
-}
-
-/* Correction : Centrer et limiter la taille des images */
 .carousel-item img {
-  width: 600px !important;
-  height: 600px !important;
   max-width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 3px solid #d4af37;
-  display: block !important;
-  margin: auto !important;
+  max-height: 80vh;
+  object-fit: contain;
+  margin: auto;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #d4af37;
+  border-radius: 5px;
 }
 
 .btn-close {
-  color: white !important;
-}
-
-/* Positionne les flèches aux bords de l'écran */
-/* Permet aux flèches de rester fixées aux bords de l'écran */
-.carousel-control-prev,
-.carousel-control-next {
-  position: fixed;
-  /* Fixé sur l'écran */
-  top: 50%;
-  transform: translateY(-50%);
-  width: auto;
-  padding: 20px;
-  z-index: 1050;
-  /* Priorité pour être au-dessus des images */
-}
-
-/* Flèche gauche au bord gauche */
-.carousel-control-prev {
-  left: 20px;
-}
-
-/* Flèche droite au bord droit */
-.carousel-control-next {
-  right: 20px;
-}
-
-/* Effet de survol */
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  transform: translateY(-50%) scale(1.2);
-}
-
-/* Icônes en blanc et plus grandes */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 60px;
-  height: 60px;
-}
-
-/* Style du bouton de fermeture (croix) */
-.modal-header .btn-close {
-  filter: invert(100%);
-  /* Rend la croix blanche */
+  filter: invert(1);
   opacity: 1;
-  /* La rendre bien visible */
-  width: 30px;
-  height: 30px;
-  transition: transform 0.3s ease-in-out;
+  background-color: transparent;
+  border: none;
+  width: 2rem;
+  height: 2rem;
 }
 
-/* Effet de zoom au survol */
-.modal-header .btn-close:hover {
-  transform: scale(1.2);
+/* ====== IMAGE FLOUE (si nécessaire) ====== */
+.blurred {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
 }
 
-/* ====== RESPONSIVE ====== */
-@media screen and (max-width: 600px) {
-  .carousel-item img {
-    width: 100%;
-    height: auto;
-  }
-
-  .profile-info .avatar img {
-    width: 150px;
-    height: 150px;
-  }
-
-  .photo-gallery img {
-    width: 80px;
-    height: 80px;
-  }
+.blurred:hover {
+  filter: none;
 }
