@@ -43,6 +43,9 @@ class Subscription
  #[ORM\Column(type: 'datetime')]
  private ?\DateTimeInterface $createdAt = null;
 
+ #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $stripeSessionId = null;
+
  public function __construct()
  {
   $this->createdAt = new \DateTime();
@@ -140,4 +143,15 @@ class Subscription
   $this->createdAt = $createdAt;
   return $this;
  }
+
+ public function getStripeSessionId(): ?string
+    {
+        return $this->stripeSessionId;
+    }
+
+    public function setStripeSessionId(?string $stripeSessionId): self
+    {
+        $this->stripeSessionId = $stripeSessionId;
+        return $this;
+    }
 }
