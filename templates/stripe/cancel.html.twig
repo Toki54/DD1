@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement annulé
+{% endblock %}
+
+{% block body %}
+	<div class="container" style="text-align:center; margin-top: 50px;">
+		<h1>Paiement annulé</h1>
+		<p>Vous avez annulé le paiement. Votre abonnement n'a pas été activé.</p>
+		<a href="{{ path('app_stripe_subscribe') }}" class="btn btn-secondary">Retour à la souscription</a>
+	</div>
+{% endblock %}
+

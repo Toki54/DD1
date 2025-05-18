@@ -19,10 +19,12 @@ class Subscription
  private ?User $user = null;
 
  #[ORM\Column(type: 'datetime')]
-private ?\DateTimeInterface $startDate = null;
+ #[Assert\NotNull]
+ private ?\DateTimeInterface $startDate = null;
 
- #[ORM\Column(type: 'datetime')]
-private ?\DateTimeInterface $endDate = null;
+ #[ORM\Column(type : 'datetime')]
+ #[Assert\NotNull]
+ private ?\DateTimeInterface $endDate = null;
 
  #[ORM\Column(length : 50)]
  #[Assert\NotBlank]
@@ -34,6 +36,17 @@ private ?\DateTimeInterface $endDate = null;
 
  #[ORM\Column(type: 'boolean')]
  private bool $active = true;
+
+ #[ORM\Column(length: 255, nullable: true)]
+ private ?string $stripeSubscriptionId = null;
+
+ #[ORM\Column(type: 'datetime')]
+ private ?\DateTimeInterface $createdAt = null;
+
+ public function __construct()
+ {
+  $this->createdAt = new \DateTime();
+ }
 
  public function getId(): ?int
  {
@@ -89,11 +102,11 @@ private ?\DateTimeInterface $endDate = null;
   return $this->price;
  }
 
- public function setPrice(float $price): self
-{
-    $this->price = $price;
-    return $this;
-}
+ public function setPrice(float $price): static
+ {
+  $this->price = $price;
+  return $this;
+ }
 
  public function isActive(): bool
  {
@@ -103,6 +116,28 @@ private ?\DateTimeInterface $endDate = null;
  public function setActive(bool $active): static
  {
   $this->active = $active;
+  return $this;
+ }
+
+ public function getStripeSubscriptionId(): ?string
+ {
+  return $this->stripeSubscriptionId;
+ }
+
+ public function setStripeSubscriptionId(?string $stripeSubscriptionId): static
+ {
+  $this->stripeSubscriptionId = $stripeSubscriptionId;
+  return $this;
+ }
+
+ public function getCreatedAt(): ?\DateTimeInterface
+ {
+  return $this->createdAt;
+ }
+
+ public function setCreatedAt(\DateTimeInterface $createdAt): static
+ {
+  $this->createdAt = $createdAt;
   return $this;
  }
 }
