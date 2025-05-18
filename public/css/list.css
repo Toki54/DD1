@@ -1,0 +1,330 @@
+/* ====== RESET ET BASE ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    /* fond très foncé */
+    color: #e0e0e0;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* ====== CONTENEUR PRINCIPAL ====== */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* centrage horizontal */
+}
+
+/* ====== BLOC DE TRI ====== */
+.sort-container {
+    background: #1f1f1f;
+    border-radius: 16px;
+    padding: 25px 30px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    flex: 1 1 350px;
+    min-width: 320px;
+    max-width: 400px;
+    color: #ccc;
+
+    /* centrage vertical et horizontal dans la colonne */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Titre */
+.sort-header h3 {
+    color: #ff4081;
+    margin-bottom: 20px;
+    text-shadow: 0 0 6px #ff4081;
+    text-align: center;
+}
+
+/* Formulaire */
+.sort-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Label général */
+.sort-form label {
+    display: flex;
+        font-weight: 600;
+        margin-top: 13px;
+        color: #ff79b0;
+}
+
+/* Conteneur des checkboxes */
+.sort-form div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    color: #ddd;
+}
+
+/* Checkbox stylisée */
+.sort-form input[type="checkbox"] {
+    transform: scale(1.15);
+    margin-right: 6px;
+    cursor: pointer;
+    accent-color: #ff4081;
+}
+
+/* Texte des options (label entourant la checkbox) */
+.sort-form div label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    color: #ddd;
+}
+
+/* Champ texte */
+.sort-form input[type="text"] {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #2a2a2a;
+    color: #eee;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.sort-form input[type="text"]::placeholder {
+    color: #888;
+}
+
+.sort-form input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 10px #ff4081;
+}
+
+/* Bouton appliquer */
+.sort-form button {
+    margin-top: 25px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    border: none;
+    background-color: #ff4081;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.7);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    align-self: center;
+    width: 100%;
+    max-width: 280px;
+}
+
+.sort-form button:hover {
+    background-color: #e0366c;
+    box-shadow: 0 6px 22px rgba(224, 54, 108, 0.9);
+}
+
+/* ====== CONTENEUR LISTE DES PROFILS ====== */
+.profile-container {
+    flex: 3 1 680px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+/* ====== CARTE DE PROFIL ====== */
+.profile-card {
+    background: #1f1f1f;
+    border-radius: 16px;
+    padding: 20px 25px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    
+    transition: box-shadow 0.3s ease;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.profile-card:hover {
+    box-shadow: 0 10px 25px rgba(255, 0, 80, 0.4);
+}
+
+/* ====== AVATAR ====== */
+.avatar-container {
+    flex-shrink: 0;
+    width: 250px;
+    height: 250px;
+    border-radius: 26%;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(255, 0, 80, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-container:hover {
+    transform: scale(1.05);
+}
+
+/* ====== INFOS PROFIL ====== */
+.info-container {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-container h2 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: #ff4081;
+    text-shadow: 0 0 6px #ff4081;
+}
+
+.info-container h2 a.profile-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.25s ease;
+}
+
+.info-container h2 a.profile-link:hover {
+    color: #ff79b0;
+    text-decoration: underline;
+}
+
+.info-container p {
+    font-size: 1.05rem;
+    margin: 6px 0;
+    color: #ccc;
+}
+
+.info-container strong {
+    font-weight: 600;
+    color: #ff4081;
+}
+
+/* ====== BOUTON ====== */
+.btn-secondary {
+    margin-top: 15px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    width: max-content;
+    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    background-color: #e0366c;
+    box-shadow: 0 6px 22px rgba(224, 54, 108, 0.8);
+}
+
+/* ====== GALERIE DE PHOTOS ====== */
+.photo-gallery {
+    border-top: 1px solid rosybrown;
+    display: flex;
+    gap: 14px;
+    margin-top: 15px;
+    padding-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.photo-gallery img.photo-thumbnail {
+    width: 70px;
+    height: 70px;
+    border-radius: 14px;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #2c2c2c;
+}
+
+.photo-gallery img.photo-thumbnail:hover {
+    transform: scale(1.2);
+    box-shadow: 0 10px 25px rgba(255, 64, 129, 0.7);
+}
+
+/* ====== PHOTOS FLOUES ====== */
+.blurred-photo {
+    filter: blur(9px);
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* ====== MODAL BOOTSTRAP ====== */
+.modal-content {
+    background-color: #1f1f1f !important;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(255, 64, 129, 0.6);
+}
+
+.carousel-item img {
+    max-height: 85vh;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        padding: 20px 15px;
+    }
+
+    .sort-container {
+        max-width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .profile-container {
+        max-width: 100%;
+        justify-content: center;
+    }
+
+.profile-card {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-container {
+    width: 100%;
+    max-width: 350px;
+    height: 250px;
+}
+
+.info-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+}
