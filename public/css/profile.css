@@ -134,6 +134,12 @@ a.btn:hover {
 }
 
 /* ====== MODAL CAROUSEL ====== */
+
+.modal-header, .btn-close
+ {
+color: white !important;
+}
+
 .modal-content {
   background: #470058;
   border: 3px solid #8e44ad;
@@ -142,8 +148,7 @@ a.btn:hover {
 }
 
 .carousel-item img {
-  max-width: 100%;
-  max-height: 80vh;
+  
   object-fit: contain;
   margin: auto;
 }
@@ -155,20 +160,12 @@ a.btn:hover {
 }
 
 .btn-close {
+  color: white !important;
   filter: invert(1);
-  opacity: 1;
-  background-color: transparent;
+  background-color: white;
   border: none;
   width: 2rem;
   height: 2rem;
 }
 
 /* ====== IMAGE FLOUE (si nécessaire) ====== */
-.blurred {
-  filter: blur(5px);
-  transition: filter 0.3s ease;
-}
-
-.blurred:hover {
-  filter: none;
-}

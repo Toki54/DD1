@@ -46,12 +46,18 @@
 					<p>{{ userProfile.situation|default('Non renseigné.') }}</p>
 				</div>
 
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Recherche</h3>
-					</div>
-					<p>{{ userProfile.research|default('Non spécifié.') }}</p>
-				</div>
+{% if userProfile.research is not empty %}
+<div class="info-item">
+
+	<div class="info-header">
+		<h3>Recherche </h3>
+		{{ userProfile.research|join(', ') }}
+	</div>
+</div>
+
+{% endif %}
+
+
 
 				<div class="info-item">
 					<div class="info-header">

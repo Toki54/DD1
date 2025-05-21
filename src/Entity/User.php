@@ -113,6 +113,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   return in_array('ROLE_ADMIN', $this->roles, true);
  }
 
+ public function addRole(string $role): static
+{
+    if (!in_array($role, $this->roles, true)) {
+        $this->roles[] = $role;
+    }
+
+    return $this;
+}
+
  /**
   * @param list<string> $roles
   */

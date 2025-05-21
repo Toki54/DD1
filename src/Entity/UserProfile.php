@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,8 +21,8 @@ class UserProfile
  #[ORM\Column(type: 'string', length: 100, nullable: true)]
  private ?string $situation = null;
 
- #[ORM\Column(type: 'string', length: 100, nullable: true)]
- private ?string $research = null;
+ #[ORM\Column(type: Types::JSON, nullable: true)]
+ private ?array $research = [];
 
  #[ORM\Column(type: 'text', nullable: true)]
  private ?string $biography = null;
@@ -73,10 +74,17 @@ class UserProfile
  public function setSituation(?string $situation): static
  { $this->situation = $situation;return $this;}
 
- public function getResearch(): ?string
- {return $this->research;}
- public function setResearch(?string $research): static
- { $this->research = $research;return $this;}
+ public function getResearch(): ?array
+{
+    return $this->research;
+}
+
+public function setResearch(?array $research): self
+{
+    $this->research = $research;
+
+    return $this;
+}
 
  public function getBiography(): ?string
  {return $this->biography;}
@@ -121,7 +129,7 @@ class UserProfile
  {return $this->user;}
 
  public function setUser(User $user): self
- { $this->user = $user;return $this;}
+ {$this->user = $user;return $this;}
 
  public function removePhoto(string $photoFilename): void
  {

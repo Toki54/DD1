@@ -273,12 +273,7 @@ body {
     box-shadow: 0 10px 25px rgba(255, 64, 129, 0.7);
 }
 
-/* ====== PHOTOS FLOUES ====== */
-.blurred-photo {
-    filter: blur(9px);
-    pointer-events: none;
-    opacity: 0.7;
-}
+
 
 /* ====== MODAL BOOTSTRAP ====== */
 .modal-content {
@@ -293,11 +288,19 @@ body {
     margin: 0 auto;
 }
 
+.btn-close {
+    background-color: white;
+}
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
         padding: 20px 15px;
+    }
+
+    .sort-content{
+        display: flex;
     }
 
     .sort-container {
