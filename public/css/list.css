@@ -8,7 +8,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;
-    /* fond très foncé */
     color: #e0e0e0;
     line-height: 1.5;
     min-height: 100vh;
@@ -24,7 +23,6 @@ body {
     padding: 20px;
     flex-wrap: wrap;
     justify-content: center;
-    /* centrage horizontal */
 }
 
 /* ====== BLOC DE TRI ====== */
@@ -37,14 +35,11 @@ body {
     min-width: 320px;
     max-width: 400px;
     color: #ccc;
-
-    /* centrage vertical et horizontal dans la colonne */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
-/* Titre */
 .sort-header h3 {
     color: #ff4081;
     margin-bottom: 20px;
@@ -52,22 +47,18 @@ body {
     text-align: center;
 }
 
-/* Formulaire */
 .sort-form {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-/* Label général */
 .sort-form label {
-    display: flex;
-        font-weight: 600;
-        margin-top: 13px;
-        color: #ff79b0;
+    font-weight: 600;
+    margin-top: 13px;
+    color: #ff79b0;
 }
 
-/* Conteneur des checkboxes */
 .sort-form div {
     display: flex;
     flex-wrap: wrap;
@@ -75,15 +66,6 @@ body {
     color: #ddd;
 }
 
-/* Checkbox stylisée */
-.sort-form input[type="checkbox"] {
-    transform: scale(1.15);
-    margin-right: 6px;
-    cursor: pointer;
-    accent-color: #ff4081;
-}
-
-/* Texte des options (label entourant la checkbox) */
 .sort-form div label {
     display: flex;
     align-items: center;
@@ -92,7 +74,13 @@ body {
     color: #ddd;
 }
 
-/* Champ texte */
+.sort-form input[type="checkbox"] {
+    transform: scale(1.15);
+    margin-right: 6px;
+    cursor: pointer;
+    accent-color: #ff4081;
+}
+
 .sort-form input[type="text"] {
     width: 100%;
     padding: 8px 12px;
@@ -100,207 +88,197 @@ body {
     border: none;
     background-color: #2a2a2a;
     color: #eee;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
-    font-size: 1rem;
-    transition: box-shadow 0.3s ease;
+    box-shadow: inset 0 0 6px #ff4081;
+    font-size: 16px;
+    outline-offset: 2px;
 }
 
-.sort-form input[type="text"]::placeholder {
-    color: #888;
-}
-
-.sort-form input[type="text"]:focus {
-    outline: none;
+.sort-form button {
+    margin-top: 18px;
+    background-color: #ff4081;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 24px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    align-self: center;
+    min-width: 160px;
     box-shadow: 0 0 10px #ff4081;
 }
 
-/* Bouton appliquer */
-.sort-form button {
-    margin-top: 25px;
-    padding: 14px 24px;
-    border-radius: 14px;
-    border: none;
-    background-color: #ff4081;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.7);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    align-self: center;
-    width: 100%;
-    max-width: 280px;
-}
-
 .sort-form button:hover {
-    background-color: #e0366c;
-    box-shadow: 0 6px 22px rgba(224, 54, 108, 0.9);
+    background-color: #ff1c70;
 }
 
-/* ====== CONTENEUR LISTE DES PROFILS ====== */
+/* ====== CONTAINER LISTE DES PROFILS ====== */
 .profile-container {
-    flex: 3 1 680px;
+    flex: 3 1 700px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 26px;
+    max-width: 900px;
+    overflow-y: auto;
+    padding-bottom: 10px;
 }
 
-/* ====== CARTE DE PROFIL ====== */
+/* ====== CARTE PROFIL ====== */
 .profile-card {
-    background: #1f1f1f;
+    background: #1c1c1c;
     border-radius: 16px;
-    padding: 20px 25px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 5px 20px #ff408180;
+    padding: 20px;
     display: flex;
-    gap: 20px;
-    width: 100%;
-    
-    transition: box-shadow 0.3s ease;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    border: 2px solid transparent;
+    transition: border-color 0.25s ease;
 }
 
 .profile-card:hover {
-    box-shadow: 0 10px 25px rgba(255, 0, 80, 0.4);
+    border-color: #ff4081;
+}
+
+/* Ligne principale avatar + infos + bio */
+.profile-row {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
 /* ====== AVATAR ====== */
 .avatar-container {
     flex-shrink: 0;
-    width: 250px;
-    height: 250px;
-    border-radius: 26%;
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 3px 12px rgba(255, 0, 80, 0.5);
-    transition: transform 0.3s ease;
+    box-shadow: 0 0 10px #ff4081aa inset;
 }
 
 .avatar-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.avatar-container:hover {
-    transform: scale(1.05);
+    display: block;
+    transition: filter 0.3s ease;
+    border-radius: 16px;
 }
 
 /* ====== INFOS PROFIL ====== */
-.info-container {
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.profile-infos {
+    flex-grow: 1;
+    max-width: 400px;
+    color: #f5f5f5;
 }
 
-.info-container h2 {
+.profile-infos h2 {
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     margin-bottom: 8px;
-    color: #ff4081;
-    text-shadow: 0 0 6px #ff4081;
+    color: #ff5c8d;
+    text-shadow: 0 0 7px #ff4081cc;
 }
 
-.info-container h2 a.profile-link {
+.profile-infos h2 a.profile-link {
     color: inherit;
     text-decoration: none;
     transition: color 0.25s ease;
 }
 
-.info-container h2 a.profile-link:hover {
-    color: #ff79b0;
-    text-decoration: underline;
-}
-
-.info-container p {
-    font-size: 1.05rem;
-    margin: 6px 0;
-    color: #ccc;
-}
-
-.info-container strong {
-    font-weight: 600;
-    color: #ff4081;
-}
-
-/* ====== BOUTON ====== */
-.btn-secondary {
-    margin-top: 15px;
-    background-color: #ff4081;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    font-weight: 700;
+.profile-infos h2 a.profile-link:hover {
+    color: #ff1c70;
+    text-shadow: 0 0 15px #ff1c70cc;
     cursor: pointer;
-    width: max-content;
-    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.6);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
+}
+
+.profile-infos p {
+    font-size: 1rem;
+    margin: 6px 0;
+    font-weight: 600;
+    color: #ff7b9a;
+    line-height: 1.3;
+}
+
+/* ====== BIOGRAPHIE ====== */
+.profile-biography {
+    flex-grow: 2;
+    max-width: 300px;
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    padding-left: 12px;
+    border-left: 3px solid #ff4081;
+}
+
+/* ====== BOUTON MESSAGE ====== */
+.btn-secondary {
+    align-self: flex-start;
+    background-color: transparent;
+    border: 2px solid #ff4081;
+    color: #ff4081;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 220px;
     text-align: center;
+    text-decoration: none;
+    margin-top: 12px;
 }
 
 .btn-secondary:hover {
-    background-color: #e0366c;
-    box-shadow: 0 6px 22px rgba(224, 54, 108, 0.8);
+    background-color: #ff4081;
+    color: #fff;
+    box-shadow: 0 0 12px #ff4081aa;
 }
 
 /* ====== GALERIE DE PHOTOS ====== */
 .photo-gallery {
-    border-top: 1px solid rosybrown;
+    margin-top: 12px;
     display: flex;
     gap: 14px;
-    margin-top: 15px;
-    padding-top: 10px;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
-.photo-gallery img.photo-thumbnail {
-    width: 70px;
-    height: 70px;
-    border-radius: 14px;
+.photo-thumbnail {
+    width: 75px;
+    height: 75px;
+    border-radius: 10px;
     object-fit: cover;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #2c2c2c;
+    box-shadow: 0 0 10px #ff4081aa;
+    transition: transform 0.3s ease;
+    border: 2px solid transparent;
 }
 
-.photo-gallery img.photo-thumbnail:hover {
-    transform: scale(1.2);
-    box-shadow: 0 10px 25px rgba(255, 64, 129, 0.7);
+.photo-thumbnail:hover {
+    transform: scale(1.05);
+    border-color: #ff4081;
 }
 
 
 
-/* ====== MODAL BOOTSTRAP ====== */
-.modal-content {
-    background-color: #1f1f1f !important;
-    border-radius: 14px;
-    box-shadow: 0 8px 30px rgba(255, 64, 129, 0.6);
+/* ====== MODAL CAROUSEL BOOTSTRAP ====== */
+.modal-fullscreen {
+    background-color: #000000dd;
 }
 
-.carousel-item img {
-    max-height: 85vh;
-    object-fit: contain;
-    margin: 0 auto;
-}
-
-.btn-close {
-    background-color: white;
+.carousel-inner img {
+    border-radius: 16px;
 }
 
 /* ====== RESPONSIVE ====== */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .container {
         flex-direction: column;
-        padding: 20px 15px;
-    }
-
-    .sort-content{
-        display: flex;
+        padding: 15px;
     }
 
     .sort-container {
@@ -310,24 +288,16 @@ body {
 
     .profile-container {
         max-width: 100%;
-        justify-content: center;
     }
 
-.profile-card {
-    max-width: 100%;
-    flex-direction: column;
-    align-items: center;
-}
+    .profile-row {
+        flex-direction: column;
+        align-items: center;
+    }
 
-.avatar-container {
-    width: 100%;
-    max-width: 350px;
-    height: 250px;
-}
-
-.info-container {
-    width: 100%;
-    text-align: center;
-    margin-top: 15px;
-}
+    .profile-infos,
+    .profile-biography {
+        max-width: 100%;
+        text-align: center;
+    }
 }

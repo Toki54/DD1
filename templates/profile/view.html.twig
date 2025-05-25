@@ -33,12 +33,13 @@
 		<h3>Galerie de photos</h3>
 		<div class="photo-gallery" id="gallery-{{ userProfile.id }}">
 			{% if userProfile.photos %}
+				{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
+				{% set isSubscribed = is_granted('ROLE_USER') %}
+				{# selon ta logique d'abonnement #}
 				{% for photo in userProfile.photos %}
-					{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
-					{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
-<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if blur %}blur-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
-
-
+					{# On applique le flou si on n'est pas le propriétaire ET qu'on n'a pas l'abonnement #}
+					{% set blur = (not isCurrentUser) and (not isSubscribed) %}
+					<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if blur %}blur-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
 				{% endfor %}
 			{% else %}
 				<p>Aucune photo</p>
@@ -56,13 +57,12 @@
 				<div class="modal-body">
 					<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
 						<div class="carousel-inner">
+							{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
+							{% set isSubscribed = is_granted('ROLE_USER') %}
 							{% for photo in userProfile.photos %}
-								{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
-								{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
+								{% set blur = (not isCurrentUser) and (not isSubscribed) %}
 								<div class="carousel-item {% if loop.first %}active{% endif %}">
-<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if blur %}blur-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
-
-
+									<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if blur %}blur-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
 								</div>
 							{% endfor %}
 						</div>
@@ -80,11 +80,6 @@
 		</div>
 	</div>
 
-	<style>
-		.blur-photo {
-			filter: blur(10px);
-			pointer-events: none;
-		}
-	</style>
+	
 {% endblock %}
 

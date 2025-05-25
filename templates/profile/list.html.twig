@@ -18,44 +18,39 @@
 			<section class="sort-content">
 				<form
 					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
-					<!-- Filtre Sexe -->
+					<!-- Sexe -->
 					<label for="sex">Sexe:</label>
 					<div>
-						<input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %} checked {% endif %}>
-						Homme
-						<input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %} checked {% endif %}>
-						Femme
-						<input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %} checked {% endif %}>
-						Autre
+						<label><input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %} checked {% endif %}>
+							Homme</label>
+						<label><input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %} checked {% endif %}>
+							Femme</label>
+						<label><input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %} checked {% endif %}>
+							Autre</label>
 					</div>
-
-					<!-- Filtre Situation -->
+					<!-- Situation -->
 					<label for="situation">Situation:</label>
 					<div>
-						<input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %} checked {% endif %}>
-						Célibataire
-						<input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %} checked {% endif %}>
-						En couple
+						<label><input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %} checked {% endif %}>
+							Célibataire</label>
+						<label><input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %} checked {% endif %}>
+							En couple</label>
 					</div>
-
-					<!-- Filtre Recherche -->
+					<!-- Recherche -->
 					<label for="research">Qui recherche:</label>
 					<div>
-						<input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %} checked {% endif %}>
-						Homme
-						<input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %} checked {% endif %}>
-						Femme
-						<input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %} checked {% endif %}>
-						Couple
+						<label><input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %} checked {% endif %}>
+							Homme</label>
+						<label><input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %} checked {% endif %}>
+							Femme</label>
+						<label><input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %} checked {% endif %}>
+							Couple</label>
 					</div>
-
-
-					<!-- Filtre Ville -->
+					<!-- Ville -->
 					<label for="city">Ville:</label>
 					<div>
 						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
 					</div>
-
 					<button type="submit">Appliquer le tri</button>
 				</form>
 			</section>
@@ -64,69 +59,67 @@
 		<!-- Liste des profils -->
 		<section class="profile-container">
 			{% for profile in profiles %}
-				<article
-					class="profile-card">
-					<!-- Avatar -->
-					<section class="avatar-container">
-						<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
-					</section>
+				{% if profile.user.pseudo != app.user.pseudo %}
+					<article
+						class="profile-card">
+						<!-- Ligne principale avec avatar et infos -->
+						<div
+							class="profile-row">
+							<!-- Avatar à gauche -->
+							<div class="avatar-container">
+								<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
+							</div>
 
-					<!-- Informations -->
-					<section class="info-container">
-						<h2>
-							<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
-						</h2>
-						<p>
-							
-							{{ profile.sex|default('Non spécifié') }}</p>
-						<p>
-							
-{% if profile.birthdate %}
-	{% set now = "now"|date("Y") %}
-	{% set birthYear = profile.birthdate|date("Y") %}
-	<p>
+							<!-- Infos à droite de l'avatar -->
+							<div class="profile-infos">
+								<h2>
+									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}
+										-</a>
+									<a>{{ profile.city|default('Non spécifiée') }}</a>
+								</h2>
+								<p>
+									<strong>{{ profile.sex|default('Non spécifié') }}</strong>
+									-
+									{% if profile.birthdate %}
+										{% set now = "now"|date("Y") %}
+										{% set birthYear = profile.birthdate|date("Y") %}
+										{{ now - birthYear }}
+										ans
+									{% endif %}
+								</p>
 
-		{{ now - birthYear }}
-		ans</p>
-{% else %}
-	<p>
+								<p>{{ profile.city|default('Non spécifiée') }}</p>
 
-		Non spécifié</p>
-{% endif %}
+								<p>
+									<strong>pour</strong>
+									{{ profile.research|join(', ')|default('Non renseignée') }}</p>
+							</div>
 
-						</p>
+							<!-- Biographie à droite des infos -->
+							<div class="profile-biography">
+								<p><br>{{ profile.biography|default('Aucune') }}</p>
+							</div>
+						</div>
 
-						<p>
-							
-							{{ profile.situation|default('Non renseigné') }}</p>
-						<p></p>
-						<p>
-							<strong>Recherche</strong>
-							{{ profile.research|join(', ') }}</p>
-
-
-						<p>
-							<strong>Biographie:</strong>
-							{{ profile.biography|default('Aucune biographie') }}</p>
 						<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
-					</section>
 
-					<!-- Galerie de photos -->
-					<section class="photo-gallery" id="gallery-{{ profile.id }}">
-						{% if profile.photos %}
-							{% for photo in profile.photos %}
-								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if not isSubscribed %}blurred-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
-							{% endfor %}
-						{% else %}
-							<p>Aucune photo ajoutée.</p>
-						{% endif %}
-					</section>
-				</article>
+						<!-- Galerie de photos -->
+						<section class="photo-gallery" id="gallery-{{ profile.id }}">
+							{% if profile.photos %}
+								{% for photo in profile.photos %}
+									<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if not isSubscribed %}blurred-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
+								{% endfor %}
+							{% else %}
+								<p>Aucune photo ajoutée.</p>
+							{% endif %}
+						</section>
+					</article>
+				{% endif %}
 			{% endfor %}
 		</section>
 	</section>
 
-	<!-- Modals pour photos -->
+	<!-- Modals pour les galeries -->
 	{% for profile in profiles %}
 		<div class="modal fade" id="photoCarousel-{{ profile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
 			<div class="modal-dialog modal-fullscreen">
@@ -148,14 +141,16 @@
 								<span class="visually-hidden">Précédent</span>
 							</button>
 							<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ profile.id }}" data-bs-slide="next">
-								<spanSuivant</span class="carousel-control-next-icon" </span> <span class="visually-hidden">></button>
-							</div>
+								<span class="carousel-control-next-icon"></span>
+								<span class="visually-hidden">Suivant</span>
+							</button>
 						</div>
 					</div>
 				</div>
 			</div>
-		{% endfor %}
+		</div>
+	{% endfor %}
 
-		<!-- JS -->
-		 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
-	{% endblock %}
+	 <script src="{{ asset('script/js/profile-list.js') }}" defer></script>
+{% endblock %}
+
