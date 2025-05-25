@@ -77,15 +77,27 @@
 							<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
 						</h2>
 						<p>
-							<strong>Sexe:</strong>
+							
 							{{ profile.sex|default('Non spécifié') }}</p>
 						<p>
-							<strong>Âge:</strong>
-							{{ profile.age is not null ? profile.age ~ ' ans' : 'Non spécifié' }}
+							
+{% if profile.birthdate %}
+	{% set now = "now"|date("Y") %}
+	{% set birthYear = profile.birthdate|date("Y") %}
+	<p>
+
+		{{ now - birthYear }}
+		ans</p>
+{% else %}
+	<p>
+
+		Non spécifié</p>
+{% endif %}
+
 						</p>
 
 						<p>
-							<strong>Situation:</strong>
+							
 							{{ profile.situation|default('Non renseigné') }}</p>
 						<p></p>
 						<p>
