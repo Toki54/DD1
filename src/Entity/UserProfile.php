@@ -59,6 +59,14 @@ class UserProfile
  #[ORM\JoinColumn(nullable: false)]
  private ?User $user = null;
 
+ #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+#[Assert\NotBlank(message: 'La date de naissance est requise.')]
+#[Assert\LessThanOrEqual(
+    value: '-18 years',
+    message: 'Vous devez avoir au moins 18 ans.'
+)]
+private ?\DateTimeInterface $birthdate = null;
+
  public function getId(): ?int
  {return $this->id;}
 
@@ -150,5 +158,16 @@ public function setResearch(?array $research): self
  {
   return __DIR__ . '/../../public/uploads/photos'; // Adapté selon ton environnement
  }
+
+ public function getBirthdate(): ?\DateTimeInterface
+{
+    return $this->birthdate;
+}
+
+public function setBirthdate(?\DateTimeInterface $birthdate): static
+{
+    $this->birthdate = $birthdate;
+    return $this;
+}
 
 }

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\UserProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -45,17 +46,23 @@ class UserProfileType extends AbstractType
 
   $builder
    ->add('sex', ChoiceType::class, [
-    'choices'  => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
+    'choices'     => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
     'placeholder' => 'Sélectionnez votre Sexe',
-    'multiple' => false,
+    'multiple'    => false,
+   ])
+   ->add('birthdate', DateType::class, [
+    'label'    => 'Date de naissance',
+    'widget'   => 'single_text',
+    'attr'     => ['max' => (new \DateTime('-18 years'))->format('Y-m-d')],
+    'required' => true,
    ])
    ->add('situation', ChoiceType::class, [
-    'choices'  => ['Célibataire' => 'Célibataire', 'En couple' => 'En couple', 'Couple libre' => 'Couple libre'],
+    'choices'     => ['Célibataire' => 'Célibataire', 'En couple' => 'En couple', 'Couple libre' => 'Couple libre'],
     'placeholder' => 'Sélectionnez votre Situation',
-    'multiple' => false,
+    'multiple'    => false,
    ])
    ->add('research', ChoiceType::class, [
-    'label' => 'Je recherche',
+    'label'    => 'Je recherche',
     'choices'  => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
     'expanded' => true,
     'multiple' => true,
