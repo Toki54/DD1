@@ -5,41 +5,44 @@ namespace App\Controller;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserProfileController extends AbstractController
 {
  #[Route('/profile', name: 'app_profile_show')]
-    public function show(EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
+ public function show(EntityManagerInterface $entityManager): Response
+ {
+  $user = $this->getUser();
 
-        if (!$user) {
-            $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
-            return $this->redirectToRoute('app_login');
-        }
+  if (!$user) {
+   $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
+   return $this->redirectToRoute('app_login');
+  }
 
-        $userProfile = $user->getProfile();
+  $userProfile = $user->getProfile();
 
-        if (!$userProfile) {
-            $userProfile = new UserProfile();
-            $userProfile->setUser($user);
-            $entityManager->persist($userProfile);
-            $entityManager->flush();
-        }
+  if (!$userProfile) {
+   $userProfile = new UserProfile();
+   $userProfile->setUser($user);
+   $entityManager->persist($userProfile);
+   $entityManager->flush();
+  }
 
-        // Vérifie si l'utilisateur est abonné (ROLE_PREMIUM par exemple)
-        $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles());
+  $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles());
 
-        return $this->render('profile/show.html.twig', [
-            'userProfile' => $userProfile,
-            'isSubscribed' => $isSubscribed,
-        ]);
-    }
+  // Récupère les photos à afficher, floutées si non abonné
+  $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+
+  return $this->render('profile/show.html.twig', [
+   'userProfile'  => $userProfile,
+   'photos'       => $photosToDisplay,
+   'isSubscribed' => $isSubscribed,
+  ]);
+ }
 
  #[Route('/profile/edit', name: 'app_profile_edit')]
  public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
@@ -51,7 +54,6 @@ class UserProfileController extends AbstractController
    return $this->redirectToRoute('app_login');
   }
 
-  // Vérifie si le profil existe, sinon crée-le
   $userProfile = $user->getProfile();
 
   if (!$userProfile) {
@@ -65,7 +67,6 @@ class UserProfileController extends AbstractController
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
-   // Gestion de l'avatar
    $avatarFile = $form->get('avatarFile')->getData();
    if ($avatarFile) {
     $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
@@ -73,7 +74,6 @@ class UserProfileController extends AbstractController
     $userProfile->setAvatar($avatarFilename);
    }
 
-   // Gestion des photos
    $photoFiles = $form->get('photoFiles')->getData();
    if ($photoFiles) {
     $existingPhotos = $userProfile->getPhotos() ?? [];
@@ -100,93 +100,92 @@ class UserProfileController extends AbstractController
 
   return $this->render('profile/edit.html.twig', [
    'form'        => $form->createView(),
-   'userProfile' => $userProfile, // Assure-toi que la variable userProfile est passée à la vue
+   'userProfile' => $userProfile,
   ]);
  }
 
  #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
-public function view(int $id, EntityManagerInterface $entityManager): Response
-{
-    $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+ public function view(int $id, EntityManagerInterface $entityManager): Response
+ {
+  $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
 
-    if (!$userProfile) {
-        throw $this->createNotFoundException('Profil non trouvé.');
-    }
+  if (!$userProfile) {
+   throw $this->createNotFoundException('Profil non trouvé.');
+  }
 
-    // Vérifie si l'utilisateur connecté est abonné (si connecté)
-    $isSubscribed = false;
-    $user = $this->getUser();
-    if ($user && method_exists($user, 'getSubscription')) {
-        $isSubscribed = (bool) $user->getSubscription();
-    }
+  $isSubscribed = false;
+  $user         = $this->getUser();
+  if ($user && method_exists($user, 'getSubscription')) {
+   $isSubscribed = (bool) $user->getSubscription();
+  }
 
-    return $this->render('profile/view.html.twig', [
-        'userProfile'  => $userProfile,
-        'isSubscribed' => $isSubscribed,
-    ]);
-}
+  $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
 
+  return $this->render('profile/view.html.twig', [
+   'userProfile'  => $userProfile,
+   'photos'       => $photosToDisplay,
+   'isSubscribed' => $isSubscribed,
+  ]);
+ }
 
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
-public function list(Request $request, EntityManagerInterface $entityManager, ?int $id): Response
-{
-    // Récupération des filtres
-    $sexFilters       = $request->query->all('sex');
-    $situationFilters = $request->query->all('situation');
-    $city             = $request->query->get('city');
-    $researchFilters  = $request->query->all('research');
+ public function list(Request $request, EntityManagerInterface $entityManager, ?int $id): Response
+ {
+  $sexFilters       = $request->query->all('sex');
+  $situationFilters = $request->query->all('situation');
+  $city             = $request->query->get('city');
+  $researchFilters  = $request->query->all('research');
 
-    // Construction de la requête
-    $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
+  $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
 
-    if (!empty($sexFilters)) {
-        $qb->andWhere('p.sex IN (:sex)')->setParameter('sex', $sexFilters);
-    }
+  if (!empty($sexFilters)) {
+   $qb->andWhere('p.sex IN (:sex)')->setParameter('sex', $sexFilters);
+  }
 
-    if (!empty($situationFilters)) {
-        $qb->andWhere('p.situation IN (:situation)')->setParameter('situation', $situationFilters);
-    }
+  if (!empty($situationFilters)) {
+   $qb->andWhere('p.situation IN (:situation)')->setParameter('situation', $situationFilters);
+  }
 
-    if (!empty($city)) {
-        $qb->andWhere('p.city = :city')->setParameter('city', $city);
-    }
+  if (!empty($city)) {
+   $qb->andWhere('p.city = :city')->setParameter('city', $city);
+  }
 
-    if (!empty($researchFilters)) {
- $orX = $qb->expr()->orX();
- foreach ($researchFilters as $key => $val) {
-  $orX->add($qb->expr()->like('p.research', ':research_' . $key));
-  $qb->setParameter('research_' . $key, '%"' . $val . '"%');
+  if (!empty($researchFilters)) {
+   $orX = $qb->expr()->orX();
+   foreach ($researchFilters as $key => $val) {
+    $orX->add($qb->expr()->like('p.research', ':research_' . $key));
+    $qb->setParameter('research_' . $key, '%"' . $val . '"%');
+   }
+   $qb->andWhere($orX);
+  }
+
+  $qb->orderBy('p.id', 'DESC');
+  $profiles = $qb->getQuery()->getResult();
+
+  $selectedProfile = null;
+  if ($id) {
+   $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+  }
+
+  $user         = $this->getUser();
+  $isSubscribed = $user && method_exists($user, 'getSubscription') && $user->getSubscription() ? true : false;
+
+  // Remplace les photos des profils par la version floutée si non abonné
+  foreach ($profiles as $profile) {
+   $photos = $this->getPhotosForDisplay($profile, $isSubscribed);
+   $profile->setPhotos($photos); // Attention : si getPhotos() est persistant, créer un setter temporaire ou une variable temporaire
+  }
+
+  return $this->render('profile/list.html.twig', [
+   'profiles'        => $profiles,
+   'selectedProfile' => $selectedProfile,
+   'sex'             => $sexFilters,
+   'situation'       => $situationFilters,
+   'city'            => $city,
+   'research'        => $researchFilters,
+   'isSubscribed'    => $isSubscribed,
+  ]);
  }
- $qb->andWhere($orX);
-}
-
-
-    // On peut trier les profils par date de création ou mise à jour si les colonnes existent
-    $qb->orderBy('p.id', 'DESC');
-
-    $profiles = $qb->getQuery()->getResult();
-
-    // Profil sélectionné si on a passé un ID dans l’URL
-    $selectedProfile = null;
-    if ($id) {
-        $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-    }
-
-    // Vérifie si l'utilisateur actuel est abonné
-    $isSubscribed = $this->getUser() && $this->getUser()->getSubscription() ? true : false;
-
-    return $this->render('profile/list.html.twig', [
-        'profiles'         => $profiles,
-        'selectedProfile'  => $selectedProfile,
-        'sex'              => $sexFilters,
-        'situation'        => $situationFilters,
-        'city'             => $city,
-        'research'         => $researchFilters,
-        'isSubscribed'     => $isSubscribed,
-    ]);
-}
-
-
 
  #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
  public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
@@ -205,12 +204,9 @@ public function list(Request $request, EntityManagerInterface $entityManager, ?i
    return $this->redirectToRoute('app_profile_show');
   }
 
-  // Vérifie si la photo existe dans le profil
   if (in_array($photoFilename, $userProfile->getPhotos())) {
-   // Retirer la photo du tableau
    $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
 
-   // Supprimer le fichier de l'upload
    $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
    if (file_exists($photoPath)) {
     unlink($photoPath);
@@ -225,4 +221,42 @@ public function list(Request $request, EntityManagerInterface $entityManager, ?i
   return $this->redirectToRoute('app_profile_edit');
  }
 
+ /**
+  * Retourne le tableau de photos à afficher, floutées si utilisateur non abonné
+  */
+ private function getPhotosForDisplay(UserProfile $profile, bool $isSubscribed): array
+ {
+  $photos = $profile->getPhotos() ?? [];
+
+  if ($isSubscribed) {
+   // Utilisateur abonné : renvoie toutes les photos originales
+   return $photos;
+  }
+
+  // Utilisateur non abonné : on ne renvoie que la 1ère photo floutée, les autres masquées
+
+  if (empty($photos)) {
+   return [];
+  }
+
+  // Exemple : on renvoie une version floutée de la première photo
+  // ATTENTION : il faut avoir pré-généré une version floutée en amont,
+  // ou utiliser une image floue par défaut (ex: 'blurred_placeholder.jpg')
+  // ici on suppose que la version floutée porte un préfixe 'blurred_' + filename
+
+  $blurredPhotos = [];
+
+  $firstPhoto       = $photos[0];
+  $blurredPhotoPath = 'blurred_' . $firstPhoto;
+
+  $blurredPhotoFullPath = $this->getParameter('photos_directory') . '/' . $blurredPhotoPath;
+  if (file_exists($blurredPhotoFullPath)) {
+   $blurredPhotos[] = $blurredPhotoPath;
+  } else {
+   // Si pas de version floutée dispo, on peut utiliser une image floue générique
+   $blurredPhotos[] = 'blurred_placeholder.jpg'; // à placer dans le dossier photos
+  }
+
+  return $blurredPhotos;
+ }
 }

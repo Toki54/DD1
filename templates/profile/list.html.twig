@@ -75,7 +75,7 @@
 								<h2>
 									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}
 										-</a>
-									<a>{{ profile.city|default('Non spécifiée') }}</a>
+									<span>{{ profile.city|default('Non spécifiée') }}</span>
 								</h2>
 								<p>
 									<strong>{{ profile.sex|default('Non spécifié') }}</strong>
@@ -87,9 +87,7 @@
 										ans
 									{% endif %}
 								</p>
-
 								<p>{{ profile.city|default('Non spécifiée') }}</p>
-
 								<p>
 									<strong>pour</strong>
 									{{ profile.research|join(', ')|default('Non renseignée') }}</p>

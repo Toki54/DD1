@@ -35,43 +35,41 @@
 			{% if userProfile.photos %}
 				{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
 				{% set isSubscribed = is_granted('ROLE_USER') %}
-				{# selon ta logique d'abonnement #}
 				{% for photo in userProfile.photos %}
-					{# On applique le flou si on n'est pas le propriétaire ET qu'on n'a pas l'abonnement #}
 					{% set blur = (not isCurrentUser) and (not isSubscribed) %}
 					<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if blur %}blur-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
 				{% endfor %}
 			{% else %}
-				<p>Aucune photo</p>
+				<p>Aucune photo ajoutée.</p>
 			{% endif %}
 		</div>
+
+		<a href="{{ path('app_messages', { id: userProfile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
 	</section>
 
-	<!-- Modal Bootstrap pour la galerie -->
+	<!-- Modal galerie -->
 	<div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
 		<div class="modal-dialog modal-fullscreen">
-			<div class="modal-content" style="background-color: black;">
+			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 				</div>
 				<div class="modal-body">
 					<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
 						<div class="carousel-inner">
-							{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
-							{% set isSubscribed = is_granted('ROLE_USER') %}
 							{% for photo in userProfile.photos %}
 								{% set blur = (not isCurrentUser) and (not isSubscribed) %}
 								<div class="carousel-item {% if loop.first %}active{% endif %}">
-									<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if blur %}blur-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
+									<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block {% if blur %}blur-photo{% endif %}" alt="Photo utilisateur" style="width: 300px; height: 300px; object-fit: cover;">
 								</div>
 							{% endfor %}
 						</div>
 						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="carousel-control-prev-icon"></span>
 							<span class="visually-hidden">Précédent</span>
 						</button>
 						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="carousel-control-next-icon"></span>
 							<span class="visually-hidden">Suivant</span>
 						</button>
 					</div>
@@ -80,6 +78,6 @@
 		</div>
 	</div>
 
-	
+	 <script src="{{ asset('script/js/profile-detail.js') }}" defer></script>
 {% endblock %}
 
