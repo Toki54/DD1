@@ -14,8 +14,8 @@
 }
 
 .blur-photo {
-    filter: blur(10px);
-    pointer-events: none;
+    filter: blur(8px);
+    transition: filter 0.3s ease;
 }
 
 .blurred {
