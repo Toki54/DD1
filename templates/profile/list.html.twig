@@ -11,10 +11,7 @@
 	<section
 		class="container">
 
-		<!-- Bouton toggle tri -->
-		
-
-		<!-- Bloc de tri (initialement visible) -->
+		<!-- Bloc de tri -->
 		<article class="sort-container" id="sortContainer" role="region" aria-label="Filtres de profils">
 			<header class="sort-header">
 				<h3>Filtrer les profils</h3>
@@ -23,53 +20,49 @@
 				<form
 					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
 					<!-- Sexe -->
-
-
 					<label for="sex">Sexe:
-
-
 						<input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %} checked {% endif %}>
-							Homme
+						Homme
 						<input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %} checked {% endif %}>
-							Femme
+						Femme
 						<input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %} checked {% endif %}>
-							Autre
-</label>
+						Autre
+					</label>
 
 					<!-- Situation -->
 					<label for="situation">Situation:
-					
 						<input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %} checked {% endif %}>
-							Célibataire
+						Célibataire
 						<input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %} checked {% endif %}>
-							En couple
+						En couple
 					</label>
+
 					<!-- Recherche -->
 					<label for="research">Qui recherche:
-					
 						<input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %} checked {% endif %}>
-							Homme
+						Homme
 						<input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %} checked {% endif %}>
-							Femme
+						Femme
 						<input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %} checked {% endif %}>
-							Couple
-</label>
+						Couple
+					</label>
 
-					<!-- Vlle -->
+					<!-- Ville -->
 					<label for="city">Ville:
-					<div>
-						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
-					</div>
-					<button type="submit">Appliquer le tri</button>
-</label>
+						<div>
+							<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
+						</div>
+					</label>
 
+					<button type="submit">Appliquer le tri</button>
 				</form>
 			</section>
 		</article>
-<button id="toggleSortBtn" class="toggle-sort-btn" aria-expanded="true" aria-controls="sortContainer">
-	Afficher / Masquer les filtres
-</button>
 
+		<!-- Bouton toggle tri -->
+		<button id="toggleSortBtn" class="toggle-sort-btn" aria-expanded="true" aria-controls="sortContainer">
+			Afficher / Masquer les filtres
+		</button>
 
 		<!-- Liste des profils -->
 		<section class="profile-container">
@@ -82,8 +75,10 @@
 							</div>
 							<div class="profile-infos">
 								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}
-										-</a>
+									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
+										{{ profile.user.pseudo }}
+									</a>
+									-
 									<span>{{ profile.city|default('Inc') }}</span>
 								</h2>
 								<p>
@@ -99,64 +94,26 @@
 								<p>{{ profile.city|default('Inc') }}</p>
 								<p>
 									<strong>pour</strong>
-									{{ profile.research|join(', ')|default('Inc') }}</p>
+									{% if profile.research is iterable %}
+										{{ profile.research|join(', ')|default('Inc') }}
+									{% else %}
+										{{ profile.research|default('Inc') }}
+									{% endif %}
+								</p>
 							</div>
 							<div class="profile-biography">
 								<p><br>{{ profile.biography|default('Aucune') }}</p>
 							</div>
-<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
-	<img src="/public/images/message.png" alt="Envoyer un message" style="width:40px; height:40px;">
-</a>
 
+							<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
+								<img src="/public/images/message.png" alt="Envoyer un message" style="width:40px; height:40px;">
+							</a>
 						</div>
-
-
-
-						<section class="photo-gallery" id="gallery-{{ profile.id }}">
-							{% if profile.photos %}
-								{% for photo in profile.photos %}
-									<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if not isSubscribed %}blurred-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ profile.id }}" data-bs-slide-to="{{ loop.index0 }}">
-								{% endfor %}
-							{% else %}
-								<p>Aucune photo ajoutée.</p>
-							{% endif %}
-						</section>
 					</article>
 				{% endif %}
 			{% endfor %}
 		</section>
 	</section>
-
-	{% for profile in profiles %}
-		<div class="modal fade" id="photoCarousel-{{ profile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
-			<div class="modal-dialog modal-fullscreen">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div id="carouselExample{{ profile.id }}" class="carousel slide" data-bs-ride="carousel">
-							<div class="carousel-inner">
-								{% for photo in profile.photos %}
-									<div class="carousel-item {% if loop.first %}active{% endif %}">
-										<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block {% if not isSubscribed %}blurred-photo{% endif %}" alt="User Photo" style="width: 300px; height: 300px; object-fit: cover;">
-									</div>
-								{% endfor %}
-							</div>
-							<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ profile.id }}" data-bs-slide="prev">
-								<span class="carousel-control-prev-icon"></span>
-								<span class="visually-hidden">Précédent</span>
-							</button>
-							<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ profile.id }}" data-bs-slide="next">
-								<span class="carousel-control-next-icon"></span>
-								<span class="visually-hidden">Suivant</span>
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endfor %}
 
 	 <script>
 	        document.addEventListener('DOMContentLoaded', () => {
@@ -169,7 +126,5 @@
 	            });
 	        });
 	    </script>
-
-	 
 {% endblock %}
 

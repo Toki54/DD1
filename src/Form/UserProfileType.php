@@ -51,7 +51,7 @@ class UserProfileType extends AbstractType
     'multiple'    => false,
    ])
    ->add('birthdate', DateType::class, [
-    'label'    => 'Date de naissance',
+    'label'    => 'Date de naissance ( seulement l\'âge sera visible )',
     'widget'   => 'single_text',
     'attr'     => ['max' => (new \DateTime('-18 years'))->format('Y-m-d')],
     'required' => true,
