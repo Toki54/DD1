@@ -108,6 +108,9 @@
 							<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
 								<img src="/public/images/message.png" alt="Envoyer un message" style="width:40px; height:40px;">
 							</a>
+<a href="{{ path('app_user_interest', {id: profile.id}) }}" class="interest-button">💖 Cette personne m'intéresse</a>
+
+
 						</div>
 					</article>
 				{% endif %}
