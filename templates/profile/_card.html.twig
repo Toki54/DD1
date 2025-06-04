@@ -1,7 +1,5 @@
-{# templates/profile/_card.html.twig #}
-
-	<link rel="stylesheet" href="{{ asset('css/list.css') }}">
-
+<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
+<div class="mil">
 
 <article class="profile-card">
 	<div class="profile-row">
@@ -10,7 +8,7 @@
 		</div>
 		<div class="profile-infos">
 			<h2>
-				<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link" title="Voir le profil de {{ profile.user.pseudo }}">
+				<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
 					{{ profile.user.pseudo }}
 				</a>
 				-
@@ -26,20 +24,24 @@
 					ans
 				{% endif %}
 			</p>
-			<p>{{ profile.city|default('Inc') }}</p>
+
 			<p>
-				<strong>pour</strong>
+				<strong>Ville :</strong>
+				{{ profile.city|default('Inconnue') }}</p>
+			<p>
+				<strong>Pour :</strong>
 				{% if profile.research is iterable %}
-					{{ profile.research|join(', ')|default('Inc') }}
+					{{ profile.research|join(', ') }}
 				{% else %}
-					{{ profile.research|default('Inc') }}
+					{{ profile.research|default('Non précisé') }}
 				{% endif %}
 			</p>
+
+			<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-secondary" title="Envoyer un message">
+				<img src="{{ asset('images/message.png') }}" alt="Envoyer un message">
+			</a>
 		</div>
-		
-		<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
-			<img src="{{ asset('images/message.png') }}" alt="Envoyer un message" style="width:40px; height:40px;">
-		</a>
 	</div>
 </article>
 
+</div>
