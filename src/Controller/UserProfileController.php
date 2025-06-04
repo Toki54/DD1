@@ -290,7 +290,7 @@ public function likes(EntityManagerInterface $entityManager): Response
 
     $userProfile = $user->getProfile();
 
-    // Récupérer les profils qui ont liké ton profil
+    // Profils qui ont liké ton profil
     $likes = $entityManager->getRepository(ProfileLike::class)
         ->createQueryBuilder('pl')
         ->where('pl.liked = :profile')
@@ -301,24 +301,34 @@ public function likes(EntityManagerInterface $entityManager): Response
 
     $likers = array_map(fn($like) => $like->getLiker(), $likes);
 
-    // Récupérer les profils qui t'ont visité (tu as déjà cette méthode visits, tu peux l'appeler ici)
-    $visits = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
-        ->createQueryBuilder('v')
+    // Récupérer la dernière visite par visiteur (donc un seul par visiteur)
+    $qb = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
+        ->createQueryBuilder('v');
+
+    // Sélectionner la visite la plus récente par visiteur
+    $subQuery = $entityManager->createQueryBuilder()
+        ->select('MAX(v2.visitedAt)')
+        ->from(\App\Entity\ProfileVisit::class, 'v2')
+        ->where('v2.visitor = v.visitor')
+        ->andWhere('v2.visited = :profile');
+
+    $visits = $qb
         ->where('v.visited = :profile')
         ->setParameter('profile', $userProfile)
+        ->andWhere($qb->expr()->eq('v.visitedAt', '(' . $subQuery->getDQL() . ')'))
         ->orderBy('v.visitedAt', 'DESC')
         ->getQuery()
         ->getResult();
 
+    // Extraire les profils visiteurs uniques
     $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
 
     return $this->render('profile/likes_and_visits.html.twig', [
         'visitorProfiles' => $visitorProfiles,
         'likerProfiles'   => $likers,
     ]);
-
-    
 }
+
 
 
  #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
