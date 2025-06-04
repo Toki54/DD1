@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Entity\ProfileLike;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserProfileController extends AbstractController
 {
@@ -199,18 +202,106 @@ class UserProfileController extends AbstractController
   ]);
  }
 
- #[Route('/profile/visites', name: 'app_profile_visits')]
-public function visits(EntityManagerInterface $entityManager): Response
+
+
+#[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
+public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
 {
     $user = $this->getUser();
-
     if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour voir vos visites.');
+        throw new AccessDeniedException('Vous devez être connecté.');
+    }
+
+    $likerProfile = $user->getProfile();
+    if (!$likerProfile) {
+        return new JsonResponse(['error' => 'Profil introuvable'], 400);
+    }
+
+    $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+    if (!$likedProfile) {
+        return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+    }
+
+    if ($likerProfile === $likedProfile) {
+        return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre profil'], 400);
+    }
+
+    // Vérifie si déjà liké
+    $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
+        'liker' => $likerProfile,
+        'liked' => $likedProfile,
+    ]);
+
+    if ($existingLike) {
+        // Déjà liké
+        return new JsonResponse(['message' => 'Déjà liké'], 200);
+    }
+
+    $like = new ProfileLike();
+    $like->setLiker($likerProfile);
+    $like->setLiked($likedProfile);
+    $entityManager->persist($like);
+    $entityManager->flush();
+
+    return new JsonResponse(['message' => 'Profil liké avec succès']);
+}
+
+#[Route('/profile/unlike/{id}', name: 'app_profile_unlike', methods: ['POST'])]
+public function unlike(int $id, EntityManagerInterface $entityManager): JsonResponse
+{
+    $user = $this->getUser();
+    if (!$user) {
+        throw new AccessDeniedException('Vous devez être connecté.');
+    }
+
+    $likerProfile = $user->getProfile();
+    if (!$likerProfile) {
+        return new JsonResponse(['error' => 'Profil introuvable'], 400);
+    }
+
+    $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+    if (!$likedProfile) {
+        return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+    }
+
+    $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
+        'liker' => $likerProfile,
+        'liked' => $likedProfile,
+    ]);
+
+    if (!$existingLike) {
+        return new JsonResponse(['message' => 'Profil non liké'], 200);
+    }
+
+    $entityManager->remove($existingLike);
+    $entityManager->flush();
+
+    return new JsonResponse(['message' => 'Like supprimé']);
+}
+
+#[Route('/profile/likes', name: 'app_profile_likes')]
+public function likes(EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+    if (!$user) {
+        $this->addFlash('error', 'Vous devez être connecté pour voir vos likes.');
         return $this->redirectToRoute('app_login');
     }
 
     $userProfile = $user->getProfile();
 
+    // Récupérer les profils qui ont liké ton profil
+    $likes = $entityManager->getRepository(ProfileLike::class)
+        ->createQueryBuilder('pl')
+        ->where('pl.liked = :profile')
+        ->setParameter('profile', $userProfile)
+        ->orderBy('pl.id', 'DESC')
+        ->getQuery()
+        ->getResult();
+
+    $likers = array_map(fn($like) => $like->getLiker(), $likes);
+
+    // Récupérer les profils qui t'ont visité (tu as déjà cette méthode visits, tu peux l'appeler ici)
     $visits = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
         ->createQueryBuilder('v')
         ->where('v.visited = :profile')
@@ -221,9 +312,12 @@ public function visits(EntityManagerInterface $entityManager): Response
 
     $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
 
-    return $this->render('profile/visits.html.twig', [
+    return $this->render('profile/likes_and_visits.html.twig', [
         'visitorProfiles' => $visitorProfiles,
+        'likerProfiles'   => $likers,
     ]);
+
+    
 }
 
 

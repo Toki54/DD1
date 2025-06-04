@@ -130,3 +130,34 @@ body {
 .mil{
     margin: auto;
 }
+
+/* Simple style onglets */
+.tabs {
+    display: flex;
+    margin-bottom: 1em;
+    cursor: pointer;
+}
+
+.tab {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background: #f0f0f0;
+    margin-right: 5px;
+    user-select: none;
+}
+
+.tab.active {
+    background: white;
+    font-weight: bold;
+    border-bottom: 1px solid white;
+}
+
+
+
+.profile-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    padding: 20px;
+}
