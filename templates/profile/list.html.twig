@@ -75,9 +75,11 @@
 							</div>
 							<div class="profile-infos">
 								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
-										{{ profile.user.pseudo }}
-									</a>
+<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
+	{{ profile.user.pseudo }}
+</a>
+
+
 									-
 									<span>{{ profile.city|default('Inc') }}</span>
 								</h2>

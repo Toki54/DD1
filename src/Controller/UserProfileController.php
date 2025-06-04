@@ -109,39 +109,39 @@ class UserProfileController extends AbstractController
  }
 
  #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
- public function view(int $id, EntityManagerInterface $entityManager): Response
- {
-  $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+public function view(int $id, EntityManagerInterface $entityManager): Response
+{
+    $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
 
-  if (!$userProfile) {
-   throw $this->createNotFoundException('Profil non trouvé.');
-  }
+    if (!$userProfile) {
+        throw $this->createNotFoundException('Profil non trouvé.');
+    }
 
-  $isSubscribed = false;
-  $user         = $this->getUser();
-  if ($user && method_exists($user, 'getSubscription')) {
-   $isSubscribed = (bool) $user->getSubscription();
-  }
+    $isSubscribed = false;
+    $user = $this->getUser();
+    if ($user && method_exists($user, 'getSubscription')) {
+        $isSubscribed = (bool) $user->getSubscription();
+    }
 
-  $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+    $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
 
-  if ($this->getUser()) {
-   $visitorProfile = $this->getUser()->getProfile();
-   if ($visitorProfile && $visitorProfile !== $userProfile) {
-    $visit = new \App\Entity\ProfileVisit();
-    $visit->setVisited($userProfile);
-    $visit->setVisitor($visitorProfile);
-    $entityManager->persist($visit);
-    $entityManager->flush();
-   }
-  }
+    if ($this->getUser()) {
+        $visitorProfile = $this->getUser()->getProfile();
+        if ($visitorProfile && $visitorProfile !== $userProfile) {
+            $visit = new \App\Entity\ProfileVisit();
+            $visit->setVisited($userProfile);
+            $visit->setVisitor($visitorProfile);
+            $entityManager->persist($visit);
+            $entityManager->flush();
+        }
+    }
 
-  return $this->render('profile/view.html.twig', [
-   'userProfile'  => $userProfile,
-   'photos'       => $photosToDisplay,
-   'isSubscribed' => $isSubscribed,
-  ]);
- }
+    return $this->render('profile/view.html.twig', [
+        'userProfile' => $userProfile,
+        'photos' => $photosToDisplay,
+        'isSubscribed' => $isSubscribed,
+    ]);
+}
 
  #[Route('/profiles/{id?}', name: 'app_profiles_list')]
  public function list(Request $request, EntityManagerInterface $entityManager, ?int $id): Response
