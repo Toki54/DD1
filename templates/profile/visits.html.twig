@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Visites de mon profil
+{% endblock %}
+
+{% block body %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+{% endblock %}
+
+	<h1>Visites récentes</h1>
+
+	{% if visitorProfiles is empty %}
+		<p>Aucune visite récente.</p>
+	{% else %}
+		{% for profile in visitorProfiles %}
+			{% include 'profile/_card.html.twig' with { profile: profile } %}
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+

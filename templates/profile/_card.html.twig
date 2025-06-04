@@ -1,0 +1,45 @@
+{# templates/profile/_card.html.twig #}
+
+	<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+
+
+<article class="profile-card">
+	<div class="profile-row">
+		<div class="avatar-container">
+			<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+		</div>
+		<div class="profile-infos">
+			<h2>
+				<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link" title="Voir le profil de {{ profile.user.pseudo }}">
+					{{ profile.user.pseudo }}
+				</a>
+				-
+				<span>{{ profile.city|default('Inc') }}</span>
+			</h2>
+			<p>
+				<strong>{{ profile.sex|default('Inc') }}</strong>
+				-
+				{% if profile.birthdate %}
+					{% set now = "now"|date("Y") %}
+					{% set birthYear = profile.birthdate|date("Y") %}
+					{{ now - birthYear }}
+					ans
+				{% endif %}
+			</p>
+			<p>{{ profile.city|default('Inc') }}</p>
+			<p>
+				<strong>pour</strong>
+				{% if profile.research is iterable %}
+					{{ profile.research|join(', ')|default('Inc') }}
+				{% else %}
+					{{ profile.research|default('Inc') }}
+				{% endif %}
+			</p>
+		</div>
+		
+		<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
+			<img src="{{ asset('images/message.png') }}" alt="Envoyer un message" style="width:40px; height:40px;">
+		</a>
+	</div>
+</article>
+

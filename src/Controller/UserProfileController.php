@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\UserProfile;
+use App\Entity\ProfileVisit;
 use App\Form\UserProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -121,6 +122,17 @@ class UserProfileController extends AbstractController
 
   $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
 
+  if ($this->getUser()) {
+   $visitorProfile = $this->getUser()->getProfile();
+   if ($visitorProfile && $visitorProfile !== $userProfile) {
+    $visit = new \App\Entity\ProfileVisit();
+    $visit->setVisited($userProfile);
+    $visit->setVisitor($visitorProfile);
+    $entityManager->persist($visit);
+    $entityManager->flush();
+   }
+  }
+
   return $this->render('profile/view.html.twig', [
    'userProfile'  => $userProfile,
    'photos'       => $photosToDisplay,
@@ -186,6 +198,34 @@ class UserProfileController extends AbstractController
    'isSubscribed'    => $isSubscribed,
   ]);
  }
+
+ #[Route('/profile/visites', name: 'app_profile_visits')]
+public function visits(EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+
+    if (!$user) {
+        $this->addFlash('error', 'Vous devez être connecté pour voir vos visites.');
+        return $this->redirectToRoute('app_login');
+    }
+
+    $userProfile = $user->getProfile();
+
+    $visits = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
+        ->createQueryBuilder('v')
+        ->where('v.visited = :profile')
+        ->setParameter('profile', $userProfile)
+        ->orderBy('v.visitedAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+
+    $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
+
+    return $this->render('profile/visits.html.twig', [
+        'visitorProfiles' => $visitorProfiles,
+    ]);
+}
+
 
  #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
  public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
