@@ -6,6 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 class UserProfile
@@ -66,6 +68,19 @@ class UserProfile
     message: 'Vous devez avoir au moins 18 ans.'
 )]
 private ?\DateTimeInterface $birthdate = null;
+
+#[ORM\OneToMany(mappedBy: 'liker', targetEntity: ProfileLike::class, cascade: ['remove'])]
+private Collection $likesSent;
+
+#[ORM\OneToMany(mappedBy: 'liked', targetEntity: ProfileLike::class, cascade: ['remove'])]
+private Collection $likesReceived;
+
+public function __construct()
+{
+    $this->likesSent = new ArrayCollection();
+    $this->likesReceived = new ArrayCollection();
+
+}
 
  public function getId(): ?int
  {return $this->id;}
@@ -168,6 +183,23 @@ public function setBirthdate(?\DateTimeInterface $birthdate): static
 {
     $this->birthdate = $birthdate;
     return $this;
+}
+
+/**
+ * @return Collection|ProfileLike[]
+ */
+public function getLikesSent(): Collection
+{
+    return $this->likesSent;
+}
+
+// Getters pour les likes reçus
+/**
+ * @return Collection|ProfileLike[]
+ */
+public function getLikesReceived(): Collection
+{
+    return $this->likesReceived;
 }
 
 }
