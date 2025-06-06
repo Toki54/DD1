@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 class UserProfile
@@ -20,8 +23,8 @@ class UserProfile
  #[ORM\Column(type: 'string', length: 100, nullable: true)]
  private ?string $situation = null;
 
- #[ORM\Column(type: 'string', length: 100, nullable: true)]
- private ?string $research = null;
+ #[ORM\Column(type: Types::JSON, nullable: true)]
+ private ?array $research = [];
 
  #[ORM\Column(type: 'text', nullable: true)]
  private ?string $biography = null;
@@ -58,6 +61,27 @@ class UserProfile
  #[ORM\JoinColumn(nullable: false)]
  private ?User $user = null;
 
+ #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+#[Assert\NotBlank(message: 'La date de naissance est requise.')]
+#[Assert\LessThanOrEqual(
+    value: '-18 years',
+    message: 'Vous devez avoir au moins 18 ans.'
+)]
+private ?\DateTimeInterface $birthdate = null;
+
+#[ORM\OneToMany(mappedBy: 'liker', targetEntity: ProfileLike::class, cascade: ['remove'])]
+private Collection $likesSent;
+
+#[ORM\OneToMany(mappedBy: 'liked', targetEntity: ProfileLike::class, cascade: ['remove'])]
+private Collection $likesReceived;
+
+public function __construct()
+{
+    $this->likesSent = new ArrayCollection();
+    $this->likesReceived = new ArrayCollection();
+
+}
+
  public function getId(): ?int
  {return $this->id;}
 
@@ -73,10 +97,17 @@ class UserProfile
  public function setSituation(?string $situation): static
  { $this->situation = $situation;return $this;}
 
- public function getResearch(): ?string
- {return $this->research;}
- public function setResearch(?string $research): static
- { $this->research = $research;return $this;}
+ public function getResearch(): ?array
+{
+    return $this->research;
+}
+
+public function setResearch(?array $research): self
+{
+    $this->research = $research;
+
+    return $this;
+}
 
  public function getBiography(): ?string
  {return $this->biography;}
@@ -121,7 +152,7 @@ class UserProfile
  {return $this->user;}
 
  public function setUser(User $user): self
- { $this->user = $user;return $this;}
+ {$this->user = $user;return $this;}
 
  public function removePhoto(string $photoFilename): void
  {
@@ -142,5 +173,33 @@ class UserProfile
  {
   return __DIR__ . '/../../public/uploads/photos'; // Adapté selon ton environnement
  }
+
+ public function getBirthdate(): ?\DateTimeInterface
+{
+    return $this->birthdate;
+}
+
+public function setBirthdate(?\DateTimeInterface $birthdate): static
+{
+    $this->birthdate = $birthdate;
+    return $this;
+}
+
+/**
+ * @return Collection|ProfileLike[]
+ */
+public function getLikesSent(): Collection
+{
+    return $this->likesSent;
+}
+
+// Getters pour les likes reçus
+/**
+ * @return Collection|ProfileLike[]
+ */
+public function getLikesReceived(): Collection
+{
+    return $this->likesReceived;
+}
 
 }

@@ -1,4 +1,7 @@
 liip_imagine:
-    driver: "gd"
-    twig:
-        mode: lazy
+    driver: gd
+    filter_sets:
+        cache: ~
+        blur:
+            filters:
+                blur: ~

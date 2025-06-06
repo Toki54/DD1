@@ -4,13 +4,116 @@
 {% endblock %}
 
 {% block body %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/abo.css') }}">
+{% endblock %}
+
+
 	<h1>Souscrire à un abonnement</h1>
 
+	<div
+		class="subscription-cards">
+		<!-- Carte pour 1 semaine -->
+		<div class="subscription-card" data-plan="basic">
+			<h3>1 Semaine</h3>
+			<p>5 €</p>
+			<p>Accès complet pendant 7 jours</p>
+			<button class="btn btn-primary" onclick="selectPlan('1 semaine - 5 €')">Choisir</button>
+		</div>
+
+		<!-- Carte pour 1 mois -->
+		<div class="subscription-card" data-plan="premium">
+			<h3>1 Mois</h3>
+			<p>15 €</p>
+			<p>Accès complet pendant 1 mois</p>
+			<button class="btn btn-primary" onclick="selectPlan('1 mois - 15 €')">Choisir</button>
+		</div>
+
+		<!-- Carte pour 3 mois -->
+		<div class="subscription-card" data-plan="vip">
+			<h3>3 Mois</h3>
+			<p>30 €</p>
+			<p>Accès complet pendant 3 mois</p>
+			<button class="btn btn-primary" onclick="selectPlan('3 mois - 30 €')">Choisir</button>
+		</div>
+
+		<!-- Carte pour 6 mois -->
+		<div class="subscription-card" data-plan="vip">
+			<h3>6 Mois</h3>
+			<p>50 €</p>
+			<p>Accès complet pendant 6 mois</p>
+			<button class="btn btn-primary" onclick="selectPlan('6 mois - 50 €')">Choisir</button>
+		</div>
+
+		<!-- Carte pour 1 an -->
+		<div class="subscription-card" data-plan="vip">
+			<h3>1 An</h3>
+			<p>80 €</p>
+			<p>Accès complet pendant 1 an</p>
+			<button class="btn btn-primary" onclick="selectPlan('1 an - 80 €')">Choisir</button>
+		</div>
+	</div>
+
+	<!-- Résumé dynamique -->
+	<div id="subscription-summary">
+		<h3>Résumé de l'abonnement</h3>
+		<p>
+			<strong>Abonnement sélectionné :</strong>
+			<span id="plan-name">Aucun</span>
+		</p>
+		<p>
+			<strong>Durée :</strong>
+			<span id="plan-duration">Aucune</span>
+		</p>
+		<p>
+			<strong>Prix :</strong>
+			<span id="plan-price">0 €</span>
+		</p>
+	</div>
+
+<div class="form-container">
 	{{ form_start(form) }}
+
 	{{ form_row(form.plan) }}
+	{# affichera un champ caché automatiquement #}
 	{{ form_row(form.startDate) }}
 	{{ form_row(form.endDate) }}
+
 	<button type="submit" class="btn btn-primary">Souscrire</button>
+
 	{{ form_end(form) }}
+</div>
+
+
+
+	 <script>
+	        // Fonction pour mettre à jour le résumé et sélectionner le plan
+	        function selectPlan(plan) {
+	            const planName = document.getElementById('plan-name');
+	            const planDuration = document.getElementById('plan-duration');
+	            const planPrice = document.getElementById('plan-price');
+	
+	            const plans = {
+	                '1 semaine - 5 €': { duration: '1 semaine', price: '5 €' },
+	                '1 mois - 15 €': { duration: '1 mois', price: '15 €' },
+	                '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
+	                '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
+	                '1 an - 80 €': { duration: '1 an', price: '80 €' },
+	            };
+	
+	            // Met à jour les éléments de résumé
+	            if (plans[plan]) {
+	                planName.textContent = plan;
+	                planDuration.textContent = plans[plan].duration;
+	                planPrice.textContent = plans[plan].price;
+	
+	                // Met à jour le champ caché du formulaire avec la sélection du plan
+	                const planField = document.querySelector('input[name="subscription[plan]"]');
+planField.value = plan;
+	            }
+	        }
+	    </script>
+
+	
 {% endblock %}
 

@@ -5,7 +5,7 @@
 
 {% block body %}
 	{% block stylesheet %}
-		<link rel="stylesheet" href="{{ asset('css/profile1.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 	{% endblock %}
 
 	<div class="profile-container">
@@ -38,6 +38,25 @@
 					</div>
 					<p>{{ userProfile.sex|default('Non spécifié.') }}</p>
 				</div>
+<div class="info-item">
+	<div class="info-header">
+		<h3>Âge</h3>
+	</div>
+{% if userProfile.birthdate %}
+	{% set now = "now"|date("Y") %}
+	{% set birthYear = userProfile.birthdate|date("Y") %}
+	<p>
+		
+		{{ now - birthYear }}
+		ans</p>
+{% else %}
+	<p>
+		
+		Non spécifié</p>
+{% endif %}
+
+</div>
+
 
 				<div class="info-item">
 					<div class="info-header">
@@ -46,12 +65,18 @@
 					<p>{{ userProfile.situation|default('Non renseigné.') }}</p>
 				</div>
 
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Recherche</h3>
-					</div>
-					<p>{{ userProfile.research|default('Non spécifié.') }}</p>
-				</div>
+{% if userProfile.research is not empty %}
+<div class="info-item">
+
+	<div class="info-header">
+		<h3>Recherche </h3>
+		{{ userProfile.research|join(', ') }}
+	</div>
+</div>
+
+{% endif %}
+
+
 
 				<div class="info-item">
 					<div class="info-header">

@@ -13,6 +13,11 @@
     flex-direction: column;
 }
 
+.blur-photo {
+    filter: blur(8px);
+    transition: filter 0.3s ease;
+}
+
 .blurred {
     filter: blur(5px);
     transition: filter 0.3s ease;

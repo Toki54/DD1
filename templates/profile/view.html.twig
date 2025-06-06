@@ -16,75 +16,84 @@
 
 		<p>
 			<strong>Sexe :</strong>
-			{{ userProfile.sex|default('Non spécifié') }}</p>
+			{{ userProfile.sex is iterable ? userProfile.sex|join(', ') : userProfile.sex|default('Non spécifié') }}
+		</p>
 		<p>
 			<strong>Situation :</strong>
-			{{ userProfile.situation|default('Non renseignée') }}</p>
+			{{ userProfile.situation is iterable ? userProfile.situation|join(', ') : userProfile.situation|default('Non renseignée') }}
+		</p>
 		<p>
 			<strong>Recherche :</strong>
-			{{ userProfile.research|default('Non spécifié') }}</p>
+			{{ userProfile.research is iterable ? userProfile.research|join(', ') : userProfile.research|default('Non spécifié') }}
+		</p>
 		<p>
 			<strong>Ville :</strong>
-			{{ userProfile.city|default('Non renseignée') }}</p>
+			{{ userProfile.city is iterable ? userProfile.city|join(', ') : userProfile.city|default('Non renseignée') }}
+		</p>
 		<p>
 			<strong>Biographie :</strong>
-			{{ userProfile.biography|default('Aucune biographie') }}</p>
+			{{ userProfile.biography is iterable ? userProfile.biography|join(', ') : userProfile.biography|default('Aucune biographie') }}
+		</p>
 
 		<h3>Galerie de photos</h3>
-		<div class="photo-gallery" id="gallery-{{ userProfile.id }}">
-			{% if userProfile.photos %}
-				{% for photo in userProfile.photos %}
-					{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
-					{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
-<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail {% if blur %}blur-photo{% endif %}" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
 
+		{% if isSubscribed %}
+			<div class="photo-gallery" id="gallery-{{ userProfile.id }}">
+				{% if userProfile.photos %}
+					{% for photo in userProfile.photos %}
+						<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel-{{ userProfile.id }}" data-bs-slide-to="{{ loop.index0 }}" style="width: 100px; height: 100px; object-fit: cover; margin: 5px;">
+					{% endfor %}
+				{% else %}
+					<p>Aucune photo ajoutée.</p>
+				{% endif %}
+			</div>
 
-				{% endfor %}
-			{% else %}
-				<p>Aucune photo</p>
-			{% endif %}
-		</div>
-	</section>
-
-	<!-- Modal Bootstrap pour la galerie -->
-	<div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
-		<div class="modal-dialog modal-fullscreen">
-			<div class="modal-content" style="background-color: black;">
-				<div class="modal-header">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
-						<div class="carousel-inner">
-							{% for photo in userProfile.photos %}
-								{% set isCurrentUser = app.user and app.user.id == userProfile.user.id %}
-								{% set blur = (not isCurrentUser) and is_granted('ROLE_USER') %}
-								<div class="carousel-item {% if loop.first %}active{% endif %}">
-<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 {% if blur %}blur-photo{% endif %}" alt="User Photo" style="width: 600px; height: 600px; object-fit: cover;">
-
-
-								</div>
-							{% endfor %}
+			<!-- Modal galerie -->
+			<div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-labelledby="photoCarouselLabel" aria-hidden="true">
+				<div class="modal-dialog modal-fullscreen">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 						</div>
-						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Précédent</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Suivant</span>
-						</button>
+						<div class="modal-body">
+							<div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
+								<div class="carousel-inner">
+									{% for photo in userProfile.photos %}
+										<div class="carousel-item {% if loop.first %}active{% endif %}">
+											<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block" alt="Photo utilisateur" style="width: 300px; height: 300px; object-fit: cover;">
+										</div>
+									{% endfor %}
+								</div>
+								<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon"></span>
+									<span class="visually-hidden">Précédent</span>
+								</button>
+								<button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
+									<span class="carousel-control-next-icon"></span>
+									<span class="visually-hidden">Suivant</span>
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+		{% else %}
+			<p>
+				<em>Pour voir la galerie de photos, vous devez être abonné.
+					<a href="{{ path('app_stripe_subscribe') }}">S'abonner</a>
+				</em>
+			</p>
+		{% endif %}
 
-	<style>
-		.blur-photo {
-			filter: blur(10px);
-			pointer-events: none;
-		}
-	</style>
+		<a href="{{ path('app_messages', { id: userProfile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
+
+		{# Bouton Like sous le bouton message #}
+		<form action="{{ path('app_profile_like', { id: userProfile.id }) }}" method="POST" style="margin-top: 10px;">
+			<input type="hidden" name="_token" value="{{ csrf_token('like' ~ userProfile.id) }}">
+			<button type="submit" class="btn btn-like" title="Liker ce profil">❤️ Like</button>
+		</form>
+	</section>
+
+	 <script src="{{ asset('script/js/profile-detail.js') }}" defer></script>
 {% endblock %}
 

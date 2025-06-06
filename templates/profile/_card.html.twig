@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
+<div class="mil">
+
+<article class="profile-card">
+	<div class="profile-row">
+		<div class="avatar-container">
+			<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+		</div>
+		<div class="profile-infos">
+			<h2>
+				<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
+					{{ profile.user.pseudo }}
+				</a>
+				-
+				<span>{{ profile.city|default('Inc') }}</span>
+			</h2>
+			<p>
+				<strong>{{ profile.sex|default('Inc') }}</strong>
+				-
+				{% if profile.birthdate %}
+					{% set now = "now"|date("Y") %}
+					{% set birthYear = profile.birthdate|date("Y") %}
+					{{ now - birthYear }}
+					ans
+				{% endif %}
+			</p>
+
+			<p>
+				<strong>Ville :</strong>
+				{{ profile.city|default('Inconnue') }}</p>
+			<p>
+				<strong>Pour :</strong>
+				{% if profile.research is iterable %}
+					{{ profile.research|join(', ') }}
+				{% else %}
+					{{ profile.research|default('Non précisé') }}
+				{% endif %}
+			</p>
+
+			<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-secondary" title="Envoyer un message">
+				<img src="{{ asset('images/message.png') }}" alt="Envoyer un message">
+			</a>
+		</div>
+	</div>
+</article>
+
+</div>

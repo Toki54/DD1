@@ -1,0 +1,105 @@
+/* ====== STYLE POUR LES CARTES D'ABONNEMENT ====== */
+.subscription-cards {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 20px;
+    padding: 0 10px;
+}
+
+.subscription-card {
+    width: 220px;
+    padding: 20px;
+    background: linear-gradient(135deg, #4b4b4b, #333333);
+    border-radius: 15px;
+    text-align: center;
+    color: #f1f1f1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid #8e44ad;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.subscription-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.subscription-card h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #d4af37;
+}
+
+.subscription-card p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.subscription-card button {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #d4af37, #ff00eb);
+    border-radius: 10px;
+    font-size: 1.2em;
+    transition: background 0.3s ease;
+    padding: 10px 15px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.subscription-card button:hover {
+    background: linear-gradient(135deg, #ff00eb, #d4af37);
+}
+
+/* ====== STYLE DU RÉSUMÉ DE L'ABONNEMENT ====== */
+#subscription-summary {
+    margin-top: 30px;
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(217, 7, 255, 0.4);
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+}
+
+#subscription-summary h3 {
+    font-size: 2em;
+    color: #d4af37;
+    margin-bottom: 20px;
+}
+
+#subscription-summary p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+#subscription-summary strong {
+    color: #ff00eb;
+}
+
+/* ====== STYLE POUR LE BOUTON DE PAIEMENT ====== */
+#checkout-button {
+    background: linear-gradient(135deg, #8e44ad, #d4af37);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    border: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+#checkout-button.enabled {
+    cursor: pointer;
+    opacity: 1;
+}
+
+#checkout-button.enabled:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #d4af37, #8e44ad);
+}
