@@ -4,158 +4,140 @@
 {% endblock %}
 
 {% block body %}
-    {% block stylesheet %}
-        <link rel="stylesheet" href="{{ asset('css/list.css') }}">
-    {% endblock %}
+	{% block stylesheet %}
+		<link rel="stylesheet" href="{{ asset('css/list.css') }}">
+	{% endblock %}
 
-    <section class="container">
+	<section class="container">
 
-        <!-- Bloc de tri -->
-        <article class="sort-container" id="sortContainer" role="region" aria-label="Filtres de profils">
-            <header class="sort-header">
-                <h3>Filtrer les profils</h3>
-            </header>
-            <section class="sort-content">
-                <form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
-                    <!-- Sexe -->
-                    <label for="sex">Sexe:
-                        <input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %} checked {% endif %}>
-                        Homme
-                        <input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %} checked {% endif %}>
-                        Femme
-                        <input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %} checked {% endif %}>
-                        Autre
-                    </label>
+		<article class="sort-container" id="sortContainer">
+			<header class="sort-header">
+				<h3>Filtrer les profils</h3>
+			</header>
+			<section class="sort-content">
+				<form
+					method="GET" action="{{ path('app_profiles_list') }}" class="sort-form">
+					<!-- Filtres -->
+					<label>Sexe:
+						<input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %} checked {% endif %}>
+						Homme
+						<input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %} checked {% endif %}>
+						Femme
+						<input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %} checked {% endif %}>
+						Autre
+					</label>
+					<label>Situation:
+						<input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %} checked {% endif %}>
+						Célibataire
+						<input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %} checked {% endif %}>
+						En couple
+					</label>
+					<label>Recherche:
+						<input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %} checked {% endif %}>
+						Homme
+						<input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %} checked {% endif %}>
+						Femme
+						<input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %} checked {% endif %}>
+						Couple
+					</label>
+					<label>Ville:
+						<input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
+					</label>
+					<button type="submit">Appliquer le tri</button>
+				</form>
+			</section>
+		</article>
 
-                    <!-- Situation -->
-                    <label for="situation">Situation:
-                        <input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %} checked {% endif %}>
-                        Célibataire
-                        <input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %} checked {% endif %}>
-                        En couple
-                    </label>
+		<button id="toggleSortBtn" class="toggle-sort-btn" aria-expanded="true" aria-controls="sortContainer">
+			Afficher / Masquer les filtres
+		</button>
 
-                    <!-- Recherche -->
-                    <label for="research">Qui recherche:
-                        <input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %} checked {% endif %}>
-                        Homme
-                        <input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %} checked {% endif %}>
-                        Femme
-                        <input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %} checked {% endif %}>
-                        Couple
-                    </label>
+		<section class="profile-container">
+			{% for profile in profiles %}
+				{% if profile.user.pseudo != app.user.pseudo %}
+					<article class="profile-card">
+						<div class="avatar">
+							<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
+						</div>
+						<div class="profile-details">
+							<div class="profile-top">
+								<h2>
+									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
+									-
+									{{ profile.city|default('Inc') }}
+								</h2>
+							</div>
+							<div class="profile-info">
+								<p>
+									<strong>{{ profile.sex|default('Inc') }}</strong>
+									-
+									{% if profile.birthdate %}
+										{% set now = "now"|date("Y") %}
+										{% set birthYear = profile.birthdate|date("Y") %}
+										{{ now - birthYear }}
+										ans
+									{% endif %}
+								</p>
+								<p class="rech">
+									<strong>pour:</strong><br>
+									{% if profile.research is iterable %}
+										{{ profile.research|join(', ')|default('Inc') }}
+                                        <br>
+									{% else %}
+										{{ profile.research|default('Inc') }}<br>
+									{% endif %}
+								</p>
+							</div>
+						</div>
+						<div class="profile-biography">
+							<p title="{{ profile.biography|default('Aucune') }}">{{ profile.biography|default('Aucune') }}</p>
+						</div>
+						<div class="profile-actions">
+							<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-message" title="Envoyer un message">
+								<img src="/public/images/message.png" alt="Message">
+							</a>
+							<button class="btn-like" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
+<img src="/public/images/coeur.png" alt="like">
 
-                    <!-- Ville -->
-                    <label for="city">Ville:
-                        <div>
-                            <input type="text" name="city" value="{{ city }}" placeholder="Ville" class="autocomplete-city">
-                        </div>
-                    </label>
+							</button>
+						</div>
+					</article>
+				{% endif %}
+			{% endfor %}
+		</section>
+	</section>
 
-                    <button type="submit">Appliquer le tri</button>
-                </form>
-            </section>
-        </article>
-
-        <!-- Bouton toggle tri -->
-        <button id="toggleSortBtn" class="toggle-sort-btn" aria-expanded="true" aria-controls="sortContainer">
-            Afficher / Masquer les filtres
-        </button>
-
-        <!-- Liste des profils -->
-        <section class="profile-container">
-            {% for profile in profiles %}
-                {% if profile.user.pseudo != app.user.pseudo %}
-                    <article class="profile-card">
-                        <div class="profile-row">
-                            <div class="avatar-container">
-                                <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
-                            </div>
-                            <div class="profile-infos">
-                                <h2>
-                                    <a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">
-                                        {{ profile.user.pseudo }}
-                                    </a>
-                                    -
-                                    <span>{{ profile.city|default('Inc') }}</span>
-                                </h2>
-                                <p>
-                                    <strong>{{ profile.sex|default('Inc') }}</strong>
-                                    -
-                                    {% if profile.birthdate %}
-                                        {% set now = "now"|date("Y") %}
-                                        {% set birthYear = profile.birthdate|date("Y") %}
-                                        {{ now - birthYear }}
-                                        ans
-                                    {% endif %}
-                                </p>
-                                <p>{{ profile.city|default('Inc') }}</p>
-                                <p>
-                                    <strong>pour</strong>
-                                    {% if profile.research is iterable %}
-                                        {{ profile.research|join(', ')|default('Inc') }}
-                                    {% else %}
-                                        {{ profile.research|default('Inc') }}
-                                    {% endif %}
-                                </p>
-                            </div>
-                            <div class="profile-biography">
-                                <p><br>{{ profile.biography|default('Aucune') }}</p>
-                            </div>
-
-                            <a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-secondary" title="Envoyer un message">
-                                <img src="/public/images/message.png" alt="Envoyer un message" style="width:40px; height:40px;">
-                            </a>
-
-<button class="btn btn-like" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
-	❤️ Like
-</button>
-
-                        </div>
-                    </article>
-                {% endif %}
-            {% endfor %}
-        </section>
-    </section>
-
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // toggle filtre (inchangé)
-    const toggleBtn = document.getElementById('toggleSortBtn');
-    const sortContainer = document.getElementById('sortContainer');
-
-    toggleBtn.addEventListener('click', () => {
-        const isVisible = sortContainer.classList.toggle('hidden');
-        toggleBtn.setAttribute('aria-expanded', !isVisible);
-    });
-
-    // Like en AJAX
-    document.querySelectorAll('.btn-like').forEach(button => {
-        button.addEventListener('click', () => {
-            const url = button.getAttribute('data-url');
-            const csrfToken = button.getAttribute('data-token');
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                body: JSON.stringify({
-                    _token: csrfToken
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                alert('Erreur lors du like');
-                console.error(error);
-            });
-        });
-    });
-});
-</script>
-
+	 <script>
+		        document.addEventListener('DOMContentLoaded', () => {
+		            const toggleBtn = document.getElementById('toggleSortBtn');
+		            const sortContainer = document.getElementById('sortContainer');
+		
+		            toggleBtn.addEventListener('click', () => {
+		                const isVisible = sortContainer.classList.toggle('hidden');
+		                toggleBtn.setAttribute('aria-expanded', !isVisible);
+		            });
+		
+		            document.querySelectorAll('.btn-like').forEach(button => {
+		                button.addEventListener('click', () => {
+		                    const url = button.getAttribute('data-url');
+		                    const csrfToken = button.getAttribute('data-token');
+		
+		                    fetch(url, {
+		                        method: 'POST',
+		                        headers: {
+		                            'Content-Type': 'application/json',
+		                            'X-Requested-With': 'XMLHttpRequest',
+		                        },
+		                        body: JSON.stringify({ _token: csrfToken })
+		                    })
+		                    .then(res => res.json())
+		                    .then(data => alert(data.message))
+		                    .catch(error => {
+		                        alert('Erreur lors du like');
+		                        console.error(error);
+		                    });
+		                });
+		            });
+		        });
+		    </script>
 {% endblock %}
