@@ -17,62 +17,63 @@
 
 		{# NAVBAR #}
 		<header>
-			<nav class="navbar navbar-expand-lg navbar-dark bg-black shadow">
-				<div class="container-fluid">
-					<a class="navbar-brand fw-bold" href="{{ path('app_home') }}">Dial And Date</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarNav">
-						<ul class="navbar-nav ms-auto">
-							{% if not app.user %}
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_login') }}">Login</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-								</li>
-							{% else %}
-								<li class="nav-item">
-									<a href="{{ path('app_messages') }}" class="btn btn-info mb-2 me-2">📩 Messages</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_profile_show') }}">Mon Profil</a>
-								</li>
-								<li class="nav-item">
-									<a href="{{ path('app_profile_likes') }}" class="btn btn-primary me-2">
-										👁️❤️ Visites & Likes
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_profiles_list') }}">Liste des Profils</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" href="{{ path('app_stripe_subscribe') }}">Abonnements</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link text-danger" href="{{ path('app_logout') }}">Logout</a>
-								</li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-4 py-2">
+	<a class="navbar-brand text-gold fw-bold" href="{{ path('app_home') }}">💛 Dial & Date</a>
+	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-								{% if 'ROLE_ADMIN' in app.user.roles %}
-									<li class="nav-item">
-										<a class="nav-link text-warning" href="{{ path('app_user_index') }}">Gérer Utilisateurs</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link text-warning" href="{{ path('app_deleted_conversations') }}">Conversations supprimées</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link text-warning" href="{{ path('admin_subscriptions_index') }}">Gérer Abonnements</a>
-									</li>
-								{% endif %}
-							{% endif %}
+	<div class="collapse navbar-collapse" id="mainNavbar">
+		<ul class="navbar-nav ms-auto align-items-center">
+
+			{% if app.user %}
+				<li class="nav-item me-2">
+					<a href="{{ path('app_messages') }}" class="btn btn-outline-light">
+						📩 Messages
+					</a>
+				</li>
+				<li class="nav-item me-2">
+					<a class="nav-link text-white" href="{{ path('app_profile_show') }}">👤 Mon Profil</a>
+				</li>
+				<li class="nav-item me-2">
+					<a href="{{ path('app_profile_likes') }}" class="btn btn-outline-primary">
+						👁️❤️ Visites & Likes
+					</a>
+				</li>
+				<li class="nav-item me-2">
+					<a class="nav-link text-white" href="{{ path('app_profiles_list') }}">🧑‍🤝‍🧑 Profils</a>
+				</li>
+				<li class="nav-item me-2">
+					<a class="nav-link text-gold" href="{{ path('app_stripe_subscribe') }}">💳 Abonnements</a>
+				</li>
+				<li class="nav-item me-3">
+					<a class="nav-link text-danger" href="{{ path('app_logout') }}">🚪 Déconnexion</a>
+				</li>
+
+				{% if 'ROLE_ADMIN' in app.user.roles %}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle text-warning" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+							⚙️ Admin
+						</a>
+						<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+							<li>
+								<a class="dropdown-item" href="{{ path('app_user_index') }}">👥 Gérer Utilisateurs</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_deleted_conversations') }}">🗑️ Conversations Supprimées</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_subscriptions_index') }}">💼 Gérer Abonnements</a>
+							</li>
 						</ul>
-					</div>
-				</div>
-			</nav>
+					</li>
+				{% endif %}
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+
+
 		</header>
 
 		
