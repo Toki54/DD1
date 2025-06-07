@@ -1,47 +1,167 @@
-/* ====== STYLES GÉNÉRAUX ====== */
-body {
-  background-color: #121212;
-  font-family: "Roboto", sans-serif;
-  color: #e0e0e0;
+/* Couleurs principales */
+:root {
+  --color-bg: #f8f9fa;
+  --color-text: #212529;
+  --color-accent: #d4af37;
+  /* doré */
+  --color-dark: #343a40;
+  --color-light: #ffffff;
+  --color-gray: #6c757d;
+}
+
+/* Réinitialisation de base */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
-/* ====== NAVBAR ====== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* NAVBAR */
 .navbar {
-  background-color: #4b0082;
-  /* violet foncé */
+  background-color: var(--color-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.navbar .nav-link,
-.navbar .navbar-brand {
-  color: #fff;
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: var(--color-light);
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-.navbar .nav-link:hover,
-.navbar .navbar-brand:hover {
-  color: #d4af37;
+.navbar-brand:hover,
+.navbar-nav .nav-link:hover {
+  color: var(--color-accent);
 }
 
-.btn-info {
-  background-color: #8e44ad;
-  border-color: #d4af37;
-  color: white;
+/* BOUTONS */
+.btn {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.btn-info:hover {
-  background-color: #732d91;
+.btn-dark {
+  background-color: var(--color-dark);
+  border-color: var(--color-dark);
+  color: var(--color-light);
 }
 
-/* ====== FOOTER TOUJOURS EN BAS ====== */
+.btn-dark:hover {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-dark);
+}
+
+.btn-outline-dark {
+  color: var(--color-dark);
+  border: 2px solid var(--color-dark);
+}
+
+.btn-outline-dark:hover {
+  background-color: var(--color-accent);
+  color: var(--color-dark);
+  border-color: var(--color-accent);
+}
+
+/* SECTION D'ACCUEIL */
+section.text-center {
+  background: linear-gradient(145deg, var(--color-dark), #1e2124);
+  padding: 60px 20px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+section.text-center h1 {
+  color: var(--color-accent);
+  text-shadow: 1px 1px 2px black;
+}
+
+section.text-center p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--color-light);
+}
+
+/* CARTES - STYLE AMÉLIORÉ */
+.card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  /* doré transparent */
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 30px 20px;
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 255, 255, 0));
+  z-index: 0;
+  transform: rotate(25deg);
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.01);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  border-color: rgba(212, 175, 55, 0.6);
+}
+
+.card h2 {
+  position: relative;
+  font-size: 1.8rem;
+  color: var(--color-dark);
+  margin-bottom: 20px;
+  z-index: 1;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.card a {
+  position: relative;
+  margin-top: 15px;
+  z-index: 1;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 10px 20px;
+  background-color: var(--color-accent);
+  color: var(--color-dark);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card a:hover {
+  background-color: #e5c100;
+  color: #1a1a1a;
+}
+/* FOOTER */
 footer {
-  background-color: #4b0082;
-  color: #fff;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: auto;
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  font-size: 0.9rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 20px;
+  }
 }

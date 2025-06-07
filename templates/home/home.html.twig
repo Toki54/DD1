@@ -4,10 +4,33 @@
 {% endblock %}
 
 {% block body %}
-	<div class="text-center mt-5">
-		<h1>Bienvenue sur notre site de rencontre !</h1>
-		<p class="lead">Trouvez votre âme sœur en quelques clics.</p>
-		<a href="#" class="btn btn-primary btn-lg">Commencez maintenant</a>
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('css/base.css') }}">
+{% endblock %}
+
+{# ZONE DE TEXTE D'ACCUEIL #}
+<section class="text-center p-4 text-white">
+	<h1 class="display-5 fw-bold">Bienvenue sur Dial And Date</h1>
+	<p class="lead mt-3">
+		Un site de rencontre conçu pour les personnes qui ne veulent pas d’enfants.<br>
+		Parce que le sujet des enfants est fondamental, nous pensons qu’il est sage d’être clair dès le départ.<br>
+		Ici, vous trouverez des profils partageant votre vision.
+	</p>
+</section>
+<div class="row justify-content-center text-dark">
+	<div class="col-md-5">
+		<div class="card text-center p-4">
+			<h2 class="mb-3">Déjà inscrit ?</h2>
+			<a href="{{ path('app_login') }}" class="btn btn-outline-dark">Se connecter</a>
+		</div>
 	</div>
+	<div class="col-md-5">
+		<div class="card text-center p-4">
+			<h2 class="mb-3">Nouvel utilisateur ?</h2>
+			<a href="{{ path('app_register') }}" class="btn btn-dark">Créer un compte</a>
+		</div>
+	</div>
+</div>
+
 {% endblock %}
 
