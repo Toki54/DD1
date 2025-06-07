@@ -1,117 +1,180 @@
-/* ====== SECTION PROFIL ====== */
+/* profileUser.css */
+
+body {
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 30px 15px;
+}
+
 .profile-detail {
-    display: flex;
-    max-width: 800px;
-    margin: 40px auto;
-    background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
-    color: #e0e0e0;
-    font-family: 'Segoe UI', sans-serif;
-    align-items: center;
-    flex-direction: column;
-}
-
-.blur-photo {
-    filter: blur(8px);
-    transition: filter 0.3s ease;
-}
-
-.blurred {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-}
-
-.blurred:hover {
-    filter: none;
-    /* Le flou disparaît au survol de l'image */
-}
-/* ====== TITRE PRINCIPAL ====== */
-.profile-detail h1 {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(30, 30, 30, 0.9);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
     text-align: center;
+}
+
+.profile-detail h1 {
     color: #d4af37;
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 4px rgba(212, 175, 55, 0.8);
 }
 
-/* ====== INFOS UTILISATEUR ====== */
-.profile-detail p {
-    font-size: 1.1em;
-    margin: 10px 0;
-}
-
-.profile-detail strong {
-    color: #d4af37;
-}
-
-/* ====== AVATAR ====== */
-.profile-detail img[alt="Avatar"] {
+/* Avatar centré, rond avec contour doré lumineux */
+.profile-detail img {
     display: block;
-    margin: 0 auto 20px;
-    border-radius: 33%;
-    border: 3px solid #8e44ad;
-    width: 200px;
-    height: 200px;
+    margin: 0 auto 30px auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     object-fit: cover;
-    box-shadow: 0 0 10px rgba(217, 7, 255, 0.3);
+    border: 5px solid rgba(212, 175, 55, 0.7);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    background-color: #2a2a2a;
+    transition: transform 0.3s ease;
 }
 
-/* ====== GALERIE DE PHOTOS ====== */
+.profile-detail img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 1);
+}
+
+/* Paragraphes profil */
+.profile-detail p {
+    font-size: 1.1rem;
+    margin: 15px 0;
+    line-height: 1.5;
+    color: #ddd;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-detail p strong {
+    color: #d4af37;
+    font-weight: 700;
+}
+
+/* Galerie photos */
 .photo-gallery {
+    margin-top: 25px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    padding-top: 15px;
-    border-top: 1px solid #ff00eb;
+    gap: 12px;
 }
 
 .photo-thumbnail {
-    border: 2px solid #8e44ad;
-    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0 0 8px rgba(217, 7, 255, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .photo-thumbnail:hover {
     transform: scale(1.1);
+    box-shadow: 0 6px 18px rgba(212, 175, 55, 0.9);
 }
 
-/* ====== TITRE GALERIE ====== */
-.profile-detail h3 {
+/* Bouton envoyer un message */
+.btn.btn-secondary {
+    background-color: #444;
     color: #d4af37;
-    text-align: center;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 1.1rem;
     margin-top: 30px;
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ====== MODAL CAROUSEL ====== */
+.btn.btn-secondary:hover {
+    background-color: #d4af37;
+    color: #1a1a1a;
+    border-color: #d4af37;
+}
+
+/* Bouton Like */
+form {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.btn-like {
+    background-color: #d4af37;
+    color: #1a1a1a;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.8);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-like:hover {
+    background-color: #e5c100;
+    color: #000;
+    box-shadow: 0 8px 22px rgba(212, 175, 55, 1);
+}
+
+/* Texte de la galerie restreinte */
+.profile-detail em {
+    color: #999;
+    font-style: italic;
+    font-size: 1rem;
+    margin-top: 20px;
+    display: block;
+}
+
+/* Modal bootstrap - centrage images */
 .modal-content {
-    background: #470058;
-    border: 3px solid #8e44ad;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
+    background-color: #1e1e1e;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+    color: #f5f5f5;
 }
 
-.carousel-item img {
-    max-width: 100%;
-    max-height: 80vh;
-    object-fit: contain;
-    margin: auto;
+.carousel-inner img {
+    margin: 0 auto;
+    border-radius: 15px;
+    max-height: 350px;
+    object-fit: cover;
 }
 
+/* Carousel controls color */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    background-color: #d4af37;
-    border-radius: 5px;
+    filter: invert(90%) sepia(100%) saturate(500%) hue-rotate(30deg);
 }
 
-.btn-close {
-    filter: invert(1);
-    opacity: 1;
-    background-color: transparent;
-    border: none;
-    width: 2rem;
-    height: 2rem;
+/* Responsive */
+@media (max-width: 600px) {
+    .profile-detail {
+        padding: 20px 15px;
+    }
+
+    .profile-detail h1 {
+        font-size: 2rem;
+    }
+
+    .btn.btn-secondary,
+    .btn-like {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
