@@ -3,6 +3,10 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+
     <form method="post">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
