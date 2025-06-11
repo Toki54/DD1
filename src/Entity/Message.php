@@ -32,6 +32,9 @@ class Message
  #[ORM\Column(type: 'boolean')]
     private bool $isChatRequest = false;
 
+#[ORM\Column(type: 'boolean')]
+private bool $isRead = false;
+
  public function __construct()
  {
   $this->sentAt = new \DateTime();
@@ -101,4 +104,15 @@ class Message
         $this->isChatRequest = $isChatRequest;
         return $this;
     }
+
+    public function isRead(): bool
+{
+    return $this->isRead;
+}
+
+public function setIsRead(bool $isRead): self
+{
+    $this->isRead = $isRead;
+    return $this;
+}
 }

@@ -131,4 +131,15 @@ class MessageRepository extends ServiceEntityRepository
    ->getQuery()
    ->getOneOrNullResult();
  }
+
+ public function countUnreadMessages(User $user): int
+{
+    return $this->createQueryBuilder('m')
+        ->select('COUNT(m.id)')
+        ->where('m.receiver = :user')
+        ->andWhere('m.isRead = false')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
 }

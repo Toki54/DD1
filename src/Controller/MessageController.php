@@ -19,40 +19,51 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MessageController extends AbstractController
 {
  #[Route('/', name: 'app_messages')]
- public function index(MessageRepository $messageRepository, UserRepository $userRepository, Request $request): Response
- {
-  $user          = $this->getUser();
-  $conversations = $messageRepository->findUserConversations($user);
-  $receiver      = null;
-  $messages      = [];
-  $chatAccepted  = false;
+public function index(
+    MessageRepository $messageRepository,
+    UserRepository $userRepository,
+    Request $request,
+    EntityManagerInterface $entityManager
+): Response {
+    $user = $this->getUser();
+    $conversations = $messageRepository->findUserConversations($user);
+    $receiver = null;
+    $messages = [];
+    $chatAccepted = false;
 
-  if ($request->query->get('id')) {
-   $receiver = $userRepository->find($request->query->get('id'));
+    if ($request->query->get('id')) {
+        $receiver = $userRepository->find($request->query->get('id'));
 
-   if ($receiver) {
-    // Récupérer tous les messages envoyés et reçus entre les deux utilisateurs
-    $messages = $messageRepository->findByConversation($user, $receiver);
-    $chatAccepted = $messageRepository->hasAcceptedChat($user, $receiver);
+        if ($receiver) {
+            // Récupérer tous les messages entre les deux utilisateurs
+            $messages = $messageRepository->findByConversation($user, $receiver);
+            $chatAccepted = $messageRepository->hasAcceptedChat($user, $receiver);
 
+            // Vérifier si une demande de discussion a été acceptée
+            foreach ($messages as $message) {
+                if ($message->isChatRequest() && $message->getContent() === 'ACCEPTED') {
+                    $chatAccepted = true;
+                }
 
-    // Vérifier si une demande de discussion a été acceptée
-    foreach ($messages as $message) {
-     if ($message->isChatRequest() && $message->getContent() === 'ACCEPTED') {
-      $chatAccepted = true;
-      break;
-     }
+                // Marquer les messages reçus comme lus
+                if ($message->getReceiver() === $user && !$message->isRead()) {
+                    $message->setIsRead(true);
+                    $entityManager->persist($message);
+                }
+            }
+
+            $entityManager->flush();
+        }
     }
-   }
-  }
 
-  return $this->render('message/messages.html.twig', [
-   'conversations' => $conversations,
-   'messages'      => $messages,
-   'receiver'      => $receiver,
-   'chatAccepted'  => $chatAccepted,
-  ]);
- }
+    return $this->render('message/messages.html.twig', [
+        'conversations' => $conversations,
+        'messages' => $messages,
+        'receiver' => $receiver,
+        'chatAccepted' => $chatAccepted,
+    ]);
+}
+
 
  #[Route('/request/{id}', name: 'app_message_request', methods: ['POST'])]
  public function requestChat(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository): Response

@@ -8,8 +8,8 @@ parameters:
 
 services:
     _defaults:
-        autowire: true
-        autoconfigure: true
+        autowire: true       # Injection automatique des dépendances
+        autoconfigure: true  # Enregistre automatiquement les services (ex: commandes, événements, etc.)
 
     App\:
         resource: '../src/'
@@ -18,5 +18,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # Si tu as un service UserProfileService, sinon supprime cette ligne :
+    # Déclaration explicite si tu utilises ce service personnalisé
     App\Service\UserProfileService: ~
+    App\Service\NavbarNotificationService: ~
+
+    # Enregistrement d'une extension Twig personnalisée
+    App\Twig\AppExtension:
+        tags: [ 'twig.extension' ]
