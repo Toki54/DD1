@@ -84,16 +84,18 @@
 				</em>
 			</p>
 		{% endif %}
+<div class="profile-buttons">
+	<a href="{{ path('app_messages', { id: userProfile.user.id }) }}">
+		<img src="/public/images/messagerie.png" alt="Messagerie">
+	</a>
 
-		<a href="{{ path('app_messages', { id: userProfile.user.id }) }}" class="btn btn-secondary">Envoyer un message</a>
-
-		{# Bouton Like sous le bouton message #}
-<form action="{{ path('app_profile_like', { id: userProfile.id }) }}" method="POST" style="margin-top: 10px;">
-	<input type="hidden" name="_token" value="{{ csrf_token('like' ~ userProfile.id) }}">
-	<button type="button" class="btn-like" title="Liker ce profil" data-id="{{ userProfile.id }}" data-token="{{ csrf_token('like' ~ userProfile.id) }}" data-url="{{ path('app_profile_like', { id: userProfile.id }) }}">
-		<img src="/images/coeur.png" alt="like">
-	</button>
-</form>
+	<form action="{{ path('app_profile_like', { id: userProfile.id }) }}" method="POST">
+		<input type="hidden" name="_token" value="{{ csrf_token('like' ~ userProfile.id) }}">
+		<button type="button" class="btn-like" title="Liker ce profil" data-id="{{ userProfile.id }}" data-token="{{ csrf_token('like' ~ userProfile.id) }}" data-url="{{ path('app_profile_like', { id: userProfile.id }) }}">
+			<img src="/public/images/like.png" alt="Like">
+		</button>
+	</form>
+</div>
 
  <script src="{{ asset('script/js/profile-detail.js') }}" defer></script>
  <script>

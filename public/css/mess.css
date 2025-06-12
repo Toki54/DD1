@@ -205,6 +205,10 @@ h3 {
     border-bottom-left-radius: 0;
 }
 
+.text-gold {
+    color: var(--color-accent);
+}
+
 /* Boutons accepter/refuser */
 .btn-success, .btn-danger {
     padding: 6px 14px;

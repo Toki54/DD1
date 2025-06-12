@@ -40,6 +40,14 @@ body {
   color: var(--color-accent);
 }
 
+
+.text-accent {
+  color: var(--color-accent) !important;
+}
+
+.border-accent {
+  border: 2px solid var(--color-accent) !important;
+}
 /* BOUTONS */
 .btn {
   border-radius: 8px;
@@ -65,10 +73,16 @@ body {
   border: 2px solid var(--color-dark);
 }
 
-.btn-outline-dark:hover {
+.btn-outline-dark:hover,
+.btn-dark:hover {
   background-color: var(--color-accent);
   color: var(--color-dark);
   border-color: var(--color-accent);
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
 }
 
 /* SECTION D'ACCUEIL */

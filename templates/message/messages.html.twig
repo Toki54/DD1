@@ -8,31 +8,31 @@
 		<link rel="stylesheet" href="{{ asset('css/mess.css') }}">
 	{% endblock %}
 
-	<div class="container">
+	<div class="container my-5">
 		<div
 			class="row">
 			<!-- Liste des Conversations -->
 			<div class="col-md-4">
-				<h3>Conversations</h3>
+				<h3 class="mb-4">Conversations</h3>
+
 				{% if conversations is empty %}
-					<p>Aucune conversation.</p>
+					<div class="alert alert-info">Aucune conversation.</div>
 				{% else %}
 					<div class="conversation-list">
 						{% for conversation in conversations %}
-							<div class="conversation-card">
-								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
-									<div class="card-header">
-										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar">
-
-										<strong class="pseudo">{{ conversation.user.pseudo }}</strong>
+							<div class="conversation-card mb-3 p-2 border rounded shadow-sm">
+								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link text-decoration-none">
+									<div class="d-flex align-items-center">
+										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar me-2 rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+										<strong class="pseudo text-dark">{{ conversation.user.pseudo }}</strong>
 									</div>
 								</a>
-								<!-- Séparation entre avatar et contenu -->
-								<hr class="divider">
-								<form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
-									<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-								</form>
 
+								<hr class="my-2">
+
+								<form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
+									<button type="submit" class="btn btn-danger btn-sm w-100">Supprimer</button>
+								</form>
 							</div>
 						{% endfor %}
 					</div>
@@ -42,31 +42,35 @@
 			<!-- Détails de la conversation -->
 			<div class="col-md-8">
 				{% if receiver %}
-					<div class="conversation-detail-card">
-						<div class="card-header">
+					<div class="conversation-detail-card border rounded shadow p-3">
+						<div class="card-header mb-3">
 							<h4>Conversation avec
 								{{ receiver.pseudo }}</h4>
 						</div>
-						<div class="card-body chat-box">
+
+						<div class="card-body chat-box mb-3" style="max-height: 500px; overflow-y: auto;">
 							{% for message in messages %}
-								<div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
-									<p>
+								<div class="message mb-2 {% if message.sender == app.user %}text-end{% else %}text-start{% endif %}">
+									<p class="mb-1">
 										<strong>
 											{% if message.sender == app.user %}Moi
 											{% else %}
 												{{ receiver.pseudo }}
-											{% endif %}:
+											{% endif %}
+											:
 										</strong>
 										{{ message.content }}
 									</p>
 
 									{% if message.isChatRequest and message.content == 'Demande de discussion en attente...' and message.receiver == app.user %}
-										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'accept' }) }}" method="POST">
-											<button type="submit" class="btn btn-success">Accepter</button>
-										</form>
-										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'refuse' }) }}" method="POST">
-											<button type="submit" class="btn btn-danger">Refuser</button>
-										</form>
+										<div class="d-flex gap-2">
+											<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'accept' }) }}" method="POST">
+												<button type="submit" class="btn btn-success btn-sm">Accepter</button>
+											</form>
+											<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'refuse' }) }}" method="POST">
+												<button type="submit" class="btn btn-danger btn-sm">Refuser</button>
+											</form>
+										</div>
 									{% endif %}
 								</div>
 							{% endfor %}
@@ -74,7 +78,7 @@
 
 						<div class="card-footer">
 							{% if chatAccepted %}
-								<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST">
+								<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST" class="d-flex gap-2">
 									<input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
 									<button type="submit" class="btn btn-primary">Envoyer</button>
 								</form>
@@ -85,9 +89,17 @@
 							{% endif %}
 						</div>
 					</div>
+				{% else %}
+					<!-- Aucun utilisateur sélectionné -->
+					<div class="text-center p-5 bg-light text-dark rounded shadow">
+						<img src="{{ asset('images/messagerie.png') }}" alt="Messagerie" class="mb-4" style="max-width: 180px;">
+						<h2 class="mb-3 text-gold">Bienvenue dans votre messagerie 💬</h2>
+						<p class="mb-4">Vous n'avez pas encore de discussion active.<br>Visitez les profils pour démarrer une conversation.</p>
+						<a href="{{ path('app_profiles_list') }}" class="btn btn-outline-dark btn-lg">Explorer les profils</a>
+					</div>
 				{% endif %}
-
 			</div>
 		</div>
 	</div>
 {% endblock %}
+
