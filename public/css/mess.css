@@ -21,9 +21,9 @@ body {
 /* Colonne gauche : liste des conversations */
 .col-md-4 {
     flex: 0 0 30%;
-    background-color: #3a3a3a;
-    border-radius: 10px;
-    box-shadow: 0 0 15px #a38629cc;
+    
+    
+    
     padding: 15px;
     height: 80vh;
     overflow-y: auto;
@@ -32,9 +32,9 @@ body {
 /* Colonne droite : détails conversation */
 .col-md-8 {
     flex: 1;
-    background-color: #3a3a3a;
+    
     border-radius: 10px;
-    box-shadow: 0 0 15px #a38629cc;
+    
     padding: 15px;
     height: 80vh;
     display: flex;
@@ -44,9 +44,11 @@ body {
 /* Titre Conversations */
 h3 {
     border-bottom: 2px solid #d4af37;
-    padding-bottom: 8px;
-    margin-bottom: 15px;
-    font-weight: 700;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
 }
 
 /* Liste des conversations */
@@ -79,8 +81,9 @@ h3 {
 
 .card-header {
     display: flex;
-    align-items: center;
-    gap: 12px;
+        align-items: center;
+        gap: 12px;
+        justify-content: center;
 }
 
 /* Avatar dans conversation */

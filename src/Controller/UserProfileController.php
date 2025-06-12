@@ -203,7 +203,6 @@ public function view(int $id, EntityManagerInterface $entityManager): Response
  }
 
 
-
 #[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
 public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
 {
@@ -283,6 +282,7 @@ public function unlike(int $id, EntityManagerInterface $entityManager): JsonResp
 public function likes(EntityManagerInterface $entityManager): Response
 {
     $user = $this->getUser();
+
     if (!$user) {
         $this->addFlash('error', 'Vous devez être connecté pour voir vos likes.');
         return $this->redirectToRoute('app_login');
@@ -290,7 +290,7 @@ public function likes(EntityManagerInterface $entityManager): Response
 
     $userProfile = $user->getProfile();
 
-    // Profils qui ont liké ton profil
+    // Récupérer les likes où le profil connecté est la cible
     $likes = $entityManager->getRepository(ProfileLike::class)
         ->createQueryBuilder('pl')
         ->where('pl.liked = :profile')
@@ -299,35 +299,46 @@ public function likes(EntityManagerInterface $entityManager): Response
         ->getQuery()
         ->getResult();
 
-    $likers = array_map(fn($like) => $like->getLiker(), $likes);
+    // Marquer tous les likes comme vus
+    foreach ($likes as $like) {
+        if (!$like->isSeen()) {
+            $like->setSeen(true);
+            $entityManager->persist($like);
+        }
+    }
+    $entityManager->flush();
 
-    // Récupérer la dernière visite par visiteur (donc un seul par visiteur)
-    $qb = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
+    // Extraire les profils qui ont liké
+    $likers = array_map(fn(ProfileLike $like) => $like->getLiker(), $likes);
+
+    // Récupérer la dernière visite unique par visiteur
+    $qb = $entityManager->getRepository(ProfileVisit::class)
         ->createQueryBuilder('v');
 
-    // Sélectionner la visite la plus récente par visiteur
     $subQuery = $entityManager->createQueryBuilder()
         ->select('MAX(v2.visitedAt)')
-        ->from(\App\Entity\ProfileVisit::class, 'v2')
+        ->from(ProfileVisit::class, 'v2')
         ->where('v2.visitor = v.visitor')
-        ->andWhere('v2.visited = :profile');
+        ->andWhere('v2.visited = :profile')
+        ->getDQL();
 
     $visits = $qb
         ->where('v.visited = :profile')
+        ->andWhere($qb->expr()->eq('v.visitedAt', '(' . $subQuery . ')'))
         ->setParameter('profile', $userProfile)
-        ->andWhere($qb->expr()->eq('v.visitedAt', '(' . $subQuery->getDQL() . ')'))
         ->orderBy('v.visitedAt', 'DESC')
         ->getQuery()
         ->getResult();
 
-    // Extraire les profils visiteurs uniques
-    $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
+    // Extraire les visiteurs (uniques)
+    $visitorProfiles = array_map(fn(ProfileVisit $visit) => $visit->getVisitor(), $visits);
 
     return $this->render('profile/likes_and_visits.html.twig', [
         'visitorProfiles' => $visitorProfiles,
         'likerProfiles'   => $likers,
     ]);
 }
+
 
 
 

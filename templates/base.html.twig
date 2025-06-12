@@ -44,11 +44,17 @@
 				<li class="nav-item me-2">
 					<a class="nav-link text-white" href="{{ path('app_profile_show') }}">👤 Mon Profil</a>
 				</li>
-				<li class="nav-item me-2">
-					<a href="{{ path('app_profile_likes') }}" class="btn btn-outline-primary">
-						👁️❤️ Visites & Likes
-					</a>
-				</li>
+<li class="nav-item me-2">
+	<a href="{{ path('app_profile_likes') }}" class="btn btn-outline-primary position-relative">
+		👁️❤️ Visites & Likes
+		{% if unread_likes_count() > 0 %}
+			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+				{{ unread_likes_count() }}
+			</span>
+		{% endif %}
+	</a>
+</li>
+
 				<li class="nav-item me-2">
 					<a class="nav-link text-white" href="{{ path('app_profiles_list') }}">🧑‍🤝‍🧑 Profils</a>
 				</li>

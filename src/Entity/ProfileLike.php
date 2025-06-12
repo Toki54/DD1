@@ -25,6 +25,9 @@ class ProfileLike
  #[ORM\Column(type: 'datetime')]
  private \DateTimeInterface $likedAt;
 
+ #[ORM\Column(type: 'boolean')]
+private bool $seen = false;
+
  public function __construct()
  {
   $this->likedAt = new \DateTime();
@@ -70,4 +73,15 @@ class ProfileLike
 
   return $this;
  }
+
+ public function isSeen(): bool
+{
+    return $this->seen;
+}
+
+public function setSeen(bool $seen): self
+{
+    $this->seen = $seen;
+    return $this;
+}
 }
