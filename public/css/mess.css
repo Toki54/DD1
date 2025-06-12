@@ -96,9 +96,9 @@ h3 {
 }
 
 /* Pseudo */
-.pseudo {
-    font-size: 1.1rem;
-    font-weight: 600;
+a {
+    text-decoration: none !important;
+    color: #a38629cc;
 }
 
 /* Séparateur */

@@ -20,13 +20,31 @@
 				{% else %}
 					<div class="conversation-list">
 						{% for conversation in conversations %}
-							<div class="conversation-card mb-3 p-2 border rounded shadow-sm">
-								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link text-decoration-none">
-									<div class="d-flex align-items-center">
-										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar me-2 rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-										<strong class="pseudo text-dark">{{ conversation.user.pseudo }}</strong>
+							<div
+								class="conversation-card mb-3 p-2 border rounded shadow-sm position-relative">
+								<!-- Card cliquable vers la conversation -->
+								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="stretched-link"></a>
+
+								<div class="d-flex align-items-center">
+									<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar me-2 rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+									<div>
+										<strong class="pseudo">
+											<a href="{{ path('app_profile_view', { id: conversation.user.profile.id }) }}" onclick="event.stopPropagation(); event.preventDefault(); window.location.href=this.href;">{{ conversation.user.pseudo }}</a>
+										</strong><br>
+										<small>
+											{{ conversation.user.profile.sex|default('Sexe inc.') }}
+											-
+											{% if conversation.user.profile.birthdate %}
+												{% set now = "now"|date("Y") %}
+												{% set birthYear = conversation.user.profile.birthdate|date("Y") %}
+												{{ now - birthYear }}
+												ans
+											{% else %}
+												Âge inc.
+											{% endif %}
+										</small>
 									</div>
-								</a>
+								</div>
 
 								<hr class="my-2">
 
@@ -45,7 +63,8 @@
 					<div class="conversation-detail-card border rounded shadow p-3">
 						<div class="card-header mb-3">
 							<h4>Conversation avec
-								{{ receiver.pseudo }}</h4>
+								<a href="{{ path('app_profile_view', { id: receiver.profile.id }) }}">{{ receiver.pseudo }}</a>
+							</h4>
 						</div>
 
 						<div class="card-body chat-box mb-3" style="max-height: 500px; overflow-y: auto;">
