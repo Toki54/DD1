@@ -16,80 +16,84 @@
 		class="d-flex flex-column min-vh-100 bg-dark text-white">
 
 		{# NAVBAR #}
-		<header>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-4 py-2">
-	<a class="navbar-brand text-gold fw-bold" href="{{ path('app_home') }}">💛 Dial & Date</a>
-	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+<header>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 rounded-bottom shadow-lg">
+		<a class="navbar-brand fw-bold text-accent" href="{{ path('app_home') }}">
+			💛 Dial & Date
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-	<div class="collapse navbar-collapse" id="mainNavbar">
-		<ul class="navbar-nav ms-auto align-items-center">
+		<div class="collapse navbar-collapse" id="mainNavbar">
+			<ul class="navbar-nav ms-auto align-items-center gap-2">
 
-			{% if app.user %}
-<li class="nav-item me-2">
-	<a href="{{ path('app_messages') }}" class="btn btn-outline-light position-relative">
-		📩 Messages
-		{% set unread = unread_messages_count() %}
-		{% if unread > 0 %}
-			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-				{{ unread }}
-				<span class="visually-hidden">nouveaux messages</span>
-			</span>
-		{% endif %}
-	</a>
-</li>
-
-
-				<li class="nav-item me-2">
-					<a class="nav-link text-white" href="{{ path('app_profile_show') }}">👤 Mon Profil</a>
-				</li>
-<li class="nav-item me-2">
-	<a href="{{ path('app_profile_likes') }}" class="btn btn-outline-primary position-relative">
-		👁️❤️ Visites & Likes
-		{% if unread_likes_count() > 0 %}
-			<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-				{{ unread_likes_count() }}
-			</span>
-		{% endif %}
-	</a>
-</li>
-
-				<li class="nav-item me-2">
-					<a class="nav-link text-white" href="{{ path('app_profiles_list') }}">🧑‍🤝‍🧑 Profils</a>
-				</li>
-				<li class="nav-item me-2">
-					<a class="nav-link text-gold" href="{{ path('app_stripe_subscribe') }}">💳 Abonnements</a>
-				</li>
-				<li class="nav-item me-3">
-					<a class="nav-link text-danger" href="{{ path('app_logout') }}">🚪 Déconnexion</a>
-				</li>
-
-				{% if 'ROLE_ADMIN' in app.user.roles %}
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle text-warning" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-							⚙️ Admin
+				{% if app.user %}
+					<li class="nav-item">
+						<a href="{{ path('app_messages') }}" class="btn btn-dark position-relative">
+							📩 Messages
+							{% set unread = unread_messages_count() %}
+							{% if unread > 0 %}
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+									{{ unread }}
+									<span class="visually-hidden">nouveaux messages</span>
+								</span>
+							{% endif %}
 						</a>
-						<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
-							<li>
-								<a class="dropdown-item" href="{{ path('app_user_index') }}">👥 Gérer Utilisateurs</a>
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ path('app_deleted_conversations') }}">🗑️ Conversations Supprimées</a>
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ path('admin_subscriptions_index') }}">💼 Gérer Abonnements</a>
-							</li>
-						</ul>
 					</li>
+
+					<li class="nav-item">
+						<a href="{{ path('app_profile_likes') }}" class="btn btn-outline-dark position-relative">
+							👁️❤️ Visites & Likes
+							{% if unread_likes_count() > 0 %}
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+									{{ unread_likes_count() }}
+								</span>
+							{% endif %}
+						</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="btn btn-dark" href="{{ path('app_profile_show') }}">👤 Mon Profil</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="btn btn-dark" href="{{ path('app_profiles_list') }}">🧑‍🤝‍🧑 Profils</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="btn btn-dark text-accent border-accent" href="{{ path('app_stripe_subscribe') }}">💳 Abonnements</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="btn btn-outline-danger" href="{{ path('app_logout') }}">🚪 Déconnexion</a>
+					</li>
+
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+						<li class="nav-item dropdown">
+							<a class="btn btn-dark dropdown-toggle text-warning" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+								⚙️ Admin
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark">
+								<li>
+									<a class="dropdown-item" href="{{ path('app_user_index') }}">👥 Gérer Utilisateurs</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_deleted_conversations') }}">🗑️ Conversations Supprimées</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_subscriptions_index') }}">💼 Gérer Abonnements</a>
+								</li>
+							</ul>
+						</li>
+					{% endif %}
 				{% endif %}
-			{% endif %}
-		</ul>
-	</div>
-</nav>
+			</ul>
+		</div>
+	</nav>
+</header>
 
 
-		</header>
 
 		
 
