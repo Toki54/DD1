@@ -96,10 +96,10 @@
 							<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-message" title="Envoyer un message">
 								<img src="/public/images/messagerie.png" alt="Message">
 							</a>
-							<button class="btn-like" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
-<img src="/public/images/like.png" alt="like">
+<button class="btn-like clean-button" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
+	<img src="{{ asset('images/like.png') }}" alt="like" class="like-icon">
+</button>
 
-							</button>
 						</div>
 					</article>
 				{% endif %}
