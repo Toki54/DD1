@@ -2,15 +2,15 @@
 
 .profile-container {
   max-width: 900px;
-  margin: 40px auto;
-  padding: 40px 30px;
-  background: rgba(28, 28, 28, 0.8);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  border-radius: 20px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  position: relative;
+    margin: 40px auto;
+    padding: 27px 28px;
+    background: rgba(28, 28, 28, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 
 .profile-container::before {
@@ -31,6 +31,21 @@
   position: relative;
   z-index: 1;
 }
+
+.edit a {
+  border-radius: 20px;
+    text-decoration: none;
+    color: #d4af37;
+    padding: 10px;
+    background-color: #212529;
+    box-shadow: 0 0 3px 2px rgb(212 175 55 / 62%);
+  }
+.edit {
+  display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 
 .pseudo {
   color: #d4af37;
