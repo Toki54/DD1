@@ -1,15 +1,12 @@
-/* Couleurs principales */
 :root {
   --color-bg: #2e2e2e;
   --color-text: #212529;
   --color-accent: #d4af37;
-  /* doré */
   --color-dark: #343a40;
   --color-light: #ffffff;
   --color-gray: #6c757d;
 }
 
-/* Réinitialisation de base */
 * {
   margin: 0;
   padding: 0;
@@ -22,30 +19,6 @@ body {
   color: var(--color-text);
 }
 
-.ban img{
-  width: 100%;
-  height: 500px;
-}
-
-/* NAVBAR */
-.navbar {
-  background-color: var(--color-dark);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-brand,
-.navbar-nav .nav-link {
-  color: var(--color-light);
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.navbar-brand:hover,
-.navbar-nav .nav-link:hover {
-  color: var(--color-accent);
-}
-
-
 .text-accent {
   color: var(--color-accent) !important;
 }
@@ -53,33 +26,48 @@ body {
 .border-accent {
   border: 2px solid var(--color-accent) !important;
 }
-/* BOUTONS */
-.btn {
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: bold;
+
+/* Navbar */
+.navbar-brand {
+  color: var(--color-accent);
+  font-size: 1.4rem;
+}
+
+.navbar {
+  background-color: var(--color-dark);
+}
+
+.navbar .btn {
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
+/* Boutons petits */
+.btn-sm-custom {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* Styles boutons */
 .btn-dark {
   background-color: var(--color-dark);
-  border-color: var(--color-dark);
+  border: 1px solid var(--color-dark);
   color: var(--color-light);
 }
 
 .btn-dark:hover {
   background-color: var(--color-accent);
-  border-color: var(--color-accent);
   color: var(--color-dark);
+  border-color: var(--color-accent);
 }
 
 .btn-outline-dark {
+  border: 1px solid var(--color-dark);
   color: var(--color-dark);
-  border: 2px solid var(--color-dark);
 }
 
-.btn-outline-dark:hover,
-.btn-dark:hover {
+.btn-outline-dark:hover {
   background-color: var(--color-accent);
   color: var(--color-dark);
   border-color: var(--color-accent);
@@ -90,97 +78,71 @@ body {
   color: white;
 }
 
-/* SECTION D'ACCUEIL */
-section.text-center {
-  background: linear-gradient(145deg, var(--color-dark), #1e2124);
-  padding: 60px 20px;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-section.text-center h1 {
-  color: var(--color-accent);
-  text-shadow: 1px 1px 2px black;
-}
-
-section.text-center p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: var(--color-light);
-}
-
-/* CARTES - STYLE AMÉLIORÉ */
-.card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  /* doré transparent */
-  border-radius: 20px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  padding: 30px 20px;
-  transition: all 0.4s ease;
-  overflow: hidden;
-}
-
-.card::before {
-  content: "";
+/* Badge de notif */
+.notif-badge {
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 255, 255, 0));
-  z-index: 0;
-  transform: rotate(25deg);
-  pointer-events: none;
-}
-
-.card:hover {
-  transform: translateY(-10px) scale(1.01);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-  border-color: rgba(212, 175, 55, 0.6);
-}
-
-.card h2 {
-  position: relative;
-  font-size: 1.8rem;
-  color: var(--color-dark);
-  margin-bottom: 20px;
-  z-index: 1;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-.card a {
-  position: relative;
-  margin-top: 15px;
-  z-index: 1;
+  top: -8px;
+  right: -12px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
   font-weight: bold;
-  border-radius: 8px;
-  padding: 10px 20px;
-  background-color: var(--color-accent);
-  color: var(--color-dark);
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.card a:hover {
-  background-color: #e5c100;
-  color: #1a1a1a;
-}
-/* FOOTER */
+/* Footer */
 footer {
   background-color: var(--color-dark);
   color: var(--color-light);
   font-size: 0.9rem;
 }
 
-/* RESPONSIVE */
+/* Petits boutons pour navbar */
+.btn-sm-custom {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Badge de notification */
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  z-index: 2;
+}
+
+/* Responsive navbar menu (mobile) */
 @media (max-width: 768px) {
-  .card {
-    margin-bottom: 20px;
+  .navbar .navbar-collapse {
+    padding-top: 10px;
+  }
+
+  .navbar .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-sm-custom {
+    width: 100%;
+    text-align: left;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .notif-badge {
+    font-size: 0.65rem;
+  }
+
+  .navbar .d-flex.flex-column>div:first-child {
+    justify-content: flex-start;
+    gap: 1rem;
   }
 }
+
