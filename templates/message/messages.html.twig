@@ -110,11 +110,11 @@
 					</div>
 				{% else %}
 					<!-- Aucun utilisateur sélectionné -->
-					<div class="text-center p-5 bg-light text-dark rounded shadow">
+					<div class="text-center p-5 rounded shadow">
 						<img src="{{ asset('images/messagerie.png') }}" alt="Messagerie" class="mb-4" style="max-width: 180px;">
 						<h2 class="mb-3 text-gold">Bienvenue dans votre messagerie 💬</h2>
 						<p class="mb-4">Vous n'avez pas encore de discussion active.<br>Visitez les profils pour démarrer une conversation.</p>
-						<a href="{{ path('app_profiles_list') }}" class="btn btn-outline-dark btn-lg">Explorer les profils</a>
+						<a href="{{ path('app_profiles_list') }}" class="btn-prof" >Explorer les profils</a>
 					</div>
 				{% endif %}
 			</div>
