@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Service;
 
 use App\Repository\MessageRepository;
@@ -9,9 +8,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class NavbarNotificationService
 {
- private $messageRepository;
- private $profileLikeRepository;
- private $security;
+ private MessageRepository $messageRepository;
+ private ProfileLikeRepository $profileLikeRepository;
+ private Security $security;
 
  public function __construct(
   MessageRepository $messageRepository,
@@ -37,5 +36,4 @@ class NavbarNotificationService
   }
   return $this->profileLikeRepository->countUnreadLikes($user->getProfile());
  }
-
 }

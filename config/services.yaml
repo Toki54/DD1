@@ -19,8 +19,10 @@ services:
             - '../src/Kernel.php'
 
     # Déclaration explicite si tu utilises ce service personnalisé
+    
     App\Service\UserProfileService: ~
     App\Service\NavbarNotificationService: ~
+    
 
     # Enregistrement d'une extension Twig personnalisée
     App\Twig\AppExtension:
