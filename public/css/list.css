@@ -67,10 +67,11 @@
         flex-grow: 1;
         border-left: 1px solid #ffc1076b;
         height: 140px;
-        max-width: 42%;
+        max-width: 46%;
         padding: 16px 16px 16px 16px;
         color: #ffc107bd;
         font-size: 15px;
+        margin-right: 25px;
 }
 
 .profile-biography p {
@@ -83,14 +84,13 @@
 
 .profile-actions {
     background-color: #00000040;
-    box-shadow: 0px 0px 3px 1px #edd65a;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 40px;
-    margin-left: auto;
-    margin-right: 20px;
-    padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 8px;
+        margin-left: auto;
+        margin-right: 20px;
+        padding-bottom: 10px;
 }
 
 
@@ -119,6 +119,12 @@
 /* Hover animation */
 .clean-button:hover .like-icon {
     transform: scale(1.1);
+}
+
+.btn-message {
+    margin-bottom: 4px;
+    border-bottom: 1px solid #ffd7006e;
+    text-decoration: underline;
 }
 
 .btn-message img {
