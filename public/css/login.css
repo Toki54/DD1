@@ -1,9 +1,11 @@
-/* FORMULAIRE DE CONNEXION */
 
+
+/* Le formulaire en glassmorphism */
 form {
+  margin: auto;
   max-width: 400px;
-  margin: 60px auto;
-  background: rgba(255, 255, 255, 0.15);
+  width: 100%;
+  background: #00000066;
   border: 1px solid rgba(212, 175, 55, 0.3);
   /* doré léger */
   border-radius: 20px;
@@ -11,10 +13,11 @@ form {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  color: var(--color-dark);
+  color: #fff;
   position: relative;
 }
 
+/* Effet lumière dorée */
 form::before {
   content: "";
   position: absolute;
@@ -33,30 +36,35 @@ form>* {
   z-index: 1;
 }
 
+/* Titre */
 form h1 {
   text-align: center;
   font-size: 1.8rem;
   margin-bottom: 30px;
-  color: var(--color-dark);
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+/* Labels */
 label {
   font-weight: 500;
   display: block;
   margin-top: 15px;
   margin-bottom: 5px;
+  color: #f0f0f0;
 }
 
+/* Inputs */
 input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 10px 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.85);
   outline: none;
-  background-color: rgba(255, 255, 255, 0.8);
   transition: border-color 0.3s ease;
+  font-size: 1rem;
 }
 
 input[type="email"]:focus,
@@ -65,25 +73,30 @@ input[type="password"]:focus {
   /* doré */
 }
 
+/* Message erreur */
 .alert.alert-danger {
   background-color: rgba(255, 0, 0, 0.1);
   border-left: 4px solid red;
-  color: #900;
+  color: #ff5555;
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 8px;
+  font-size: 0.95rem;
 }
 
+/* Bouton */
 button[type="submit"] {
   width: 100%;
   padding: 12px 20px;
   margin-top: 30px;
   font-size: 1rem;
   background-color: #d4af37;
+  /* doré */
   color: #1a1a1a;
   border: none;
   border-radius: 8px;
   font-weight: bold;
+  cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

@@ -29,7 +29,7 @@
 }
 
 .card-home {
-    background: rgba(0, 0, 0, 0.4);
+    background: #00000066;
     border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: 20px;
     padding: 2rem;
@@ -51,7 +51,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 255, 255, 0));
+    background: linear-gradient(135deg, #d4af371a, rgba(255, 255, 255, 0));
     z-index: 0;
     transform: rotate(25deg);
     pointer-events: none;
