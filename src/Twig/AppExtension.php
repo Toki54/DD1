@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Repository\UserRepository;
-use App\Service\NavbarNotificationService;
+use App\Services\NavbarNotificationService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
