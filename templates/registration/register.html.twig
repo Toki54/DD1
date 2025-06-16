@@ -1,46 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register
+{% block title %}Inscription
 {% endblock %}
-
 
 
 {% block body %}
-	<h1>Register</h1>
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{{ asset('css/register.css') }}">
+	{% endblock %}
 
-	{# Affichage des erreurs globales du formulaire #}
-	{{ form_errors(registrationForm) }}
+	<div class="container register-container mt-5">
+		<h1 class="text-center mb-4">Créer un compte</h1>
 
-	{# Début du formulaire #}
-	{{ form_start(registrationForm) }}
+		{{ form_errors(registrationForm) }}
 
-	{# Champ pour l'email #}
-	<div class="form-group">
-		{{ form_row(registrationForm.email) }}
+		{{ form_start(registrationForm) }}
+
+		<div class="form-group">
+			{{ form_row(registrationForm.email) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.pseudo) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
+		</div>
+
+		<div id="cgu" class="form-group">
+
+{{ form_row(registrationForm.agreeTerms) }}
+<a href="#" data-bs-toggle="modal" data-bs-target="#cguModal">Lire les CGU</a>
+		</div>
+
+		<div class="text-center mt-4">
+			<button type="submit" class="btn btn-primary">S'inscrire</button>
+		</div>
+
+		{{ form_end(registrationForm) }}
 	</div>
 
-<div class="form-group">
-	{{ form_row(registrationForm.pseudo) }}
-</div>
+	<!-- Modal CGU -->
+	<div class="modal fade" id="cguModal" tabindex="-1" aria-labelledby="cguModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+			<div class="modal-content text-black">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cguModalLabel">Conditions Générales d'Utilisation (CGU)</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div class="modal-body">
+					<h6>1. Objet du site</h6>
+					<p>Ce site est destiné aux personnes ne souhaitant pas avoir d’enfants, et favorise les échanges entre individus partageant cette vision. La transparence est essentielle dès le départ.</p>
 
+					<h6>2. Accès au service</h6>
+					<p>
+						<strong>Interdit aux mineurs :</strong>
+						toute personne accédant au site doit avoir au minimum 18 ans.</p>
 
-	{# Champ pour le mot de passe (plainPassword) #}
-	<div class="form-group">
-		{{ form_row(registrationForm.plainPassword, {
-                label: 'Password'
-            }) }}
+					<h6>3. Comportement des utilisateurs</h6>
+					<ul>
+						<li>Respect des autres membres</li>
+						<li>Pas de contenu illégal, haineux ou discriminatoire</li>
+						<li>Pas de harcèlement ou d’usurpation d’identité</li>
+					</ul>
+
+					<h6>4. Messages et données</h6>
+					<p>Les messages sont conservés pendant une durée maximale de 1 an. En cas d’enquête judiciaire, les autorités peuvent y avoir accès.</p>
+
+					<h6>5. Responsabilité</h6>
+					<p>Nous ne sommes pas responsables des propos ou comportements des utilisateurs ni des conséquences de leurs interactions.</p>
+
+					<h6>6. Suppression de compte</h6>
+					<p>Tout comportement abusif peut entraîner une suppression immédiate du compte, sans préavis.</p>
+
+					<h6>7. Données personnelles</h6>
+					<p>Conformément au RGPD, chaque utilisateur peut consulter, modifier ou supprimer ses données sur demande.</p>
+
+					<h6>8. Modifications</h6>
+					<p>Les CGU peuvent évoluer. Dernière mise à jour :
+						{{ "now"|date("d/m/Y") }}.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+				</div>
+			</div>
+		</div>
 	</div>
-
-	{# Case pour accepter les conditions d'utilisation #}
-	<div class="form-group">
-		{{ form_row(registrationForm.agreeTerms) }}
-	</div>
-
-	{# Bouton de soumission du formulaire #}
-	<button type="submit" class="btn btn-primary">Register</button>
-
-	{# Fin du formulaire #}
-	{{ form_end(registrationForm) }}
-
 {% endblock %}
-

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Mime\Message;
 
 class RegistrationFormType extends AbstractType
 {
@@ -48,13 +49,14 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
-                'label' => 'Agree to terms',
+                'label' => 'J\'accepte les Conditions Général d\'Utilisation.  ',
                 'mapped' => false,
                 'constraints' => [
                     new \Symfony\Component\Validator\Constraints\IsTrue([
-                        'message' => 'You must agree to our terms',
+                        'message' => 'J\'accepte les Conditions Général d\'Utilisation.',
                     ]),
                 ],
+                
             ]);
     }
 
