@@ -30,8 +30,15 @@
 
 		<div id="cgu" class="form-group">
 
-{{ form_row(registrationForm.agreeTerms) }}
-<a href="#" data-bs-toggle="modal" data-bs-target="#cguModal">Lire les CGU</a>
+<div class="form-check">
+	{{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+	<label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+		J'accepte les
+		<a href="#" data-bs-toggle="modal" data-bs-target="#cguModal">Conditions Générales d'Utilisation</a>.
+	</label>
+	{{ form_errors(registrationForm.agreeTerms) }}
+</div>
+
 		</div>
 
 		<div class="text-center mt-4">
