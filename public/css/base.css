@@ -1,8 +1,8 @@
 :root {
   --color-bg: #2e2e2e;
-  --color-text: #212529;
+  --color-text: #f1f1f1;
   --color-accent: #d4af37;
-  --color-dark: #343a40;
+  --color-dark: #1c1c1c;
   --color-light: #ffffff;
   --color-gray: #6c757d;
 }
@@ -19,6 +19,7 @@ body {
   color: var(--color-text);
 }
 
+/* Accent et bordures */
 .text-accent {
   color: var(--color-accent) !important;
 }
@@ -42,19 +43,29 @@ body {
   transition: all 0.3s ease;
 }
 
-.compteur {
-  border: 1px solid green;
-  padding: 4px;
+.navbar .btn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-dark);
 }
 
-/* Boutons petits */
-.btn-sm-custom {
-  padding: 6px 12px;
-  font-size: 0.85rem;
+/* Compteur / Badge de compteur */
+.compteur {
+  border: 1px solid var(--color-accent);
+  padding: 4px 8px;
+  color: var(--color-light);
+  background-color: rgba(212, 175, 55, 0.1);
   border-radius: 6px;
 }
 
-/* Styles boutons */
+/* Petits boutons */
+.btn-sm-custom {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Boutons styles */
 .btn-dark {
   background-color: var(--color-dark);
   border: 1px solid var(--color-dark);
@@ -69,7 +80,8 @@ body {
 
 .btn-outline-dark {
   border: 1px solid var(--color-dark);
-  color: var(--color-dark);
+  color: var(--color-light);
+  background: transparent;
 }
 
 .btn-outline-dark:hover {
@@ -78,37 +90,14 @@ body {
   border-color: var(--color-accent);
 }
 
+.btn-outline-danger {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
 .btn-outline-danger:hover {
   background-color: #dc3545;
   color: white;
-}
-
-/* Badge de notif */
-.notif-badge {
-  position: absolute;
-  top: -8px;
-  right: -12px;
-  background-color: #dc3545;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.75rem;
-  font-weight: bold;
-}
-
-/* Footer */
-footer {
-  background-color: var(--color-dark);
-  color: var(--color-light);
-  font-size: 0.9rem;
-}
-
-/* Petits boutons pour navbar */
-.btn-sm-custom {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 6px;
 }
 
 /* Badge de notification */
@@ -116,12 +105,38 @@ footer {
   position: absolute;
   top: -5px;
   right: -10px;
-  font-size: 0.7rem;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
   padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
   z-index: 2;
 }
 
-/* Responsive navbar menu (mobile) */
+/* Modal blanc conservé */
+.modal-content {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.modal-header,
+.modal-footer {
+  border: none;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  font-size: 0.9rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Responsive navbar */
 @media (max-width: 768px) {
   .navbar .navbar-collapse {
     padding-top: 10px;
@@ -150,4 +165,3 @@ footer {
     gap: 1rem;
   }
 }
-

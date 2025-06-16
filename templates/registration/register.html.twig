@@ -5,7 +5,7 @@
 
 
 {% block body %}
-	{% block stylesheets %}
+	{% block stylesheet %}
 		<link rel="stylesheet" href="{{ asset('css/register.css') }}">
 	{% endblock %}
 
@@ -42,7 +42,7 @@
 		</div>
 
 		<div class="text-center mt-4">
-			<button type="submit" class="btn btn-primary">S'inscrire</button>
+			<button type="submit" class="btn btn-primary">Inscription</button>
 		</div>
 
 		{{ form_end(registrationForm) }}
@@ -51,40 +51,41 @@
 	<!-- Modal CGU -->
 	<div class="modal fade" id="cguModal" tabindex="-1" aria-labelledby="cguModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-scrollable">
-			<div class="modal-content text-black">
+			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="cguModalLabel">Conditions Générales d'Utilisation (CGU)</h5>
+<h5 class="modal-title" id="cguModalLabel">Conditions Générales d'Utilisation</h5>
+
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 				</div>
 				<div class="modal-body">
-					<h6>1. Objet du site</h6>
+					<h6>1. Objet du site :</h6>
 					<p>Ce site est destiné aux personnes ne souhaitant pas avoir d’enfants, et favorise les échanges entre individus partageant cette vision. La transparence est essentielle dès le départ.</p>
 
-					<h6>2. Accès au service</h6>
+					<h6>2. Accès au service :</h6>
 					<p>
 						<strong>Interdit aux mineurs :</strong>
 						toute personne accédant au site doit avoir au minimum 18 ans.</p>
 
-					<h6>3. Comportement des utilisateurs</h6>
+					<h6>3. Comportement des utilisateurs :</h6>
 					<ul>
 						<li>Respect des autres membres</li>
 						<li>Pas de contenu illégal, haineux ou discriminatoire</li>
 						<li>Pas de harcèlement ou d’usurpation d’identité</li>
 					</ul>
 
-					<h6>4. Messages et données</h6>
+					<h6>4. Messages et données :</h6>
 					<p>Les messages sont conservés pendant une durée maximale de 1 an. En cas d’enquête judiciaire, les autorités peuvent y avoir accès.</p>
 
-					<h6>5. Responsabilité</h6>
+					<h6>5. Responsabilité :</h6>
 					<p>Nous ne sommes pas responsables des propos ou comportements des utilisateurs ni des conséquences de leurs interactions.</p>
 
-					<h6>6. Suppression de compte</h6>
+					<h6>6. Suppression de compte :</h6>
 					<p>Tout comportement abusif peut entraîner une suppression immédiate du compte, sans préavis.</p>
 
-					<h6>7. Données personnelles</h6>
+					<h6>7. Données personnelles :</h6>
 					<p>Conformément au RGPD, chaque utilisateur peut consulter, modifier ou supprimer ses données sur demande.</p>
 
-					<h6>8. Modifications</h6>
+					<h6>8. Modifications :</h6>
 					<p>Les CGU peuvent évoluer. Dernière mise à jour :
 						{{ "now"|date("d/m/Y") }}.</p>
 				</div>

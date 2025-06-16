@@ -4,33 +4,40 @@
 {% endblock %}
 
 {% block body %}
-	<section class="text-center p-4 text-white">
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{{ asset('css/home.css') }}">
+	{% endblock %}
+
+	<section class="home-section text-center p-4 text-white">
 		<h1 class="display-5 fw-bold">Bienvenue sur Dial And Date</h1>
 		<p class="lead mt-3">
 			Un site de rencontre conçu pour les personnes qui ne veulent pas d’enfants.<br>
 			Parce que le sujet des enfants est fondamental, nous pensons qu’il est sage d’être clair dès le départ.<br>
 			Ici, vous trouverez des profils partageant votre vision.<br>
-			<a href="#" data-bs-toggle="modal" data-bs-target="#cguModal">Lire les CGU</a>
+			<a href="#" data-bs-toggle="modal" data-bs-target="#cguModal" class="text-accent">Lire les CGU</a>
 		</p>
 	</section>
 
 	{% if not app.user %}
-		<div class="row justify-content-center text-dark">
-			<div class="col-md-5">
-				<div class="card text-center p-4">
-					<h2 class="mb-3">Déjà inscrit ?</h2>
-					<a href="{{ path('app_login') }}" class="btn btn-outline-dark">Se connecter</a>
-				</div>
+		<div class="card-home-wrapper">
+			<div class="card-home">
+				<h2>Déjà inscrit ?</h2>
+				<p>Connecte-toi pour retrouver tes messages et profils favoris.</p>
+				<a href="{{ path('app_login') }}">
+					<button class="btn">Se connecter</button>
+				</a>
 			</div>
-			<div class="col-md-5">
-				<div class="card text-center p-4">
-					<h2 class="mb-3">Nouvel utilisateur ?</h2>
-					<a href="{{ path('app_register') }}" class="btn btn-dark">Créer un compte</a>
-				</div>
+
+			<div class="card-home">
+				<h2>Nouvel utilisateur ?</h2>
+				<p>Crée ton compte gratuitement et commence à faire des rencontres sérieuses.</p>
+				<a href="{{ path('app_register') }}">
+					<button class="btn">Créer un compte</button>
+				</a>
 			</div>
 		</div>
 	{% else %}
-		<div class="text-center mt-5">
+		<div class="text-center mt-5 text-white">
 			<h2 class="fw-bold">Bienvenue
 				{{ app.user.pseudo }}
 				👋</h2>
@@ -46,49 +53,42 @@
 	<!-- Modal CGU -->
 	<div class="modal fade" id="cguModal" tabindex="-1" aria-labelledby="cguModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-scrollable">
-			<div class="modal-content">
+			<div class="modal-content text-black">
 				<div class="modal-header">
 					<h5 class="modal-title" id="cguModalLabel">Conditions Générales d'Utilisation (CGU)</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 				</div>
-				<div class="modal-body" style="white-space: pre-wrap;">
-					Bienvenue sur notre site de rencontre dédié aux personnes ne souhaitant pas d’enfants.
-					
-					1. **Objet du site**  
-					Le présent site a pour objectif de mettre en relation des personnes partageant une vision de vie commune, notamment celle de ne pas avoir d’enfants. Ce sujet étant central, il est essentiel que les utilisateurs soient honnêtes et transparents dans leurs échanges.
-					
-					2. **Accès au service**  
-					Le site est **strictement interdit aux mineurs**. Toute personne accédant au site doit avoir **18 ans ou plus**. L’inscription et l’utilisation du site impliquent la pleine acceptation de ces CGU.
-					
-					3. **Comportement des utilisateurs**  
-					Chaque utilisateur s'engage à :  
-					- Respecter les autres membres.  
-					- Ne pas publier de contenu haineux, discriminatoire, violent, ou contraire à la loi.  
-					- Ne pas harceler, menacer ou usurper l’identité d’un autre membre.  
-					- Utiliser le site dans un but de rencontre respectueuse, sans activité illégale.
-					
-					4. **Messages et données**  
-					Pour des raisons de sécurité et en cas d’enquête judiciaire :  
-					- **Les messages sont conservés sur nos serveurs** pendant une durée légale (1 an par défaut).  
-					- Ces messages peuvent être transmis aux autorités compétentes en cas de réquisition judiciaire.
-					
-					5. **Responsabilité**  
-					Le site ne peut être tenu responsable :  
-					- Des propos tenus par les membres.  
-					- Des rencontres organisées entre membres.  
-					- Des conséquences liées à une fausse déclaration.
-					
-					6. **Suppression de compte**  
-					Tout comportement inapproprié peut entraîner la suppression immédiate du compte, sans préavis.
-					
-					7. **Données personnelles**  
-					Conformément à la législation RGPD, vous pouvez demander à consulter, modifier ou supprimer vos données à tout moment. Les données sont traitées de manière confidentielle.
-					
-					8. **Modification des CGU**  
-					Nous nous réservons le droit de modifier les CGU à tout moment. Les utilisateurs seront informés de tout changement via le site.
-					
-					Dernière mise à jour :
-					{{ "now"|date("d/m/Y") }}
+				<div class="modal-body">
+					<h6>1. Objet du site</h6>
+					<p>Ce site est destiné aux personnes ne souhaitant pas avoir d’enfants, et favorise les échanges entre individus partageant cette vision.</p>
+
+					<h6>2. Accès au service</h6>
+					<p>
+						<strong>Interdit aux mineurs :</strong>
+						toute personne accédant au site doit avoir au minimum 18 ans.</p>
+
+					<h6>3. Comportement des utilisateurs</h6>
+					<ul>
+						<li>Respect des autres membres</li>
+						<li>Pas de contenu illégal, haineux ou discriminatoire</li>
+						<li>Pas de harcèlement ou d’usurpation d’identité</li>
+					</ul>
+
+					<h6>4. Messages et données</h6>
+					<p>Les messages sont conservés pendant une durée maximale de 1 an. En cas d’enquête judiciaire, les autorités peuvent y avoir accès.</p>
+
+					<h6>5. Responsabilité</h6>
+					<p>Nous ne sommes pas responsables des propos ou comportements des utilisateurs ni des conséquences de leurs interactions.</p>
+
+					<h6>6. Suppression de compte</h6>
+					<p>Tout comportement abusif peut entraîner une suppression immédiate du compte, sans préavis.</p>
+
+					<h6>7. Données personnelles</h6>
+					<p>Conformément au RGPD, chaque utilisateur peut consulter, modifier ou supprimer ses données sur demande.</p>
+
+					<h6>8. Modifications</h6>
+					<p>Les CGU peuvent évoluer. Dernière mise à jour :
+						{{ "now"|date("d/m/Y") }}.</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

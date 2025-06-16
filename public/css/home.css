@@ -1,0 +1,106 @@
+.home-section {
+    background-color: #111;
+    padding: 3rem 1rem;
+    border-radius: 1rem;
+    text-align: center;
+    color: #fff;
+}
+
+.home-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #d4af37;
+    text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+}
+
+.home-section p {
+    font-size: 1.1rem;
+    color: #ccc;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+.card-home-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 2rem 1rem;
+}
+
+.card-home {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    transition: transform 0.2s ease-in-out;
+    text-align: center;
+    position: relative;
+}
+
+.card-home::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 255, 255, 0));
+    z-index: 0;
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+.card-home>* {
+    position: relative;
+    z-index: 1;
+}
+
+.card-home h2 {
+    color: #d4af37;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.card-home p {
+    font-size: 1rem;
+    color: #e0e0e0;
+    margin-bottom: 1.5rem;
+}
+
+.card-home .btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+    background-color: #d4af37;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.card-home .btn:hover {
+    background-color: #e5c100;
+    color: #000000;
+}
+
+@media (max-width: 768px) {
+    .card-home-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-home {
+        max-width: 90%;
+    }
+}
