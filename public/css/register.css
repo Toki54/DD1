@@ -1,78 +1,120 @@
-body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Segoe UI', sans-serif;
-}
+/* STYLE DU FORMULAIRE D'INSCRIPTION - DARK + GRIS + DORÉ */
 
 .register-container {
-    background-color: #1e1e1e;
-    padding: 2rem;
-    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    /* doré léger */
+    border-radius: 20px;
+    padding: 2.5rem;
     max-width: 600px;
-    margin: auto;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    margin: 60px auto;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    color: #ffffff;
+}
+
+.register-container::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 255, 255, 0));
+    z-index: 0;
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+.register-container>* {
+    position: relative;
+    z-index: 1;
 }
 
 h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #f0f0f0;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+}
+
+label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    background-color: rgba(255, 255, 255, 0.08);
     color: #ffffff;
+    transition: border-color 0.3s ease;
 }
 
-a {
-    color: #bb86fc;
-    text-decoration: underline;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #d4af37;
+    background-color: rgba(255, 255, 255, 0.12);
+    outline: none;
 }
 
-a:hover {
-    color: #d3b6ff;
+input[type="checkbox"] {
+    accent-color: #d4af37;
+    margin-right: 0.5rem;
 }
 
 .form-group {
     margin-bottom: 1.5rem;
 }
 
-label {
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    background-color: #2c2c2c;
-    border: 1px solid #444;
-    color: #fff;
-    border-radius: 0.5rem;
-    padding: 0.6rem 1rem;
-    width: 100%;
-}
-
-input[type="checkbox"] {
-    justify-content: center;
-}
-
-.cgu{
+#cgu {
     display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-input:focus {
-    outline: none;
-    border-color: #bb86fc;
-    background-color: #333;
+a {
+    color: #d4af37;
+    text-decoration: underline;
 }
 
+a:hover {
+    color: #ffe083;
+}
+
+button[type="submit"],
 .btn-primary {
-    background-color: #6f42c1;
-    border-color: #6f42c1;
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 30px;
+    font-size: 1rem;
+    background-color: #d4af37;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+button[type="submit"]:hover,
 .btn-primary:hover {
-    background-color: #5930a5;
-    border-color: #5930a5;
+    background-color: #e5c100;
+    color: #000000;
 }
 
+/* Modal blanc conservé */
 .modal-content {
     background-color: #ffffff;
     color: #000000;
