@@ -24,10 +24,10 @@
 					{{ form_label(form.sex) }}
 					{{ form_widget(form.sex, {'attr': {'class': 'form-control'}}) }}
 				</div>
-<div class="mb-3">
-	{{ form_label(form.birthdate) }}
-	{{ form_widget(form.birthdate, {'attr': {'class': 'form-control'}}) }}
-</div>
+				<div class="mb-3">
+					{{ form_label(form.birthdate) }}
+					{{ form_widget(form.birthdate, {'attr': {'class': 'form-control'}}) }}
+				</div>
 
 
 				<div class="mb-3">
@@ -71,19 +71,22 @@
 				</div>
 
 				{# Affichage des photos déjà téléchargées #}
-				<div class="mb-3">
-					<label for="photos" class="form-label">Photos</label>
-					<div class="photo-gallery">
-						{% for photo in userProfile.photos %}
-							<div class="photo-item">
-								<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" width="100">
-								<a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')">Supprimer</a>
-							</div>
-						{% endfor %}
-					</div>
-				</div>
+				
+
 
 			</div>
+<div class="mb-3">
+	<label for="photos" class="form-label">Photos</label>
+	<div class="photo-gallery">
+		{% for photo in userProfile.photos %}
+			<div class="photo-item">
+				<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail">
+				<a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')">Supprimer</a>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+
 
 			<div class="text-center mt-4">
 				<button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>

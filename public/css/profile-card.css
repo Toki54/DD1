@@ -10,8 +10,17 @@ body {
 }
 
 h1 {
-    color: var(--color-dark, #d4af37);
+    color: #d4af37;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.abo {
+    box-shadow: inset 0px 0px 5px 4px #000;
+        border-radius: 20px;
+        width: 50%;
+        margin: auto;
+        background-color: #3b3a39;
+        color: #d4af37;
 }
 
 /* Conteneur des onglets */

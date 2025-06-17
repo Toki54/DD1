@@ -2,19 +2,20 @@
 main {
     border: 1px solid rgba(212, 175, 55, 0.3);
 }
+
 .container {
     max-width: 900px;
-    margin: 40px auto;
-    padding: 40px 30px;
-    background: rgba(28, 28, 28, 0.8);
-    /*border: 1px solid rgba(212, 175, 55, 0.3);*/
-    border-radius: 20px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    position: relative;
-    color: #f5f5f5;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* margin: 40px auto; */
+        /* padding: 40px 30px; */
+        background: rgba(28, 28, 28, 0.8);
+        /* border: 1px solid rgba(212, 175, 55, 0.3); */
+        border-radius: 20px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        position: relative;
+        color: #f5f5f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container::before {
@@ -67,6 +68,7 @@ h1 {
 }
 
 .col-md-6 {
+    color: goldenrod;
     flex: 1 1 45%;
     min-width: 280px;
 }
@@ -82,11 +84,12 @@ textarea.form-control {
 }
 
 .form-label {
-    display: block;
+    display: flex;
     margin-bottom: 8px;
     font-weight: 600;
     color: #d4af37;
     letter-spacing: 0.5px;
+    justify-content: center;
 }
 
 .form-control {
@@ -112,7 +115,8 @@ textarea.form-control {
 
 .text-muted {
     font-size: 0.85rem;
-color: #dfded44d !important;    display: block;
+    color: #dfded44d !important;
+    display: block;
     margin-top: 5px;
     font-style: italic;
 }
@@ -120,19 +124,30 @@ color: #dfded44d !important;    display: block;
 .photo-gallery {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 16px;
+    justify-content: center;
+    padding: 10px;
+    background-color: rgba(40, 40, 40, 0.5);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 15px;
+    max-height: 350px;
+    overflow-y: auto;
 }
 
 .photo-item {
+    width: 100px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    text-align: center;
 }
 
 .photo-thumbnail {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    border-radius: 15px;
+    border-radius: 12px;
     border: 1px solid rgba(212, 175, 55, 0.4);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     cursor: pointer;
@@ -140,8 +155,14 @@ color: #dfded44d !important;    display: block;
 }
 
 .photo-thumbnail:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.7);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(212, 175, 55, 0.6);
+}
+
+.photo-item .btn-danger {
+    margin-top: 8px;
+    width: 90%;
+    text-align: center;
 }
 
 .btn-danger {
@@ -155,6 +176,20 @@ color: #dfded44d !important;    display: block;
     box-shadow: 0 3px 8px rgba(178, 60, 60, 0.7);
     transition: background-color 0.3s ease;
     display: inline-block;
+}
+
+.photo-gallery::-webkit-scrollbar {
+    width: 8px;
+}
+
+.photo-gallery::-webkit-scrollbar-track {
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 10px;
+}
+
+.photo-gallery::-webkit-scrollbar-thumb {
+    background-color: #d4af37;
+    border-radius: 10px;
 }
 
 .btn-danger:hover {
@@ -173,16 +208,18 @@ color: #dfded44d !important;    display: block;
 }
 
 .btn-primary {
-    background-color: #d4af37;
-    color: #1a1a1a;
-    border: none;
-    padding: 12px 28px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.8);
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: auto;
+        margin-bottom: 45px;
+        background-color: #d4af37;
+        color: #1a1a1a;
+        border: none;
+        padding: 12px 28px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 15px;
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.8);
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -199,6 +236,7 @@ color: #dfded44d !important;    display: block;
     }
 
     .col-md-6 {
+        color: goldenrod;
         flex: 1 1 100%;
     }
 }

@@ -3,105 +3,111 @@
 {% block title %}Visites et Likes de mon profil
 {% endblock %}
 
-
-
 {% block body %}
-{% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
-
-{% endblock %}
+	{% block stylesheets %}
+		<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
+	{% endblock %}
 
 	<h1 style="text-align:center; margin-bottom:20px;">Visites et Likes de mon profil</h1>
 
-	<div class="tabs">
-		<div class="tab active" data-tab="visits">Ils ont visité ton profil ({{ visitorProfiles|length }})</div>
-		<div class="tab" data-tab="likes">Ils ont liké ton profil ({{ likerProfiles|length }})</div>
-	</div>
+	{% if is_granted('ROLE_PREMIUM') %}
 
-	<div id="visits" class="tab-content">
-		{% if visitorProfiles is empty %}
-			<p>Aucun visiteur pour le moment.</p>
-		{% else %}
-			<div class="profile-container">
-				{% for profile in visitorProfiles %}
-					<article class="profile-card">
-						<div class="profile-row">
-							<div class="avatar-container">
-								<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-							</div>
-							<div class="profile-infos">
-								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
-										{{ profile.user.pseudo }}
-									</a>
-									-
-									<span>{{ profile.city|default('Inc') }}</span>
-								</h2>
-								<p>
-									<strong>{{ profile.sex|default('Inc') }}</strong>
-									{% if profile.birthdate %}
+		<div class="tabs">
+			<div class="tab active" data-tab="visits">Ils ont visité ton profil ({{ visitorProfiles|length }})</div>
+			<div class="tab" data-tab="likes">Ils ont liké ton profil ({{ likerProfiles|length }})</div>
+		</div>
+
+		<div id="visits" class="tab-content">
+			{% if visitorProfiles is empty %}
+				<p>Aucun visiteur pour le moment.</p>
+			{% else %}
+				<div class="profile-container">
+					{% for profile in visitorProfiles %}
+						<article class="profile-card">
+							<div class="profile-row">
+								<div class="avatar-container">
+									<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+								</div>
+								<div class="profile-infos">
+									<h2>
+										<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
+											{{ profile.user.pseudo }}
+										</a>
 										-
-										{{ ( "now"|date("Y") - profile.birthdate|date("Y") ) }}
-										ans
-									{% endif %}
-								</p>
+										<span>{{ profile.city|default('Inc') }}</span>
+									</h2>
+									<p>
+										<strong>{{ profile.sex|default('Inc') }}</strong>
+										{% if profile.birthdate %}
+											-
+											{{ ("now"|date("Y") - profile.birthdate|date("Y")) }}
+											ans
+										{% endif %}
+									</p>
+								</div>
 							</div>
-						</div>
-					</article>
-				{% endfor %}
-			</div>
-		{% endif %}
-	</div>
+						</article>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
 
-	<div id="likes" class="tab-content" style="display:none;">
-		{% if likerProfiles is empty %}
-			<p>Aucun like pour le moment.</p>
-		{% else %}
-			<div class="profile-container">
-				{% for profile in likerProfiles %}
-					<article class="profile-card">
-						<div class="profile-row">
-							<div class="avatar-container">
-								<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-							</div>
-							<div class="profile-infos">
-								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
-										{{ profile.user.pseudo }}
-									</a>
-									-
-									<span>{{ profile.city|default('Inc') }}</span>
-								</h2>
-								<p>
-									<strong>{{ profile.sex|default('Inc') }}</strong>
-									{% if profile.birthdate %}
+		<div id="likes" class="tab-content" style="display:none;">
+			{% if likerProfiles is empty %}
+				<p>Aucun like pour le moment.</p>
+			{% else %}
+				<div class="profile-container">
+					{% for profile in likerProfiles %}
+						<article class="profile-card">
+							<div class="profile-row">
+								<div class="avatar-container">
+									<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+								</div>
+								<div class="profile-infos">
+									<h2>
+										<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
+											{{ profile.user.pseudo }}
+										</a>
 										-
-										{{ ( "now"|date("Y") - profile.birthdate|date("Y") ) }}
-										ans
-									{% endif %}
-								</p>
+										<span>{{ profile.city|default('Inc') }}</span>
+									</h2>
+									<p>
+										<strong>{{ profile.sex|default('Inc') }}</strong>
+										{% if profile.birthdate %}
+											-
+											{{ ("now"|date("Y") - profile.birthdate|date("Y")) }}
+											ans
+										{% endif %}
+									</p>
+								</div>
 							</div>
-						</div>
-					</article>
-				{% endfor %}
-			</div>
-		{% endif %}
-	</div>
+						</article>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
 
-	 <script>
-	    const tabs = document.querySelectorAll('.tab');
-	    const contents = document.querySelectorAll('.tab-content');
-	
-	    tabs.forEach(tab => {
-	        tab.addEventListener('click', () => {
-	            tabs.forEach(t => t.classList.remove('active'));
-	            tab.classList.add('active');
-	
-	            contents.forEach(c => c.style.display = 'none');
-	            document.getElementById(tab.dataset.tab).style.display = 'block';
-	        });
-	    });
-	</script>
+		 <script>
+		        const tabs = document.querySelectorAll('.tab');
+		        const contents = document.querySelectorAll('.tab-content');
+		
+		        tabs.forEach(tab => {
+		            tab.addEventListener('click', () => {
+		                tabs.forEach(t => t.classList.remove('active'));
+		                tab.classList.add('active');
+		
+		                contents.forEach(c => c.style.display = 'none');
+		                document.getElementById(tab.dataset.tab).style.display = 'block';
+		            });
+		        });
+		    </script>
+
+	{% else %}
+		<div class="abo" style="text-align: center; padding: 30px; font-size: 1.2rem;">
+			<p>Cette fonctionnalité est réservée aux membres abonnés.</p>
+			<a href="{{ path('app_stripe_subscribe') }}" class="btn btn-primary">S'abonner maintenant</a>
+		</div>
+	{% endif %}
 
 {% endblock %}
 
