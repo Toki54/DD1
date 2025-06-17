@@ -87,143 +87,149 @@
 			Afficher / Masquer les filtres
 		</button>
 
-<section class="profile-container">
-	{% for profile in profiles %}
-		{% if profile.user.pseudo != app.user.pseudo %}
-			<article class="profile-card">
-				<div class="avatar">
-					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
-				</div>
-				<div class="profile-details">
-					<div class="profile-top">
-						<h2>
-							<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
-							-
-							{{ profile.city|default('Inc') }}
-						</h2>
-					</div>
-					<div class="profile-info">
-						<p>
-							<strong>{{ profile.sex|default('Inc') }}</strong>
-							de
-							{% if profile.birthdate %}
-								{% set now = "now"|date("Y") %}
-								{% set birthYear = profile.birthdate|date("Y") %}
-								{{ now - birthYear }}
-								ans
-							{% endif %}
-						</p>
-						<p class="rech">
-							<strong>pour :</strong><br>
-							{% if profile.research is iterable %}
-								{{ profile.research|join(', ')|default('Inc') }}
-								<br>
-							{% else %}
-								{{ profile.research|default('Inc') }}<br>
-							{% endif %}
-						</p>
-					</div>
-				</div>
-				<div class="profile-biography">
-					<p title="{{ profile.biography|default('Aucune') }}">{{ profile.biography|default('Aucune') }}</p>
-				</div>
-				<div class="profile-actions">
-					<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-message" title="Envoyer un message">
-						<img src="/public/images/messagerie.png" alt="Message">
-					</a>
-					<button class="btn-like clean-button" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
-						<img src="{{ asset('images/like.png') }}" alt="like" class="like-icon">
-					</button>
+		<section class="profile-container">
+			{% for profile in profiles %}
+				{% if profile.user.pseudo != app.user.pseudo %}
+					<article class="profile-card">
+						<div class="avatar">
+							<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar">
+						</div>
+						<div class="profile-details">
+							<div class="profile-top">
+								<h2>
+									<a href="{{ path('app_profile_view', { id: profile.id }) }}" class="profile-link">{{ profile.user.pseudo }}</a>
+									-
+									{{ profile.city|default('Inc') }}
+									
 
-				</div>
-			</article>
-		{% endif %}
-	{% endfor %}
-</section>
+								</h2>
+{% if profile.department %}
+	{{ profile.department }}
+{% endif %}
+
+							</div>
+							<div class="profile-info">
+								<p>
+									<strong>{{ profile.sex|default('Inc') }}</strong>
+									de
+									{% if profile.birthdate %}
+										{% set now = "now"|date("Y") %}
+										{% set birthYear = profile.birthdate|date("Y") %}
+										{{ now - birthYear }}
+										ans
+									{% endif %}
+								</p>
+								<p class="rech">
+									<strong>pour :</strong><br>
+									{% if profile.research is iterable %}
+										{{ profile.research|join(', ')|default('Inc') }}
+										<br>
+									{% else %}
+										{{ profile.research|default('Inc') }}<br>
+									{% endif %}
+								</p>
+							</div>
+						</div>
+						<div class="profile-biography">
+							<p title="{{ profile.biography|default('Aucune') }}">{{ profile.biography|default('Aucune') }}</p>
+						</div>
+						<div class="profile-actions">
+							<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-message" title="Envoyer un message">
+								<img src="/public/images/messagerie.png" alt="Message">
+							</a>
+							<button class="btn-like clean-button" title="Liker ce profil" data-id="{{ profile.id }}" data-token="{{ csrf_token('like' ~ profile.id) }}" data-url="{{ path('app_profile_like', { id: profile.id }) }}">
+								<img src="{{ asset('images/like.png') }}" alt="like" class="like-icon">
+							</button>
+
+						</div>
+					</article>
+				{% endif %}
+			{% endfor %}
+		</section>
 
 	</section>
 
 	 <script>
-						document.addEventListener('DOMContentLoaded', () => {
-							const toggleBtn = document.getElementById('toggleSortBtn');
-							const sortContainer = document.getElementById('sortContainer');
-				
-							toggleBtn.addEventListener('click', () => {
-								const isVisible = sortContainer.classList.toggle('hidden');
-								toggleBtn.setAttribute('aria-expanded', !isVisible);
-							});
-				
-							document.querySelectorAll('.btn-like').forEach(button => {
-								button.addEventListener('click', () => {
-									const url = button.getAttribute('data-url');
-									const csrfToken = button.getAttribute('data-token');
-				
-									fetch(url, {
-										method: 'POST',
-										headers: {
-											'Content-Type': 'application/json',
-											'X-Requested-With': 'XMLHttpRequest',
-										},
-										body: JSON.stringify({ _token: csrfToken })
-									})
-									.then(res => res.json())
-									.then(data => alert(data.message))
-									.catch(error => {
-										alert('Erreur lors du like');
-										console.error(error);
+							document.addEventListener('DOMContentLoaded', () => {
+								const toggleBtn = document.getElementById('toggleSortBtn');
+								const sortContainer = document.getElementById('sortContainer');
+					
+								toggleBtn.addEventListener('click', () => {
+									const isVisible = sortContainer.classList.toggle('hidden');
+									toggleBtn.setAttribute('aria-expanded', !isVisible);
+								});
+					
+								document.querySelectorAll('.btn-like').forEach(button => {
+									button.addEventListener('click', () => {
+										const url = button.getAttribute('data-url');
+										const csrfToken = button.getAttribute('data-token');
+					
+										fetch(url, {
+											method: 'POST',
+											headers: {
+												'Content-Type': 'application/json',
+												'X-Requested-With': 'XMLHttpRequest',
+											},
+											body: JSON.stringify({ _token: csrfToken })
+										})
+										.then(res => res.json())
+										.then(data => alert(data.message))
+										.catch(error => {
+											alert('Erreur lors du like');
+											console.error(error);
+										});
+									});
+								});
+					
+								// Autocomplétion ville (simple et côté client)
+								const cityInput = document.getElementById('cityInput');
+								const suggestionsBox = document.getElementById('citySuggestions');
+					
+								const villes = [
+									'Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg',
+									'Lille', 'Bordeaux', 'Rennes', 'Reims', 'Le Havre', 'Saint-Étienne',
+									'Toulon', 'Grenoble', 'Dijon', 'Angers', 'Nîmes', 'Villeurbanne',
+									
+					'Nancy',
+					'Villers-lès-Nancy',
+					'Laxou',
+					'Maxéville',
+					'Mallette',
+					'Vandoeuvre-lès-Nancy',
+					'Jarville-la-Malgrange',
+					'Tomblaine',
+					'Essey-lès-Nancy',
+					'Saint-Max',
+					'Heillecourt',
+					'Laneuveville-devant-Nancy',
+					'Pulnoy',
+					'Seichamps',
+					'Houdemont',
+					'Fléville-devant-Nancy',
+					'Art-sur-Meurthe',
+					'Saulxures-lès-Nancy',
+					'Dommartemont',
+					'Agincourt'
+									
+								];
+					
+								cityInput.addEventListener('input', () => {
+									const input = cityInput.value.toLowerCase();
+									suggestionsBox.innerHTML = '';
+					
+									if (input.length < 2) return;
+					
+									const matches = villes.filter(v => v.toLowerCase().includes(input));
+									matches.forEach(match => {
+										const li = document.createElement('li');
+										li.textContent = match;
+										li.addEventListener('click', () => {
+											cityInput.value = match;
+											suggestionsBox.innerHTML = '';
+										});
+										suggestionsBox.appendChild(li);
 									});
 								});
 							});
-				
-							// Autocomplétion ville (simple et côté client)
-							const cityInput = document.getElementById('cityInput');
-							const suggestionsBox = document.getElementById('citySuggestions');
-				
-							const villes = [
-								'Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg',
-								'Lille', 'Bordeaux', 'Rennes', 'Reims', 'Le Havre', 'Saint-Étienne',
-								'Toulon', 'Grenoble', 'Dijon', 'Angers', 'Nîmes', 'Villeurbanne',
-								
-				'Nancy',
-				'Villers-lès-Nancy',
-				'Laxou',
-				'Maxéville',
-				'Mallette',
-				'Vandoeuvre-lès-Nancy',
-				'Jarville-la-Malgrange',
-				'Tomblaine',
-				'Essey-lès-Nancy',
-				'Saint-Max',
-				'Heillecourt',
-				'Laneuveville-devant-Nancy',
-				'Pulnoy',
-				'Seichamps',
-				'Houdemont',
-				'Fléville-devant-Nancy',
-				'Art-sur-Meurthe',
-				'Saulxures-lès-Nancy',
-				'Dommartemont',
-				'Agincourt'
-								
-							];
-				
-							cityInput.addEventListener('input', () => {
-								const input = cityInput.value.toLowerCase();
-								suggestionsBox.innerHTML = '';
-				
-								if (input.length < 2) return;
-				
-								const matches = villes.filter(v => v.toLowerCase().includes(input));
-								matches.forEach(match => {
-									const li = document.createElement('li');
-									li.textContent = match;
-									li.addEventListener('click', () => {
-										cityInput.value = match;
-										suggestionsBox.innerHTML = '';
-									});
-									suggestionsBox.appendChild(li);
-								});
-							});
-						});
-					</script>
+						</script>
 {% endblock %}

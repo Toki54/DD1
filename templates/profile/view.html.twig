@@ -26,6 +26,11 @@
 			<strong>Recherche :</strong>
 			{{ userProfile.research is iterable ? userProfile.research|join(', ') : userProfile.research|default('Non spécifié') }}
 		</p>
+<p>
+	<strong>Département :</strong>
+	{{ userProfile.department|default('Non renseigné') }}
+</p>
+
 		<p>
 			<strong>Ville :</strong>
 			{{ userProfile.city is iterable ? userProfile.city|join(', ') : userProfile.city|default('Non renseignée') }}
