@@ -150,8 +150,15 @@ public function view(int $id, EntityManagerInterface $entityManager): Response
   $situationFilters = $request->query->all('situation');
   $city             = $request->query->get('city');
   $researchFilters  = $request->query->all('research');
+  $department = $request->query->get('department');
+
 
   $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
+
+  if (!empty($department)) {
+ $qb->andWhere('p.department = :department')->setParameter('department', $department);
+}
+
 
   if (!empty($sexFilters)) {
    $qb->andWhere('p.sex IN (:sex)')->setParameter('sex', $sexFilters);
@@ -196,6 +203,7 @@ public function view(int $id, EntityManagerInterface $entityManager): Response
    'selectedProfile' => $selectedProfile,
    'sex'             => $sexFilters,
    'situation'       => $situationFilters,
+   'department'      => $department,
    'city'            => $city,
    'research'        => $researchFilters,
    'isSubscribed'    => $isSubscribed,
