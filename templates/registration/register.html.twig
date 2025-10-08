@@ -1,46 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register
-{% endblock %}
-
-
+{% block title %}Register{% endblock %}
 
 {% block body %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
+<div class="register-container">
 	<h1>Register</h1>
 
 	{# Affichage des erreurs globales du formulaire #}
 	{{ form_errors(registrationForm) }}
 
-	{# Début du formulaire #}
 	{{ form_start(registrationForm) }}
 
-	{# Champ pour l'email #}
+	{# Email #}
 	<div class="form-group">
 		{{ form_row(registrationForm.email) }}
 	</div>
 
-<div class="form-group">
-	{{ form_row(registrationForm.pseudo) }}
-</div>
-
-
-	{# Champ pour le mot de passe (plainPassword) #}
+	{# Pseudo #}
 	<div class="form-group">
-		{{ form_row(registrationForm.plainPassword, {
-                label: 'Password'
-            }) }}
+		{{ form_row(registrationForm.pseudo) }}
 	</div>
 
-	{# Case pour accepter les conditions d'utilisation #}
+	{# Mot de passe #}
+	<div class="form-group">
+		{{ form_row(registrationForm.plainPassword, {
+			label: 'Password'
+		}) }}
+	</div>
+
+	{# Conditions d'utilisation #}
 	<div class="form-group">
 		{{ form_row(registrationForm.agreeTerms) }}
 	</div>
 
-	{# Bouton de soumission du formulaire #}
+	{# Bouton de soumission #}
 	<button type="submit" class="btn btn-primary">Register</button>
 
-	{# Fin du formulaire #}
 	{{ form_end(registrationForm) }}
 
+	{# Lien vers la page de connexion (optionnel) #}
+	<div class="register-footer">
+		<p>Already have an account? <a href="{{ path('app_login') }}">Login here</a></p>
+	</div>
+</div>
 {% endblock %}
-

@@ -1,0 +1,175 @@
+/* ====== SECTION REGISTRATION ====== */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 40px auto;
+  background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.register-container h1 {
+  text-align: center;
+  color: #d4af37;
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ====== FORMULAIRE ====== */
+form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  color: #d4af37;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  background: #1b1b1b;
+  border: 2px solid #8e44ad;
+  border-radius: 10px;
+  color: #e0e0e0;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.2);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(217, 7, 255, 0.5);
+  background: #252525;
+}
+
+/* ====== CHECKBOX TERMS ====== */
+.form-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #8e44ad;
+  vertical-align: middle;
+}
+
+.form-group label[for*="agreeTerms"] {
+  display: inline;
+  color: #e0e0e0;
+  font-size: 1em;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+/* ====== ERREURS ====== */
+.form-error,
+.alert-danger {
+  background: rgba(231, 76, 60, 0.2);
+  border: 2px solid #e74c3c;
+  border-radius: 10px;
+  padding: 15px;
+  color: #ff6b6b;
+  margin-bottom: 20px;
+  font-size: 0.95em;
+}
+
+.invalid-feedback {
+  color: #ff6b6b;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: block;
+}
+
+.form-group .is-invalid {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+/* ====== BOUTON SUBMIT ====== */
+button[type="submit"],
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(217, 7, 255, 0.4);
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover,
+.btn-primary:hover {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  box-shadow: 0 0 25px rgba(217, 7, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+button[type="submit"]:active,
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.4);
+}
+
+/* ====== LIENS ADDITIONNELS ====== */
+.register-footer {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #ff00eb;
+}
+
+.register-footer a {
+  color: #d4af37;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-footer a:hover {
+  color: #8e44ad;
+  text-decoration: underline;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .register-container {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .register-container h1 {
+    font-size: 2em;
+  }
+
+  button[type="submit"],
+  .btn-primary {
+    font-size: 1.1em;
+    padding: 12px 25px;
+  }
+}

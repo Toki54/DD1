@@ -1,0 +1,199 @@
+/* ====== SECTION LOGIN ====== */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 60px auto;
+  background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
+  color: #e0e0e0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-container h1 {
+  text-align: center;
+  color: #d4af37;
+  font-size: 2em;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+/* ====== FORMULAIRE LOGIN ====== */
+.login-container form {
+  width: 100%;
+}
+
+.login-container .form-group {
+  margin-bottom: 25px;
+}
+
+.login-container label {
+  display: block;
+  color: #d4af37;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"],
+.login-container .form-control {
+  width: 100%;
+  padding: 12px 15px;
+  background: #1b1b1b;
+  border: 2px solid #8e44ad;
+  border-radius: 10px;
+  color: #e0e0e0;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.2);
+  margin-bottom: 15px;
+}
+
+.login-container input[type="email"]:focus,
+.login-container input[type="password"]:focus,
+.login-container .form-control:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 15px rgba(217, 7, 255, 0.5);
+  background: #252525;
+}
+
+/* ====== ALERTES ====== */
+.login-container .alert-danger {
+  background: rgba(231, 76, 60, 0.2);
+  border: 2px solid #e74c3c;
+  border-radius: 10px;
+  padding: 15px;
+  color: #ff6b6b;
+  margin-bottom: 25px;
+  font-size: 0.95em;
+  text-align: center;
+}
+
+.login-container .mb-3 {
+  background: rgba(142, 68, 173, 0.2);
+  border: 2px solid #8e44ad;
+  border-radius: 10px;
+  padding: 15px;
+  color: #e0e0e0;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.login-container .mb-3 a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.login-container .mb-3 a:hover {
+  color: #8e44ad;
+  text-decoration: underline;
+}
+
+/* ====== CHECKBOX REMEMBER ME ====== */
+.login-container .checkbox {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.login-container .checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  margin-bottom: 0;
+  cursor: pointer;
+  accent-color: #8e44ad;
+}
+
+.login-container .checkbox label {
+  margin-bottom: 0;
+  color: #e0e0e0;
+  font-size: 1em;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+/* ====== BOUTON SUBMIT ====== */
+.login-container button[type="submit"],
+.login-container .btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(217, 7, 255, 0.4);
+  margin-top: 10px;
+}
+
+.login-container button[type="submit"]:hover,
+.login-container .btn-primary:hover {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  box-shadow: 0 0 25px rgba(217, 7, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.login-container button[type="submit"]:active,
+.login-container .btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 0 10px rgba(217, 7, 255, 0.4);
+}
+
+/* ====== LIENS ADDITIONNELS ====== */
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #ff00eb;
+}
+
+.login-footer a {
+  color: #d4af37;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1em;
+}
+
+.login-footer a:hover {
+  color: #8e44ad;
+  text-decoration: underline;
+}
+
+.login-footer p {
+  color: #e0e0e0;
+  margin: 10px 0;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .login-container {
+    margin: 30px 20px;
+    padding: 30px 20px;
+  }
+
+  .login-container h1 {
+    font-size: 1.6em;
+  }
+
+  .login-container button[type="submit"],
+  .login-container .btn-primary {
+    font-size: 1.1em;
+    padding: 12px 25px;
+  }
+}
