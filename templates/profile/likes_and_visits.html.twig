@@ -39,12 +39,10 @@
 								</h2>
 								<p>
 									<strong>{{ profile.sex|default('Inc') }}</strong>
-									{% if profile.birthdate %}
-										-
-										{{ ( "now"|date("Y") - profile.birthdate|date("Y") ) }}
-										ans
-									{% endif %}
-								</p>
+								{% if profile.age %}
+									- {{ profile.age }} ans
+								{% endif %}
+							</p>
 							</div>
 						</div>
 					</article>
@@ -74,11 +72,9 @@
 								</h2>
 								<p>
 									<strong>{{ profile.sex|default('Inc') }}</strong>
-									{% if profile.birthdate %}
-										-
-										{{ ( "now"|date("Y") - profile.birthdate|date("Y") ) }}
-										ans
-									{% endif %}
+								{% if profile.age %}
+									- {{ profile.age }} ans
+								{% endif %}
 								</p>
 							</div>
 						</div>

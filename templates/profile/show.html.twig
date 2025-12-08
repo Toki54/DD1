@@ -39,22 +39,10 @@
 					<p>{{ userProfile.sex|default('Non spécifié.') }}</p>
 				</div>
 <div class="info-item">
-	<div class="info-header">
-		<h3>Âge</h3>
-	</div>
-{% if userProfile.birthdate %}
-	{% set now = "now"|date("Y") %}
-	{% set birthYear = userProfile.birthdate|date("Y") %}
-	<p>
-		
-		{{ now - birthYear }}
-		ans</p>
-{% else %}
-	<p>
-		
-		Non spécifié</p>
-{% endif %}
-
+<div class="info-header">
+<h3>Âge</h3>
+</div>
+<p>{{ userProfile.age|default('Non spécifié') }}</p>
 </div>
 
 

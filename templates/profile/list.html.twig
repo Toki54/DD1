@@ -81,14 +81,12 @@
                                 </h2>
                                 <p>
                                     <strong>{{ profile.sex|default('Inc') }}</strong>
-                                    -
-                                    {% if profile.birthdate %}
-                                        {% set now = "now"|date("Y") %}
-                                        {% set birthYear = profile.birthdate|date("Y") %}
-                                        {{ now - birthYear }}
-                                        ans
-                                    {% endif %}
-                                </p>
+
+    {% if profile.age %}
+        -
+        {{ profile.age }} ans
+    {% endif %}
+</p>
                                 <p>{{ profile.city|default('Inc') }}</p>
                                 <p>
                                     <strong>pour</strong>
