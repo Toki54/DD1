@@ -88,6 +88,15 @@ body {
     margin-top: 0.4rem;
 }
 
+.profile-bio {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;     /* limite à 2 lignes */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 10px;        /* assure même hauteur même sans bio */
+}
+
 .profile-city,
 .profile-search,
 .profile-bio {

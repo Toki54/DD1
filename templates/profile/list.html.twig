@@ -87,6 +87,8 @@
 
                             {% if profile.biography %}
                                 <p class="profile-bio">{{ profile.biography }}</p>
+                            {% else %}
+                            {{ profile.biography|default('Inc') }}
                             {% endif %}
                         </div>
 
