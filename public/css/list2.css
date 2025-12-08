@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+/* RESET */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #600b28;
+}
+
+/* CONTAINER */
+.container {
+    padding: 2rem;
+}
+
+/* TRI */
+.sort-container {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+.toggle-sort-btn {
+    background: #b82151;
+    padding: 0.7em 1.2em;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+}
+
+/* LISTE PROFILS */
+.profile-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 40px;
+    justify-content: center;
+}
+
+/* CARD */
+.profile-card {
+    width: 300px;
+    margin-bottom: 30px;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2.5rem 1.5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0px 0px 25px rgba(0,0,0,0.6);
+}
+
+/* IMAGE */
+.profile-image img {
+    width: 11rem;
+    height: 11rem;
+    object-fit: cover;
+    border-radius: 1rem;
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 0px 25px rgba(0,0,0,0.4);
+}
+
+.profile-info {
+    margin-top: 4.5rem;
+}
+
+.profile-name a {
+    text-decoration: none;
+    color: #212121;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.profile-desc {
+    color: #666;
+    margin-top: 0.4rem;
+}
+
+.profile-city,
+.profile-search,
+.profile-bio {
+    color: #777;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+/* ACTION BUTTONS */
+.action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.7em 1.4em;
+    border-radius: 0.35rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-pink {
+    background: #b82151;
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #b82151;
+    color: #b82151;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.hidden {
+    display: none;
+}

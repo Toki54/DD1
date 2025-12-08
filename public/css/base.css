@@ -27,6 +27,113 @@ body {
   color: #d4af37;
 }
 
+/* Container général */
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Hero section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.hero-section h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.hero-section .lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto 20px;
+}
+
+.hero-section .special-offer {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ff4d6d;
+}
+
+.hero-section .premium {
+    color: #ff7f50;
+}
+
+/* Cartes Connexion / Inscription */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.card {
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    text-align: center;
+    flex: 1 1 300px;
+    max-width: 400px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.card p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.card .btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #ff4d6d;
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #ff7f50;
+}
+
+.btn-secondary {
+    background-color: #6c63ff;
+    color: #fff;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5848c2;
+}
+
+
+
+
 .btn-info {
   background-color: #8e44ad;
   border-color: #d4af37;
@@ -44,4 +151,16 @@ footer {
   text-align: center;
   padding: 15px 0;
   margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        max-width: 90%;
+    }
 }
