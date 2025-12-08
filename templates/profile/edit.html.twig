@@ -15,6 +15,10 @@
 				{{ message }}
 			</div>
 		{% endfor %}
+		{% if userProfile.avatar %}
+        <label class="form-label">Avatar actuel</label><br>
+        <img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="img-thumbnail mb-2" width="150">
+    {% endif %}
 
 		{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'profile-form'}}) }}
 
@@ -48,10 +52,12 @@
 
 			<div class="col-md-6">
 				<div class="mb-3">
-					{{ form_label(form.avatarFile) }}
-					{{ form_widget(form.avatarFile, {'attr': {'class': 'form-control'}}) }}
-					<small class="text-muted">Téléchargez une photo de profil (JPG, PNG, GIF)</small>
-				</div>
+    
+
+    {{ form_label(form.avatarFile) }}
+    {{ form_widget(form.avatarFile, {'attr': {'class': 'form-control'}}) }}
+    <small class="text-muted">Téléchargez une photo de profil (JPG, PNG, GIF)</small>
+</div>
 
 				<div class="mb-3">
 					{{ form_label(form.department) }}
