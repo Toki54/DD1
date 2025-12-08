@@ -17,390 +17,396 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserProfileController extends AbstractController
 {
- #[Route('/profile', name: 'app_profile_show')]
- public function show(EntityManagerInterface $entityManager): Response
- {
-  $user = $this->getUser();
+    #[Route('/profile', name: 'app_profile_show')]
+    public function show(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
 
-  if (!$user) {
-   $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
-   return $this->redirectToRoute('app_login');
-  }
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour voir votre profil.');
+            return $this->redirectToRoute('app_login');
+        }
 
-  $userProfile = $user->getProfile();
+        $userProfile = $user->getProfile();
 
-  if (!$userProfile) {
-   $userProfile = new UserProfile();
-   $userProfile->setUser($user);
-   $entityManager->persist($userProfile);
-   $entityManager->flush();
-  }
-
-  $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles());
-
-  // Récupère les photos à afficher, floutées si non abonné
-  $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
-
-  return $this->render('profile/show.html.twig', [
-   'userProfile'  => $userProfile,
-   'photos'       => $photosToDisplay,
-   'isSubscribed' => $isSubscribed,
-  ]);
- }
-
- #[Route('/profile/edit', name: 'app_profile_edit')]
- public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
- {
-  $user = $this->getUser();
-
-  if (!$user) {
-   $this->addFlash('error', 'Vous devez être connecté pour modifier votre profil.');
-   return $this->redirectToRoute('app_login');
-  }
-
-  $userProfile = $user->getProfile();
-
-  if (!$userProfile) {
-   $userProfile = new UserProfile();
-   $userProfile->setUser($user);
-   $entityManager->persist($userProfile);
-   $entityManager->flush();
-  }
-
-  $form = $this->createForm(UserProfileType::class, $userProfile);
-  $form->handleRequest($request);
-
-  if ($form->isSubmitted() && $form->isValid()) {
-   $avatarFile = $form->get('avatarFile')->getData();
-   if ($avatarFile) {
-    $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
-    $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
-    $userProfile->setAvatar($avatarFilename);
-   }
-
-   $photoFiles = $form->get('photoFiles')->getData();
-   if ($photoFiles) {
-    $existingPhotos = $userProfile->getPhotos() ?? [];
-    $photoPaths     = [];
-
-    foreach ($photoFiles as $photo) {
-     if (count($existingPhotos) + count($photoPaths) >= 10) {
-      $this->addFlash('error', 'Vous ne pouvez pas ajouter plus de 10 photos.');
-      break;
-     }
-
-     $photoFilename = uniqid() . '.' . $photo->guessExtension();
-     $photo->move($this->getParameter('photos_directory'), $photoFilename);
-     $photoPaths[] = $photoFilename;
-    }
-
-    $userProfile->setPhotos(array_merge($existingPhotos, $photoPaths));
-   }
-
-   $entityManager->flush();
-   $this->addFlash('success', 'Profil mis à jour avec succès !');
-   return $this->redirectToRoute('app_profile_edit');
-  }
-
-  return $this->render('profile/edit.html.twig', [
-   'form'        => $form->createView(),
-   'userProfile' => $userProfile,
-  ]);
- }
-
- #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
-public function view(int $id, EntityManagerInterface $entityManager): Response
-{
-    $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-
-    if (!$userProfile) {
-        throw $this->createNotFoundException('Profil non trouvé.');
-    }
-
-    $isSubscribed = false;
-    $user = $this->getUser();
-    if ($user && method_exists($user, 'getSubscription')) {
-        $isSubscribed = (bool) $user->getSubscription();
-    }
-
-    $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
-
-    if ($this->getUser()) {
-        $visitorProfile = $this->getUser()->getProfile();
-        if ($visitorProfile && $visitorProfile !== $userProfile) {
-            $visit = new \App\Entity\ProfileVisit();
-            $visit->setVisited($userProfile);
-            $visit->setVisitor($visitorProfile);
-            $entityManager->persist($visit);
+        if (!$userProfile) {
+            $userProfile = new UserProfile();
+            $userProfile->setUser($user);
+            $entityManager->persist($userProfile);
             $entityManager->flush();
         }
+
+        $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles());
+
+        // Récupère les photos à afficher, floutées si non abonné
+        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+
+        return $this->render('profile/show.html.twig', [
+            'userProfile'  => $userProfile,
+            'photos'       => $photosToDisplay,
+            'isSubscribed' => $isSubscribed,
+        ]);
     }
 
-    return $this->render('profile/view.html.twig', [
-        'userProfile' => $userProfile,
-        'photos' => $photosToDisplay,
-        'isSubscribed' => $isSubscribed,
-    ]);
-}
+    #[Route('/profile/edit', name: 'app_profile_edit')]
+    public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $user = $this->getUser();
 
- #[Route('/profiles/{id?}', name: 'app_profiles_list')]
- public function list(Request $request, EntityManagerInterface $entityManager, ?int $id): Response
- {
-  $sexFilters       = $request->query->all('sex');
-  $situationFilters = $request->query->all('situation');
-  $city             = $request->query->get('city');
-  $researchFilters  = $request->query->all('research');
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour modifier votre profil.');
+            return $this->redirectToRoute('app_login');
+        }
 
-  $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
+        $userProfile = $user->getProfile();
 
-  if (!empty($sexFilters)) {
-   $qb->andWhere('p.sex IN (:sex)')->setParameter('sex', $sexFilters);
-  }
+        if (!$userProfile) {
+            $userProfile = new UserProfile();
+            $userProfile->setUser($user);
+            $entityManager->persist($userProfile);
+            $entityManager->flush();
+        }
 
-  if (!empty($situationFilters)) {
-   $qb->andWhere('p.situation IN (:situation)')->setParameter('situation', $situationFilters);
-  }
+        $form = $this->createForm(UserProfileType::class, $userProfile);
+        $form->handleRequest($request);
 
-  if (!empty($city)) {
-   $qb->andWhere('p.city = :city')->setParameter('city', $city);
-  }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $avatarFile = $form->get('avatarFile')->getData();
+            if ($avatarFile) {
+                $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
+                $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
+                $userProfile->setAvatar($avatarFilename);
+            }
 
-  if (!empty($researchFilters)) {
-   $orX = $qb->expr()->orX();
-   foreach ($researchFilters as $key => $val) {
-    $orX->add($qb->expr()->like('p.research', ':research_' . $key));
-    $qb->setParameter('research_' . $key, '%"' . $val . '"%');
-   }
-   $qb->andWhere($orX);
-  }
+            $photoFiles = $form->get('photoFiles')->getData();
+            if ($photoFiles) {
+                $existingPhotos = $userProfile->getPhotos() ?? [];
+                $photoPaths = [];
 
-  $qb->orderBy('p.id', 'DESC');
-  $profiles = $qb->getQuery()->getResult();
+                foreach ($photoFiles as $photo) {
+                    if (count($existingPhotos) + count($photoPaths) >= 10) {
+                        $this->addFlash('error', 'Vous ne pouvez pas ajouter plus de 10 photos.');
+                        break;
+                    }
 
-  $selectedProfile = null;
-  if ($id) {
-   $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-  }
+                    // Vérifie la taille du fichier (supplémentaire sécurité)
+                    if ($photo->getSize() > 8 * 1024 * 1024) {
+                        $this->addFlash('error', 'Une photo dépasse 8 Mo et n’a pas été uploadée.');
+                        continue;
+                    }
 
-  $user         = $this->getUser();
-  $isSubscribed = $user && method_exists($user, 'getSubscription') && $user->getSubscription() ? true : false;
+                    $photoFilename = uniqid() . '.' . $photo->guessExtension();
+                    $photo->move($this->getParameter('photos_directory'), $photoFilename);
+                    $photoPaths[] = $photoFilename;
+                }
 
-  // Remplace les photos des profils par la version floutée si non abonné
-  foreach ($profiles as $profile) {
-   $photos = $this->getPhotosForDisplay($profile, $isSubscribed);
-   $profile->setPhotos($photos); // Attention : si getPhotos() est persistant, créer un setter temporaire ou une variable temporaire
-  }
+                $userProfile->setPhotos(array_merge($existingPhotos, $photoPaths));
+            }
 
-  return $this->render('profile/list.html.twig', [
-   'profiles'        => $profiles,
-   'selectedProfile' => $selectedProfile,
-   'sex'             => $sexFilters,
-   'situation'       => $situationFilters,
-   'city'            => $city,
-   'research'        => $researchFilters,
-   'isSubscribed'    => $isSubscribed,
-  ]);
- }
+            $entityManager->flush();
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
+            return $this->redirectToRoute('app_profile_edit');
+        }
 
-
-
-#[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
-public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
-{
-    $user = $this->getUser();
-    if (!$user) {
-        throw new AccessDeniedException('Vous devez être connecté.');
+        return $this->render('profile/edit.html.twig', [
+            'form'        => $form->createView(),
+            'userProfile' => $userProfile,
+        ]);
     }
 
-    $likerProfile = $user->getProfile();
-    if (!$likerProfile) {
-        return new JsonResponse(['error' => 'Profil introuvable'], 400);
+    #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
+    public function view(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+
+        if (!$userProfile) {
+            throw $this->createNotFoundException('Profil non trouvé.');
+        }
+
+        $isSubscribed = false;
+        $user = $this->getUser();
+        if ($user && method_exists($user, 'getSubscription')) {
+            $isSubscribed = (bool) $user->getSubscription();
+        }
+
+        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+
+        if ($this->getUser()) {
+            $visitorProfile = $this->getUser()->getProfile();
+            if ($visitorProfile && $visitorProfile !== $userProfile) {
+                $visit = new \App\Entity\ProfileVisit();
+                $visit->setVisited($userProfile);
+                $visit->setVisitor($visitorProfile);
+                $entityManager->persist($visit);
+                $entityManager->flush();
+            }
+        }
+
+        return $this->render('profile/view.html.twig', [
+            'userProfile' => $userProfile,
+            'photos' => $photosToDisplay,
+            'isSubscribed' => $isSubscribed,
+        ]);
     }
 
-    $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-    if (!$likedProfile) {
-        return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+    #[Route('/profiles/{id?}', name: 'app_profiles_list')]
+    public function list(Request $request, EntityManagerInterface $entityManager, ?int $id): Response
+    {
+        $sexFilters       = $request->query->all('sex');
+        $situationFilters = $request->query->all('situation');
+        $city             = $request->query->get('city');
+        $researchFilters  = $request->query->all('research');
+
+        $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
+
+        if (!empty($sexFilters)) {
+            $qb->andWhere('p.sex IN (:sex)')->setParameter('sex', $sexFilters);
+        }
+
+        if (!empty($situationFilters)) {
+            $qb->andWhere('p.situation IN (:situation)')->setParameter('situation', $situationFilters);
+        }
+
+        if (!empty($city)) {
+            $qb->andWhere('p.city = :city')->setParameter('city', $city);
+        }
+
+        if (!empty($researchFilters)) {
+            $orX = $qb->expr()->orX();
+            foreach ($researchFilters as $key => $val) {
+                $orX->add($qb->expr()->like('p.research', ':research_' . $key));
+                $qb->setParameter('research_' . $key, '%"' . $val . '"%');
+            }
+            $qb->andWhere($orX);
+        }
+
+        $qb->orderBy('p.id', 'DESC');
+        $profiles = $qb->getQuery()->getResult();
+
+        $selectedProfile = null;
+        if ($id) {
+            $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+        }
+
+        $user         = $this->getUser();
+        $isSubscribed = $user && method_exists($user, 'getSubscription') && $user->getSubscription() ? true : false;
+
+        // Remplace les photos des profils par la version floutée si non abonné
+        foreach ($profiles as $profile) {
+            $photos = $this->getPhotosForDisplay($profile, $isSubscribed);
+            $profile->setPhotos($photos); // Attention : si getPhotos() est persistant, créer un setter temporaire ou une variable temporaire
+        }
+
+        return $this->render('profile/list.html.twig', [
+            'profiles'        => $profiles,
+            'selectedProfile' => $selectedProfile,
+            'sex'             => $sexFilters,
+            'situation'       => $situationFilters,
+            'city'            => $city,
+            'research'        => $researchFilters,
+            'isSubscribed'    => $isSubscribed,
+        ]);
     }
 
-    if ($likerProfile === $likedProfile) {
-        return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre profil'], 400);
+
+
+    #[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
+    public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Vous devez être connecté.');
+        }
+
+        $likerProfile = $user->getProfile();
+        if (!$likerProfile) {
+            return new JsonResponse(['error' => 'Profil introuvable'], 400);
+        }
+
+        $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+        if (!$likedProfile) {
+            return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+        }
+
+        if ($likerProfile === $likedProfile) {
+            return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre profil'], 400);
+        }
+
+        // Vérifie si déjà liké
+        $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
+            'liker' => $likerProfile,
+            'liked' => $likedProfile,
+        ]);
+
+        if ($existingLike) {
+            // Déjà liké
+            return new JsonResponse(['message' => 'Déjà liké'], 200);
+        }
+
+        $like = new ProfileLike();
+        $like->setLiker($likerProfile);
+        $like->setLiked($likedProfile);
+        $entityManager->persist($like);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Profil liké avec succès']);
     }
 
-    // Vérifie si déjà liké
-    $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
-        'liker' => $likerProfile,
-        'liked' => $likedProfile,
-    ]);
+    #[Route('/profile/unlike/{id}', name: 'app_profile_unlike', methods: ['POST'])]
+    public function unlike(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Vous devez être connecté.');
+        }
 
-    if ($existingLike) {
-        // Déjà liké
-        return new JsonResponse(['message' => 'Déjà liké'], 200);
+        $likerProfile = $user->getProfile();
+        if (!$likerProfile) {
+            return new JsonResponse(['error' => 'Profil introuvable'], 400);
+        }
+
+        $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
+        if (!$likedProfile) {
+            return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+        }
+
+        $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
+            'liker' => $likerProfile,
+            'liked' => $likedProfile,
+        ]);
+
+        if (!$existingLike) {
+            return new JsonResponse(['message' => 'Profil non liké'], 200);
+        }
+
+        $entityManager->remove($existingLike);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Like supprimé']);
     }
 
-    $like = new ProfileLike();
-    $like->setLiker($likerProfile);
-    $like->setLiked($likedProfile);
-    $entityManager->persist($like);
-    $entityManager->flush();
+    #[Route('/profile/likes', name: 'app_profile_likes')]
+    public function likes(EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour voir vos likes.');
+            return $this->redirectToRoute('app_login');
+        }
 
-    return new JsonResponse(['message' => 'Profil liké avec succès']);
-}
+        $userProfile = $user->getProfile();
 
-#[Route('/profile/unlike/{id}', name: 'app_profile_unlike', methods: ['POST'])]
-public function unlike(int $id, EntityManagerInterface $entityManager): JsonResponse
-{
-    $user = $this->getUser();
-    if (!$user) {
-        throw new AccessDeniedException('Vous devez être connecté.');
+        // Profils qui ont liké ton profil
+        $likes = $entityManager->getRepository(ProfileLike::class)
+            ->createQueryBuilder('pl')
+            ->where('pl.liked = :profile')
+            ->setParameter('profile', $userProfile)
+            ->orderBy('pl.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $likers = array_map(fn($like) => $like->getLiker(), $likes);
+
+        // Récupérer la dernière visite par visiteur (donc un seul par visiteur)
+        $qb = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
+            ->createQueryBuilder('v');
+
+        // Sélectionner la visite la plus récente par visiteur
+        $subQuery = $entityManager->createQueryBuilder()
+            ->select('MAX(v2.visitedAt)')
+            ->from(\App\Entity\ProfileVisit::class, 'v2')
+            ->where('v2.visitor = v.visitor')
+            ->andWhere('v2.visited = :profile');
+
+        $visits = $qb
+            ->where('v.visited = :profile')
+            ->setParameter('profile', $userProfile)
+            ->andWhere($qb->expr()->eq('v.visitedAt', '(' . $subQuery->getDQL() . ')'))
+            ->orderBy('v.visitedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        // Extraire les profils visiteurs uniques
+        $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
+
+        return $this->render('profile/likes_and_visits.html.twig', [
+            'visitorProfiles' => $visitorProfiles,
+            'likerProfiles'   => $likers,
+        ]);
     }
 
-    $likerProfile = $user->getProfile();
-    if (!$likerProfile) {
-        return new JsonResponse(['error' => 'Profil introuvable'], 400);
+
+
+    #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
+    public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour supprimer une photo.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        $userProfile = $user->getProfile();
+
+        if (!$userProfile) {
+            $this->addFlash('error', 'Profil non trouvé.');
+            return $this->redirectToRoute('app_profile_show');
+        }
+
+        if (in_array($photoFilename, $userProfile->getPhotos())) {
+            $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
+
+            $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
+            if (file_exists($photoPath)) {
+                unlink($photoPath);
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Photo supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Photo non trouvée.');
+        }
+
+        return $this->redirectToRoute('app_profile_edit');
     }
 
-    $likedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
-    if (!$likedProfile) {
-        return new JsonResponse(['error' => 'Profil aimé introuvable'], 404);
+    /**
+     * Retourne le tableau de photos à afficher, floutées si utilisateur non abonné
+     */
+    private function getPhotosForDisplay(UserProfile $profile, bool $isSubscribed): array
+    {
+        $photos = $profile->getPhotos() ?? [];
+
+        if ($isSubscribed) {
+            // Utilisateur abonné : renvoie toutes les photos originales
+            return $photos;
+        }
+
+        // Utilisateur non abonné : on ne renvoie que la 1ère photo floutée, les autres masquées
+
+        if (empty($photos)) {
+            return [];
+        }
+
+        // Exemple : on renvoie une version floutée de la première photo
+        // ATTENTION : il faut avoir pré-généré une version floutée en amont,
+        // ou utiliser une image floue par défaut (ex: 'blurred_placeholder.jpg')
+        // ici on suppose que la version floutée porte un préfixe 'blurred_' + filename
+
+        $blurredPhotos = [];
+
+        $firstPhoto       = $photos[0];
+        $blurredPhotoPath = 'blurred_' . $firstPhoto;
+
+        $blurredPhotoFullPath = $this->getParameter('photos_directory') . '/' . $blurredPhotoPath;
+        if (file_exists($blurredPhotoFullPath)) {
+            $blurredPhotos[] = $blurredPhotoPath;
+        } else {
+            // Si pas de version floutée dispo, on peut utiliser une image floue générique
+            $blurredPhotos[] = 'blurred_placeholder.jpg'; // à placer dans le dossier photos
+        }
+
+        return $blurredPhotos;
     }
-
-    $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
-        'liker' => $likerProfile,
-        'liked' => $likedProfile,
-    ]);
-
-    if (!$existingLike) {
-        return new JsonResponse(['message' => 'Profil non liké'], 200);
-    }
-
-    $entityManager->remove($existingLike);
-    $entityManager->flush();
-
-    return new JsonResponse(['message' => 'Like supprimé']);
-}
-
-#[Route('/profile/likes', name: 'app_profile_likes')]
-public function likes(EntityManagerInterface $entityManager): Response
-{
-    $user = $this->getUser();
-    if (!$user) {
-        $this->addFlash('error', 'Vous devez être connecté pour voir vos likes.');
-        return $this->redirectToRoute('app_login');
-    }
-
-    $userProfile = $user->getProfile();
-
-    // Profils qui ont liké ton profil
-    $likes = $entityManager->getRepository(ProfileLike::class)
-        ->createQueryBuilder('pl')
-        ->where('pl.liked = :profile')
-        ->setParameter('profile', $userProfile)
-        ->orderBy('pl.id', 'DESC')
-        ->getQuery()
-        ->getResult();
-
-    $likers = array_map(fn($like) => $like->getLiker(), $likes);
-
-    // Récupérer la dernière visite par visiteur (donc un seul par visiteur)
-    $qb = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
-        ->createQueryBuilder('v');
-
-    // Sélectionner la visite la plus récente par visiteur
-    $subQuery = $entityManager->createQueryBuilder()
-        ->select('MAX(v2.visitedAt)')
-        ->from(\App\Entity\ProfileVisit::class, 'v2')
-        ->where('v2.visitor = v.visitor')
-        ->andWhere('v2.visited = :profile');
-
-    $visits = $qb
-        ->where('v.visited = :profile')
-        ->setParameter('profile', $userProfile)
-        ->andWhere($qb->expr()->eq('v.visitedAt', '(' . $subQuery->getDQL() . ')'))
-        ->orderBy('v.visitedAt', 'DESC')
-        ->getQuery()
-        ->getResult();
-
-    // Extraire les profils visiteurs uniques
-    $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
-
-    return $this->render('profile/likes_and_visits.html.twig', [
-        'visitorProfiles' => $visitorProfiles,
-        'likerProfiles'   => $likers,
-    ]);
-}
-
-
-
- #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
- public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
- {
-  $user = $this->getUser();
-
-  if (!$user) {
-   $this->addFlash('error', 'Vous devez être connecté pour supprimer une photo.');
-   return $this->redirectToRoute('app_login');
-  }
-
-  $userProfile = $user->getProfile();
-
-  if (!$userProfile) {
-   $this->addFlash('error', 'Profil non trouvé.');
-   return $this->redirectToRoute('app_profile_show');
-  }
-
-  if (in_array($photoFilename, $userProfile->getPhotos())) {
-   $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
-
-   $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
-   if (file_exists($photoPath)) {
-    unlink($photoPath);
-   }
-
-   $entityManager->flush();
-   $this->addFlash('success', 'Photo supprimée avec succès.');
-  } else {
-   $this->addFlash('error', 'Photo non trouvée.');
-  }
-
-  return $this->redirectToRoute('app_profile_edit');
- }
-
- /**
-  * Retourne le tableau de photos à afficher, floutées si utilisateur non abonné
-  */
- private function getPhotosForDisplay(UserProfile $profile, bool $isSubscribed): array
- {
-  $photos = $profile->getPhotos() ?? [];
-
-  if ($isSubscribed) {
-   // Utilisateur abonné : renvoie toutes les photos originales
-   return $photos;
-  }
-
-  // Utilisateur non abonné : on ne renvoie que la 1ère photo floutée, les autres masquées
-
-  if (empty($photos)) {
-   return [];
-  }
-
-  // Exemple : on renvoie une version floutée de la première photo
-  // ATTENTION : il faut avoir pré-généré une version floutée en amont,
-  // ou utiliser une image floue par défaut (ex: 'blurred_placeholder.jpg')
-  // ici on suppose que la version floutée porte un préfixe 'blurred_' + filename
-
-  $blurredPhotos = [];
-
-  $firstPhoto       = $photos[0];
-  $blurredPhotoPath = 'blurred_' . $firstPhoto;
-
-  $blurredPhotoFullPath = $this->getParameter('photos_directory') . '/' . $blurredPhotoPath;
-  if (file_exists($blurredPhotoFullPath)) {
-   $blurredPhotos[] = $blurredPhotoPath;
-  } else {
-   // Si pas de version floutée dispo, on peut utiliser une image floue générique
-   $blurredPhotos[] = 'blurred_placeholder.jpg'; // à placer dans le dossier photos
-  }
-
-  return $blurredPhotos;
- }
 }

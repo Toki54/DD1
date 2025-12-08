@@ -15,14 +15,14 @@ use Symfony\Component\Validator\Constraints\All;
 
 class UserProfileType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options): void
-  {
-    $ageChoices = [];
-    for ($i = 18; $i <= 99; $i++) {
-      $ageChoices[$i] = $i;
-    }
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $ageChoices = [];
+        for ($i = 18; $i <= 99; $i++) {
+            $ageChoices[$i] = $i;
+        }
 
-    $departments = [
+        $departments = [
       '01 - Ain'                => '01',
       '02 - Aisne'               => '02',
       '03 - Allier'                => '03',
@@ -121,70 +121,76 @@ class UserProfileType extends AbstractType
       '95 - Val-d\'Oise'             => '95',
     ];
 
-    $builder
-      ->add('sex', ChoiceType::class, [
-        'choices' => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
-        'placeholder' => 'Sélectionnez votre Sexe',
-      ])
-      ->add('age', ChoiceType::class, [
-        'label' => 'Âge',
-        'choices' => $ageChoices,
-        'placeholder' => 'Sélectionnez votre âge',
-        
-      ])
-      ->add('situation', ChoiceType::class, [
-        'choices' => ['Célibataire' => 'Célibataire', 'En couple' => 'En couple', 'Couple libre' => 'Couple libre'],
-        'placeholder' => 'Sélectionnez votre Situation',
-      ])
-      ->add('research', ChoiceType::class, [
-        'label' => 'Je recherche',
-        'choices' => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
-        'expanded' => true,
-        'multiple' => true,
-      ])
-      ->add('biography', TextareaType::class, [
-        'required' => false,
-      ])
-      ->add('department', ChoiceType::class, [
-        'choices' => $departments,
-        'placeholder' => 'Sélectionnez votre département',
-      ])
-      ->add('city', TextType::class)
-      ->add('avatarFile', FileType::class, [
-        'label' => 'Avatar (JPEG, PNG, GIF, max 8Mo)',
-        'required' => false,
-        'mapped' => false,
-        'constraints' => [
-          new Assert\File([
-            'maxSize' => '8M',
-            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, GIF).',
-          ]),
-        ],
-      ])
-      ->add('photoFiles', FileType::class, [
-        'label' => 'Ajouter jusqu\'à 10 photos (JPEG, PNG, max 8Mo)',
-        'required' => false,
-        'mapped' => false,
-        'multiple' => true,
-        'constraints' => [
-          new All([
-            'constraints' => [
-              new Assert\File([
-                'maxSize' => '8M',
-                'mimeTypes' => ['image/jpeg', 'image/png'],
-                'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG).',
-              ])
-            ]
-          ])
-        ],
-      ]);
-  }
+        $builder
+            ->add('sex', ChoiceType::class, [
+                'choices' => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
+                'placeholder' => 'Sélectionnez votre Sexe',
+                'required' => false,
+            ])
+            ->add('age', ChoiceType::class, [
+                'label' => 'Âge',
+                'choices' => $ageChoices,
+                'placeholder' => 'Sélectionnez votre âge',
+                'required' => false,
+            ])
+            ->add('situation', ChoiceType::class, [
+                'choices' => ['Célibataire' => 'Célibataire', 'En couple' => 'En couple', 'Couple libre' => 'Couple libre'],
+                'placeholder' => 'Sélectionnez votre Situation',
+                'required' => false,
+                ])
+            ->add('research', ChoiceType::class, [
+                'label' => 'Je recherche',
+                'choices' => ['Homme' => 'Homme', 'Femme' => 'Femme', 'Couple' => 'Couple'],
+                'expanded' => true,
+                'multiple' => true,
+                'required' => false,
+            ])
+            ->add('biography', TextareaType::class, [
+                'required' => false,
+            ])
+            ->add('department', ChoiceType::class, [
+                'choices' => $departments,
+                'placeholder' => 'Sélectionnez votre département',
+                'required' => false,
+            ])
+            ->add('city', TextType::class)
+            ->add('avatarFile', FileType::class, [
+                'label' => 'Avatar (JPEG, PNG, GIF, max 8Mo)',
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new Assert\File([
+                        'maxSize' => '8M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG, GIF).',
+                        'maxSizeMessage' => 'L’avatar ne peut pas dépasser 8 Mo.',
+                    ]),
+                ],
+            ])
+            ->add('photoFiles', FileType::class, [
+                'label' => 'Ajouter jusqu\'à 10 photos (JPEG, PNG, max 8Mo chacune)',
+                'required' => false,
+                'mapped' => false,
+                'multiple' => true,
+                'constraints' => [
+                    new All([
+                        'constraints' => [
+                            new Assert\File([
+                                'maxSize' => '8M',
+                                'mimeTypes' => ['image/jpeg', 'image/png'],
+                                'mimeTypesMessage' => 'Veuillez uploader une image valide (JPG, PNG).',
+                                'maxSizeMessage' => 'Chaque photo ne peut pas dépasser 8 Mo.',
+                            ])
+                        ]
+                    ])
+                ],
+            ]);
+    }
 
-  public function configureOptions(OptionsResolver $resolver): void
-  {
-    $resolver->setDefaults([
-      'data_class' => UserProfile::class,
-    ]);
-  }
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => UserProfile::class,
+        ]);
+    }
 }

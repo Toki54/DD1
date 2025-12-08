@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProfileVisitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: ProfileVisitRepository::class)]
 class ProfileVisit
 {
