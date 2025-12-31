@@ -2,138 +2,169 @@
 
 {% block title %}Liste des Profils{% endblock %}
 
+
+
 {% block body %}
-    {% block stylesheet %}
-        <link rel="stylesheet" href="{{ asset('css/list2.css') }}">
-    {% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/list2.css') }}">
+{% endblock %}
+<section class="list-page">
 
-    <section class="container">
+    <header class="page-header">
+        <h1>Liste des profils</h1>
+        <p>Trouve des profils selon tes critères.</p>
+    </header>
 
-        {# ----------- TRI ------------ #}
-        <article class="sort-container" id="sortContainer">
-            <header class="sort-header">
-                <h3>Filtrer les profils</h3>
-            </header>
+    {# ----------- TRI ------------ #}
+    <article class="filter-card" id="sortContainer">
+        <header class="filter-header">
+            <h2>Filtres</h2>
+            <p>Affinez la recherche</p>
+        </header>
 
-            <section class="sort-content">
-                <form method="GET" action="{{ path('app_profiles_list') }}" class="sort-form-horizontal">
+        <form method="GET" action="{{ path('app_profiles_list') }}" class="filter-form">
 
-                    <div class="sort-group">
-                        <label>Sexe:</label>
-                        <input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %}checked{% endif %}> Homme
-                        <input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %}checked{% endif %}> Femme
-                        <input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %}checked{% endif %}> Autre
-                    </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <div class="filter-label">Sexe</div>
+                    <label class="check">
+                        <input type="checkbox" name="sex[]" value="Homme" {% if 'Homme' in sex %}checked{% endif %}>
+                        <span>Homme</span>
+                    </label>
+                    <label class="check">
+                        <input type="checkbox" name="sex[]" value="Femme" {% if 'Femme' in sex %}checked{% endif %}>
+                        <span>Femme</span>
+                    </label>
+                    <label class="check">
+                        <input type="checkbox" name="sex[]" value="Autre" {% if 'Autre' in sex %}checked{% endif %}>
+                        <span>Autre</span>
+                    </label>
+                </div>
 
-                    <div class="sort-group">
-                        <label>Situation:</label>
-                        <input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %}checked{% endif %}> Célibataire
-                        <input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %}checked{% endif %}> En couple
-                    </div>
+                <div class="filter-group">
+                    <div class="filter-label">Situation</div>
+                    <label class="check">
+                        <input type="checkbox" name="situation[]" value="Celibataire" {% if 'Celibataire' in situation %}checked{% endif %}>
+                        <span>Célibataire</span>
+                    </label>
+                    <label class="check">
+                        <input type="checkbox" name="situation[]" value="En couple" {% if 'En couple' in situation %}checked{% endif %}>
+                        <span>En couple</span>
+                    </label>
+                </div>
 
-                    <div class="sort-group">
-                        <label>Qui recherche:</label>
-                        <input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %}checked{% endif %}> Homme
-                        <input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %}checked{% endif %}> Femme
-                        <input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %}checked{% endif %}> Couple
-                    </div>
+                <div class="filter-group">
+                    <div class="filter-label">Qui recherche</div>
+                    <label class="check">
+                        <input type="checkbox" name="research[]" value="Homme" {% if 'Homme' in research %}checked{% endif %}>
+                        <span>Homme</span>
+                    </label>
+                    <label class="check">
+                        <input type="checkbox" name="research[]" value="Femme" {% if 'Femme' in research %}checked{% endif %}>
+                        <span>Femme</span>
+                    </label>
+                    <label class="check">
+                        <input type="checkbox" name="research[]" value="Couple" {% if 'Couple' in research %}checked{% endif %}>
+                        <span>Couple</span>
+                    </label>
+                </div>
 
-                    <div class="sort-group">
-                        <label>Ville:</label>
-                        <input type="text" name="city" class="autocomplete-city" value="{{ city }}" placeholder="Ville">
-                    </div>
+                <div class="filter-group">
+                    <div class="filter-label">Ville</div>
+                    <input type="text" name="city" class="input" value="{{ city }}" placeholder="Ville">
+                </div>
+            </div>
 
-                    <button type="submit">Appliquer le tri</button>
-                </form>
-            </section>
-        </article>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary">Appliquer</button>
+                <button id="toggleSortBtn" type="button" class="btn btn-ghost">Afficher / Masquer</button>
+            </div>
+        </form>
+    </article>
 
-        <button id="toggleSortBtn" class="toggle-sort-btn">Afficher / Masquer les filtres</button>
+    {# ----------- LISTE DES PROFILS ------------ #}
+    <section class="profiles-grid">
+        {% for profile in profiles %}
+            {% if profile.user.pseudo != app.user.pseudo %}
+                <article class="profile-card">
 
-        {# ----------- LISTE DES PROFILS ------------ #}
-        <section class="profile-list">
-            {% for profile in profiles %}
-                {% if profile.user.pseudo != app.user.pseudo %}
-                
-                    <article class="profile-card">
-
-                        {# --- image centrée avec effet --- #}
-                        <div class="profile-image">
+                    <a class="card-top" href="{{ path('app_profile_view', { id: profile.id }) }}">
+                        <div class="avatar-wrap">
                             <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
                         </div>
 
-                        <div class="profile-info">
-                            <h2 class="profile-name">
-                                <a href="{{ path('app_profile_view', { id: profile.id }) }}">
-                                    {{ profile.user.pseudo }}
-                                </a>
-                            </h2>
+                        <div class="card-main">
+                            <h2 class="name">{{ profile.user.pseudo }}</h2>
 
-                            <p class="profile-desc">
-                                {{ profile.sex|default('Inc') }}
-                                {% if profile.age %} - {{ profile.age }} ans{% endif %}
-                            </p>
+                            <div class="meta">
+                                <span class="pill">{{ profile.sex|default('Inc') }}</span>
+                                {% if profile.age %}
+                                    <span class="sep">—</span>
+                                    <span>{{ profile.age }} ans</span>
+                                {% endif %}
+                            </div>
 
-                            <p class="profile-city">{{ profile.city|default('Inc') }}</p>
+                            <div class="city">{{ profile.city|default('Inc') }}</div>
 
-                            <p class="profile-search">
+                            <div class="search">
                                 <strong>Recherche :</strong>
                                 {% if profile.research is iterable %}
                                     {{ profile.research|join(', ')|default('Inc') }}
                                 {% else %}
                                     {{ profile.research|default('Inc') }}
                                 {% endif %}
+                            </div>
+
+                            <p class="bio">
+                                {{ profile.biography|default('Aucune biographie.') }}
                             </p>
-
-                            {% if profile.biography %}
-                                <p class="profile-bio">{{ profile.biography }}</p>
-                            {% else %}
-                            {{ profile.biography|default('Inc') }}
-                            {% endif %}
                         </div>
+                    </a>
 
-                        <div class="action">
-                            <a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-pink">Message</a>
+                    <div class="card-actions">
+                        <a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-primary btn-small">Message</a>
 
-                            <button class="btn btn-outline"
-                                    data-id="{{ profile.id }}"
-                                    data-token="{{ csrf_token('like' ~ profile.id) }}"
-                                    data-url="{{ path('app_profile_like', { id: profile.id }) }}">
-                                Like ❤️
-                            </button>
-                        </div>
-
-                    </article>
-
-                {% endif %}
-            {% endfor %}
-        </section>
-
+                        <button class="btn btn-outline btn-small"
+                                data-id="{{ profile.id }}"
+                                data-token="{{ csrf_token('like' ~ profile.id) }}"
+                                data-url="{{ path('app_profile_like', { id: profile.id }) }}">
+                            Like ❤️
+                        </button>
+                    </div>
+                </article>
+            {% endif %}
+        {% endfor %}
     </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleBtn = document.getElementById('toggleSortBtn');
-            const sortContainer = document.getElementById('sortContainer');
+</section>
 
-            toggleBtn.addEventListener('click', () => {
-                sortContainer.classList.toggle('hidden');
-            });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggleSortBtn');
+    const sortContainer = document.getElementById('sortContainer');
 
-            document.querySelectorAll('.btn-outline').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    fetch(btn.dataset.url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ _token: btn.dataset.token })
-                    })
-                    .then(r => r.json())
-                    .then(d => alert(d.message));
-                });
-            });
+    // 🔒 MASQUÉ PAR DÉFAUT
+    sortContainer.classList.add('collapsed');
+
+    toggleBtn.addEventListener('click', () => {
+        sortContainer.classList.toggle('collapsed');
+    });
+
+    document.querySelectorAll('.btn-outline').forEach(btn => {
+        btn.addEventListener('click', () => {
+            fetch(btn.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ _token: btn.dataset.token })
+            })
+            .then(r => r.json())
+            .then(d => alert(d.message));
         });
-    </script>
+    });
+});
+</script>
+
 {% endblock %}

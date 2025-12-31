@@ -1,103 +1,109 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Visites et Likes de mon profil
-{% endblock %}
+{% block title %}Visites et Likes de mon profil{% endblock %}
 
 
 
 {% block body %}
 {% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
 {% endblock %}
+<div class="likes-page">
 
-	<h1 style="text-align:center; margin-bottom:20px;">Visites et Likes de mon profil</h1>
+    <header class="page-header">
+        <h1>Visites et Likes de mon profil</h1>
+        <p>Consulte qui a visité ton profil et qui t’a liké.</p>
+    </header>
 
-	<div class="tabs">
-		<div class="tab active" data-tab="visits">Ils ont visité ton profil ({{ visitorProfiles|length }})</div>
-		<div class="tab" data-tab="likes">Ils ont liké ton profil ({{ likerProfiles|length }})</div>
-	</div>
+    <div class="tabs">
+        <button class="tab active" data-tab="visits" type="button">
+            Ils ont visité ton profil <span class="count">{{ visitorProfiles|length }}</span>
+        </button>
+        <button class="tab" data-tab="likes" type="button">
+            Ils ont liké ton profil <span class="count">{{ likerProfiles|length }}</span>
+        </button>
+    </div>
 
-	<div id="visits" class="tab-content">
-		{% if visitorProfiles is empty %}
-			<p>Aucun visiteur pour le moment.</p>
-		{% else %}
-			<div class="profile-container">
-				{% for profile in visitorProfiles %}
-					<article class="profile-card">
-						<div class="profile-row">
-							<div class="avatar-container">
-								<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-							</div>
-							<div class="profile-infos">
-								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
-										{{ profile.user.pseudo }}
-									</a>
-									-
-									<span>{{ profile.city|default('Inc') }}</span>
-								</h2>
-								<p>
-									<strong>{{ profile.sex|default('Inc') }}</strong>
-								{% if profile.age %}
-									- {{ profile.age }} ans
-								{% endif %}
-							</p>
-							</div>
-						</div>
-					</article>
-				{% endfor %}
-			</div>
-		{% endif %}
-	</div>
+    <section id="visits" class="tab-content">
+        {% if visitorProfiles is empty %}
+            <div class="empty">Aucun visiteur pour le moment.</div>
+        {% else %}
+            <div class="profiles-grid">
+                {% for profile in visitorProfiles %}
+                    <article class="profile-card">
+                        <a class="profile-link" href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
+                            <div class="avatar-wrap">
+                                <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}"
+                                     alt="Avatar de {{ profile.user.pseudo }}"
+                                     class="avatar">
+                            </div>
 
-	<div id="likes" class="tab-content" style="display:none;">
-		{% if likerProfiles is empty %}
-			<p>Aucun like pour le moment.</p>
-		{% else %}
-			<div class="profile-container">
-				{% for profile in likerProfiles %}
-					<article class="profile-card">
-						<div class="profile-row">
-							<div class="avatar-container">
-								<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-							</div>
-							<div class="profile-infos">
-								<h2>
-									<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
-										{{ profile.user.pseudo }}
-									</a>
-									-
-									<span>{{ profile.city|default('Inc') }}</span>
-								</h2>
-								<p>
-									<strong>{{ profile.sex|default('Inc') }}</strong>
-								{% if profile.age %}
-									- {{ profile.age }} ans
-								{% endif %}
-								</p>
-							</div>
-						</div>
-					</article>
-				{% endfor %}
-			</div>
-		{% endif %}
-	</div>
+                            <div class="profile-infos">
+                                <h2 class="name">
+                                    {{ profile.user.pseudo }}
+                                    <span class="dot">•</span>
+                                    <span class="city">{{ profile.city|default('Inc') }}</span>
+                                </h2>
 
-	 <script>
-	    const tabs = document.querySelectorAll('.tab');
-	    const contents = document.querySelectorAll('.tab-content');
-	
-	    tabs.forEach(tab => {
-	        tab.addEventListener('click', () => {
-	            tabs.forEach(t => t.classList.remove('active'));
-	            tab.classList.add('active');
-	
-	            contents.forEach(c => c.style.display = 'none');
-	            document.getElementById(tab.dataset.tab).style.display = 'block';
-	        });
-	    });
-	</script>
+                                <p class="meta">
+                                    <span class="pill">{{ profile.sex|default('Inc') }}</span>
+                                    {% if profile.age %}<span class="sep">—</span>{{ profile.age }} ans{% endif %}
+                                </p>
+                            </div>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
 
+    <section id="likes" class="tab-content" style="display:none;">
+        {% if likerProfiles is empty %}
+            <div class="empty">Aucun like pour le moment.</div>
+        {% else %}
+            <div class="profiles-grid">
+                {% for profile in likerProfiles %}
+                    <article class="profile-card">
+                        <a class="profile-link" href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
+                            <div class="avatar-wrap">
+                                <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}"
+                                     alt="Avatar de {{ profile.user.pseudo }}"
+                                     class="avatar">
+                            </div>
+
+                            <div class="profile-infos">
+                                <h2 class="name">
+                                    {{ profile.user.pseudo }}
+                                    <span class="dot">•</span>
+                                    <span class="city">{{ profile.city|default('Inc') }}</span>
+                                </h2>
+
+                                <p class="meta">
+                                    <span class="pill">{{ profile.sex|default('Inc') }}</span>
+                                    {% if profile.age %}<span class="sep">—</span>{{ profile.age }} ans{% endif %}
+                                </p>
+                            </div>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            contents.forEach(c => c.style.display = 'none');
+            document.getElementById(tab.dataset.tab).style.display = 'block';
+        });
+    });
+</script>
 {% endblock %}
-

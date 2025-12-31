@@ -12,41 +12,62 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubscriptionType extends AbstractType
 {
- public function buildForm(FormBuilderInterface $builder, array $options): void
- {
-  $plans = [
-   '1 semaine - 5 €' => ['duration' => '+1 week', 'price' => 5.00],
-   '1 mois - 15 €'   => ['duration' => '+1 month', 'price' => 15.00],
-   '3 mois - 30 €'   => ['duration' => '+3 months', 'price' => 30.00],
-   '6 mois - 50 €'   => ['duration' => '+6 months', 'price' => 50.00],
-   '1 an - 80 €'     => ['duration' => '+1 year', 'price' => 80.00],
-  ];
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $plans = [
+            '1 semaine - 5 €' => ['duration' => '+1 week',   'price' => 5.00],
+            '1 mois - 15 €'   => ['duration' => '+1 month',  'price' => 15.00],
+            '3 mois - 30 €'   => ['duration' => '+3 months', 'price' => 30.00],
+            '6 mois - 50 €'   => ['duration' => '+6 months', 'price' => 50.00],
+            '1 an - 80 €'     => ['duration' => '+1 year',   'price' => 80.00],
+        ];
 
-  $builder
-   ->add('plan', HiddenType::class)
-   ->add('price', HiddenType::class)
-   ->add('startDate', HiddenType::class)
-   ->add('endDate', HiddenType::class);
+        $builder
+            ->add('plan', HiddenType::class)
+            // Tu peux garder ces champs (mais ils ne sont plus nécessaires côté client)
+            ->add('price', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('startDate', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('endDate', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ]);
 
-  $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($plans) {
-   $data = $event->getData();
-   if (isset($data['plan'], $plans[$data['plan']])) {
-    $startDate = new \DateTime();
-    $endDate   = (clone $startDate)->modify($plans[$data['plan']]['duration']);
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($plans) {
+            $data = $event->getData();
+            if (!is_array($data) || empty($data['plan'])) {
+                return;
+            }
 
-    $data['price']     = $plans[$data['plan']]['price'];
-    $data['startDate'] = $startDate;
-    $data['endDate']   = $endDate;
+            $plan = $data['plan'];
+            if (!isset($plans[$plan])) {
+                return;
+            }
 
-    $event->setData($data);
-   }
-  });
- }
+            /** @var Subscription $subscription */
+            $subscription = $event->getForm()->getData();
 
- public function configureOptions(OptionsResolver $resolver): void
- {
-  $resolver->setDefaults([
-   'data_class' => Subscription::class,
-  ]);
- }
+            $startDate = new \DateTime();
+            $endDate   = (clone $startDate)->modify($plans[$plan]['duration']);
+
+            // ✅ On hydrate l'ENTITY directement (DateTimeInterface OK)
+            $subscription->setPlan($plan);
+            $subscription->setPrice((float) $plans[$plan]['price']);
+            $subscription->setStartDate($startDate);
+            $subscription->setEndDate($endDate);
+            $subscription->setActive(true);
+        });
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Subscription::class,
+        ]);
+    }
 }

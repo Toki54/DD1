@@ -1,116 +1,207 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Souscription
-{% endblock %}
+{% block title %}Souscription{% endblock %}
 
 
 
 {% block body %}
 {% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('css/abo.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/abo.css') }}">
 {% endblock %}
+<div class="abo-page">
 
-	<h1>Souscrire à un abonnement</h1>
+    <header class="page-header">
+        <h1>Souscrire à un abonnement</h1>
+        <p>Choisis une durée, puis valide le paiement.</p>
+    </header>
 
-	<div class="subscription-cards">
-		<div class="subscription-card" data-plan="1 semaine - 5 €" data-amount="5">
-			<h3>1 Semaine</h3>
-			<p>5 €</p>
-			<p>Accès complet pendant 7 jours</p>
-			<button class="btn btn-primary" onclick="selectPlan(this)">Choisir</button>
-		</div>
+    <section class="abo-layout">
 
-		<div class="subscription-card" data-plan="1 mois - 15 €" data-amount="15">
-			<h3>1 Mois</h3>
-			<p>15 €</p>
-			<p>Accès complet pendant 1 mois</p>
-			<button class="btn btn-primary" onclick="selectPlan(this)">Choisir</button>
-		</div>
+        <!-- CARTES -->
+        <div class="subscription-cards">
+            <button type="button" class="subscription-card" data-plan="1 semaine - 5 €" data-amount="5">
+                <div class="card-top">
+                    <h3>1 Semaine</h3>
+                    <span class="badge">Populaire</span>
+                </div>
+                <p class="price">5 €</p>
+                <p class="desc">Accès complet pendant 7 jours</p>
+                <div class="cta">Choisir</div>
+            </button>
 
-		<div class="subscription-card" data-plan="3 mois - 30 €" data-amount="30">
-			<h3>3 Mois</h3>
-			<p>30 €</p>
-			<p>Accès complet pendant 3 mois</p>
-			<button class="btn btn-primary" onclick="selectPlan(this)">Choisir</button>
-		</div>
+            <button type="button" class="subscription-card" data-plan="1 mois - 15 €" data-amount="15">
+                <div class="card-top"><h3>1 Mois</h3></div>
+                <p class="price">15 €</p>
+                <p class="desc">Accès complet pendant 1 mois</p>
+                <div class="cta">Choisir</div>
+            </button>
 
-		<div class="subscription-card" data-plan="6 mois - 50 €" data-amount="50">
-			<h3>6 Mois</h3>
-			<p>50 €</p>
-			<p>Accès complet pendant 6 mois</p>
-			<button class="btn btn-primary" onclick="selectPlan(this)">Choisir</button>
-		</div>
+            <button type="button" class="subscription-card" data-plan="3 mois - 30 €" data-amount="30">
+                <div class="card-top">
+                    <h3>3 Mois</h3>
+                    <span class="badge badge-dark">Meilleur deal</span>
+                </div>
+                <p class="price">30 €</p>
+                <p class="desc">Accès complet pendant 3 mois</p>
+                <div class="cta">Choisir</div>
+            </button>
 
-		<div class="subscription-card" data-plan="1 an - 80 €" data-amount="80">
-			<h3>1 An</h3>
-			<p>80 €</p>
-			<p>Accès complet pendant 1 an</p>
-			<button class="btn btn-primary" onclick="selectPlan(this)">Choisir</button>
-		</div>
-	</div>
+            <button type="button" class="subscription-card" data-plan="6 mois - 50 €" data-amount="50">
+                <div class="card-top"><h3>6 Mois</h3></div>
+                <p class="price">50 €</p>
+                <p class="desc">Accès complet pendant 6 mois</p>
+                <div class="cta">Choisir</div>
+            </button>
 
-	<div id="subscription-summary" style="display:none;">
-		<h3>Résumé de l'abonnement</h3>
-		<p>
-			<strong>Abonnement sélectionné :</strong>
-			<span id="plan-name"></span>
-		</p>
-		<p>
-			<strong>Prix :</strong>
-			<span id="plan-price"></span>
-		</p>
-		<button id="checkout-button" disabled>Payer avec Stripe</button>
-	</div>
+            <button type="button" class="subscription-card" data-plan="1 an - 80 €" data-amount="80">
+                <div class="card-top"><h3>1 An</h3></div>
+                <p class="price">80 €</p>
+                <p class="desc">Accès complet pendant 1 an</p>
+                <div class="cta">Choisir</div>
+            </button>
+        </div>
 
-	 <script src="https://js.stripe.com/v3/"></script>
-	 <script>
-	        let selectedPlan = '';
-	        let selectedAmount = 0;
-	
-	        function selectPlan(button) {
-	            const card = button.closest('.subscription-card');
-	            selectedPlan = card.getAttribute('data-plan');
-	            selectedAmount = parseFloat(card.getAttribute('data-amount'));
-	
-	            document.getElementById('plan-name').textContent = selectedPlan;
-	            document.getElementById('plan-price').textContent = selectedAmount + ' €';
-	            document.getElementById('subscription-summary').style.display = 'block';
-	
-	            const checkoutBtn = document.getElementById('checkout-button');
-	            checkoutBtn.disabled = false;
-	            checkoutBtn.classList.add('enabled');
-	        }
-	
-	        document.addEventListener('DOMContentLoaded', function () {
-	            const checkoutButton = document.getElementById('checkout-button');
-	
-	            checkoutButton.addEventListener('click', function () {
-	                if (checkoutButton.disabled) return;
-	
-	                fetch('{{ path('app_stripe_checkout') }}', {
-	                    method: 'POST',
-	                    headers: {
-	                        'Content-Type': 'application/json',
-	                    },
-	                    body: JSON.stringify({
-	                        plan: selectedPlan,
-	                        amount: selectedAmount
-	                    })
-	                })
-	                .then(response => response.json())
-	                .then(data => {
-	                    if (data.id) {
-	                        const stripe = Stripe('{{ stripe_public_key }}');
-	                        stripe.redirectToCheckout({ sessionId: data.id });
-	                    } else {
-	                        alert('Erreur lors de la création de la session Stripe.');
-	                    }
-	                })
-	                .catch(() => {
-	                    alert('Erreur réseau ou serveur.');
-	                });
-	            });
-	        });
-	    </script>
+        <!-- COLONNE DROITE -->
+        <aside class="right-column">
+
+            <!-- RÉSUMÉ -->
+            <div id="subscription-summary" class="card panel">
+                <h2 class="panel-title">Résumé</h2>
+
+                <div class="summary-row">
+                    <div class="k">Abonnement</div>
+                    <div class="v" id="plan-name">Aucun</div>
+                </div>
+
+                <div class="summary-row">
+                    <div class="k">Durée</div>
+                    <div class="v" id="plan-duration">Aucune</div>
+                </div>
+
+                <div class="summary-row">
+                    <div class="k">Prix</div>
+                    <div class="v price-v" id="plan-price">0 €</div>
+                </div>
+
+                <div class="hint">Sélectionne un plan puis clique sur “Payer”.</div>
+            </div>
+
+            <!-- VALIDATION STRIPE -->
+            <div class="card panel form-container" id="paymentSection">
+                <h2 class="panel-title">Validation</h2>
+
+                <button id="payBtn" class="btn btn-primary w-100" type="button" disabled>
+                    Payer
+                </button>
+
+                <div class="pay-note">
+                    Paiement sécurisé par Stripe.
+                </div>
+            </div>
+
+        </aside>
+
+    </section>
+
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const stripePublicKey = "{{ stripe_public_key }}";
+    const stripe = Stripe(stripePublicKey);
+
+    const planName = document.getElementById('plan-name');
+    const planDuration = document.getElementById('plan-duration');
+    const planPrice = document.getElementById('plan-price');
+    const payBtn = document.getElementById('payBtn');
+
+    let selectedPlan = null;
+    let selectedAmount = 0;
+
+    const plans = {
+        '1 semaine - 5 €': { duration: '1 semaine', price: '5 €' },
+        '1 mois - 15 €': { duration: '1 mois', price: '15 €' },
+        '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
+        '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
+        '1 an - 80 €': { duration: '1 an', price: '80 €' },
+    };
+
+    function selectPlan(plan, amount) {
+    if (!plans[plan]) return;
+
+    selectedPlan = plan;
+    selectedAmount = Number(amount) || 0;
+
+    planName.textContent = plan;
+    planDuration.textContent = plans[plan].duration;
+    planPrice.textContent = plans[plan].price;
+
+    document.querySelectorAll('.subscription-card')
+        .forEach(c => c.classList.remove('selected'));
+
+    const selected = document.querySelector(`.subscription-card[data-plan="${plan}"]`);
+    if (selected) selected.classList.add('selected');
+
+    payBtn.disabled = false;
+
+    // ⬇️ SCROLL VERS LE BAS (Validation)
+    const target = document.getElementById('paymentSection');
+    if (target) {
+        target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+
+    document.querySelectorAll('.subscription-card').forEach(card => {
+        card.addEventListener('click', () => {
+            selectPlan(card.dataset.plan, card.dataset.amount);
+        });
+    });
+
+    payBtn.addEventListener('click', async () => {
+        if (!selectedPlan || selectedAmount <= 0) return;
+
+        payBtn.disabled = true;
+        payBtn.textContent = "Redirection...";
+
+        try {
+            const res = await fetch("{{ path('app_stripe_checkout') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify({
+                    plan: selectedPlan,
+                    amount: selectedAmount
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.id) {
+                payBtn.disabled = false;
+                payBtn.textContent = "Payer";
+                alert(data.error || "Erreur lors de la création de la session Stripe");
+                return;
+            }
+
+            const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+            if (error) {
+                payBtn.disabled = false;
+                payBtn.textContent = "Payer";
+                alert(error.message);
+            }
+        } catch (e) {
+            payBtn.disabled = false;
+            payBtn.textContent = "Payer";
+            alert("Erreur réseau");
+        }
+    });
+});
+</script>
 {% endblock %}
-
