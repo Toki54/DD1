@@ -4,199 +4,308 @@
    RESET
    ========================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-    min-height: 100vh;
-    background: #300616; /* sombre grenat */
-    color: #fff;
-    display: flex;
-    flex-direction: column;
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  min-height: 100vh;
+  background: #300616; /* sombre grenat */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =========================
    HEADER / TITRE
    ========================= */
 .site-header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
+  text-align: center;
+  padding: 2rem 1rem 1rem;
 }
 
 .site-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
 }
 
 /* =========================
-   NAVBAR
+   NAVBAR (boutons en haut, Logout dessous)
+   - Compatible avec ta structure .navbar > .nav-container > .nav-list
+   - Le bouton logout est détecté via .logout
    ========================= */
 .navbar {
-    background: rgba(0,0,0,0.25);
-    border-radius: 12px;
-    margin: auto;
-    padding: 0.5rem 1rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  margin: 0 auto;
+  padding: 0.9rem 1rem 0.8rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  width: min(1200px, calc(100% - 2rem));
 }
 
 .nav-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
 }
 
 /* Hamburger */
 .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 24px;
-    height: 20px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    margin-right: 1rem;
-    z-index: 1000;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 1rem;
+  z-index: 1000;
 }
 
 .hamburger span {
-    display: block;
-    height: 3px;
-    width: 100%;
-    background: #fff;
-    border-radius: 2px;
-    transition: 0.3s;
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
 }
 
-/* LISTE NAV */
+/* =========================
+   NAV LIST : 2 LIGNES
+   - Ligne 1 : tous les liens sauf .logout
+   - Ligne 2 : lien .logout centré
+   ========================= */
 .nav-list {
-    list-style: none;
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;          /* 1 colonne (2 lignes en grid-areas) */
+  grid-template-areas:
+    "top"
+    "logout";
+  gap: 12px;
+  width: 100%;
+  justify-items: center;
+  align-items: center;
 }
 
-.nav-list.open {
-    width: max-content;
-    display: flex;
-    flex-direction: column;
-    background: rgba(0, 0, 0, 0.85);
-    position: absolute;
-    top: -17%;
-    left: -2px;
-    right: -1px;
-    padding: 25px 4px;
-    border-radius: 0 0 12px 12px;
+/* Ligne du haut : wrap en plusieurs boutons */
+.nav-list > li:not(.logout-item) {
+  display: inline-flex;
+}
+
+/* IMPORTANT :
+   Pour que ça marche sans changer ton Twig, on gère en CSS :
+   - Tous les <a> sauf .logout vont dans la ligne du haut
+   - Le <a>.logout va dans la ligne du bas
+*/
+.nav-list {
+  /* on crée 2 "rangées" via wrappers virtuels : on utilise flex-wrap sur un conteneur interne */
+}
+
+/* Conteneur de la ligne du haut (on l'émule en mettant les éléments non-logout en "inline-flex"
+   et en forçant leur parent à se comporter comme un wrap center) */
+.nav-list {
+  position: relative;
+}
+
+/* Ligne du haut : on centre, on wrap */
+.nav-list::before {
+  content: "";
+  grid-area: top;
+  display: block;
+}
+
+/* On force tous les liens non-logout à se placer comme une “ligne” */
+.nav-list a:not(.logout) {
+  /* rien ici, la position est gérée par le flux + le wrapper .nav-top (ci-dessous) */
+}
+
+/* On crée un vrai layout : on transforme .nav-list en 2 blocs */
+.nav-list {
+  display: grid;
+  grid-template-areas:
+    "top"
+    "logout";
+}
+
+/* Bloc TOP : on utilise un conteneur flex via :has() quand dispo,
+   sinon fallback : tout reste centré et le logout est isolé (en bas) */
+.nav-list {
+  justify-items: stretch;
+}
+
+/* Fallback universel : on fait tout en flex-wrap et on isole logout en bas */
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+/* Le lien logout passe sur une ligne en dessous */
+.nav-list a.logout {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* =========================
    BOUTONS (Glassmorphism + Dégradé)
    ========================= */
 .nav-list a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 1.6rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
 
-    /* Glass effect */
-    background: rgba(128, 0, 32, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.15);
+  /* tailles comme le screen */
+  min-width: 210px;
+  height: 46px;
 
-    /* Dégradé subtil */
-    background-image: linear-gradient(
-        to right,
-        rgba(139, 0, 0, 0.3) 0%,
-        rgba(128, 0, 32, 0.6) 50%,
-        rgba(139, 0, 0, 0.3) 100%
-    );
+  padding: 0 1.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: #fff;
 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-    transition: all 0.3s ease;
+  /* Glass effect */
+  background: rgba(128, 0, 32, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* Dégradé subtil */
+  background-image: linear-gradient(
+    to right,
+    rgba(139, 0, 0, 0.3) 0%,
+    rgba(128, 0, 32, 0.6) 50%,
+    rgba(139, 0, 0, 0.3) 100%
+  );
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
 }
 
 .nav-list a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.45), 0 0 15px rgba(128,0,32,0.5);
-    background-image: linear-gradient(
-        to right,
-        rgba(139,0,0,0.45) 0%,
-        rgba(128,0,32,0.75) 50%,
-        rgba(139,0,0,0.45) 100%
-    );
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(128, 0, 32, 0.5);
+  background-image: linear-gradient(
+    to right,
+    rgba(139, 0, 0, 0.45) 0%,
+    rgba(128, 0, 32, 0.75) 50%,
+    rgba(139, 0, 0, 0.45) 100%
+  );
 }
 
+/* Logout dessous, centré, un peu plus compact */
 .nav-list a.logout {
-    background: rgba(200,0,0,0.35);
-    background-image: linear-gradient(
-        to right,
-        rgba(200,0,0,0.3) 0%,
-        rgba(180,0,0,0.6) 50%,
-        rgba(200,0,0,0.3) 100%
-    );
+  width: min(240px, 100%);
+  height: 44px;
+  margin-top: 4px;
+
+  background: rgba(200, 0, 0, 0.35);
+  background-image: linear-gradient(
+    to right,
+    rgba(200, 0, 0, 0.3) 0%,
+    rgba(180, 0, 0, 0.6) 50%,
+    rgba(200, 0, 0, 0.3) 100%
+  );
 }
 
 .nav-list a.logout:hover {
-    background-image: linear-gradient(
-        to right,
-        rgba(200,0,0,0.45) 0%,
-        rgba(180,0,0,0.8) 50%,
-        rgba(200,0,0,0.45) 100%
-    );
+  background-image: linear-gradient(
+    to right,
+    rgba(200, 0, 0, 0.45) 0%,
+    rgba(180, 0, 0, 0.8) 50%,
+    rgba(200, 0, 0, 0.45) 100%
+  );
 }
 
 /* ICONES */
 .nav-list i {
-    stroke-width: 2px;
+  stroke-width: 2px;
 }
 
 /* =========================
    MAIN CONTENT
    ========================= */
 .container {
-    flex-grow: 1;
-    padding: 2rem 1rem;
+  flex-grow: 1;
+  padding: 2rem 1rem;
 }
 
 /* =========================
    FOOTER
    ========================= */
 footer {
-    background: #2b0613;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-    font-size: 0.9rem;
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.4);
+  background: #2b0613;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
 }
 
 /* =========================
-   MEDIA QUERY (MOBILE)
+   MOBILE
+   - menu déroulant : liste en colonne
+   - logout reste dessous (mais dans la même colonne)
    ========================= */
 @media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-    .nav-list {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-    }
-    .navbar {
+  .hamburger {
+    display: flex;
+    position: absolute;
+    left: 12px;
+    top: 10px;
+  }
+
+  .navbar {
     margin: 0 1rem;
-    }
+    width: calc(100% - 2rem);
+  }
+
+  .nav-container {
+    justify-content: center;
+    padding-top: 2.1rem; /* place pour l'hamburger */
+  }
+
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-list.open {
+    display: flex;
+    background: rgba(0, 0, 0, 0.85);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 18px 12px 14px;
+    border-radius: 12px;
+    z-index: 999;
+  }
+
+  .nav-list a {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .nav-list a.logout {
+    width: 100%;
+    flex-basis: auto;
+  }
 }

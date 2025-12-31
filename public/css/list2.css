@@ -23,14 +23,18 @@ body{
 
 /* ====== PAGE ====== */
 .list-page{
-  padding: 10px 0 40px;
+  padding: 10px 16px 40px;
+  max-width: var(--page-max);
+  margin: 0 auto;
 }
 
+/* ====== HEADER ====== */
 .page-header{
-  display: flex;
-    margin-bottom: 16px;
-    flex-direction: column;
-    align-items: center;
+  display:flex;
+  margin-bottom: 16px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .page-header h1{
@@ -147,11 +151,18 @@ body{
   flex-wrap: wrap;
 }
 
-/* ====== GRID ====== */
+/* =========================================================
+   GRID PROFILES : TOUJOURS 3 COLONNES sur grand écran
+   - On force 3 colonnes, et on centre le tout via max-width.
+   - Responsive : 2 colonnes puis 1.
+   ========================================================= */
+
 .profiles-grid{
   display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 18px;
+
+  /* Toujours 3 colonnes à partir d'une largeur confortable */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* ====== PROFILE CARD ====== */
@@ -163,6 +174,7 @@ body{
   overflow:hidden;
   position:relative;
   transition: transform .25s ease, box-shadow .25s ease;
+  min-height: 210px;
 }
 
 .profile-card:hover{
@@ -262,7 +274,7 @@ body{
   -webkit-line-clamp: 2; /* 2 lignes max */
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 40px;
+  min-height: 40px; /* garde les cards alignées */
 }
 
 /* actions */
@@ -330,12 +342,51 @@ body{
   background: rgba(255,255,255,.16);
 }
 
-/* ====== RESPONSIVE ====== */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* filtres en 1 colonne */
 @media (max-width: 980px){
   .filter-row{
     grid-template-columns: 1fr;
   }
+}
+
+/* passe en 2 colonnes */
+@media (max-width: 1100px){
+  .profiles-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 1 colonne + actions verticales */
+@media (max-width: 720px){
+  .profiles-grid{
+    grid-template-columns: 1fr;
+  }
   .card-actions{
-    flex-direction:column;
+    flex-direction: column;
+  }
+
+  /* navbar : boutons moins larges */
+  .nav-btn,
+  .navbar .nav-link,
+  .site-nav .nav-link,
+  .header-nav .nav-link{
+    min-width: 160px;
+    width: 100%;
+  }
+  .navbar .nav-row,
+  .site-nav .nav-row,
+  .header-nav .nav-row{
+    width: 100%;
+  }
+  .btn-logout,
+  .navbar .logout,
+  .site-nav .logout,
+  .header-nav .logout{
+    width: 100%;
+    min-width: 0;
   }
 }
