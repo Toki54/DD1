@@ -1,175 +1,228 @@
-/* ====== SECTION REGISTRATION ====== */
-.register-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 600px;
-  margin: 40px auto;
-  background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
-  color: #e0e0e0;
-  font-family: 'Segoe UI', sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+:root{
+  --accent:#c2171e;
+  --accent-2:#8b1116;
+
+  --white:#ffffff;
+  --text:#121212;
+  --muted:#666;
+
+  --shadow: 0 25px 60px rgba(0,0,0,.28);
+  --shadow-hover: 0 40px 80px rgba(0,0,0,.35);
+
+  --radius: 22px;
 }
 
-.register-container h1 {
-  text-align: center;
-  color: #d4af37;
-  font-size: 2.5em;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* ====== FORMULAIRE ====== */
-form {
-  width: 100%;
+/* ====== PAGE ====== */
+.auth-page{
+  padding: 20px 0 50px;
+  display:flex;
+  justify-content:center;
 }
 
-.form-group {
-  margin-bottom: 25px;
+/* ====== CARD ====== */
+.auth-card{
+  width: min(560px, 100%);
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border:none;
+  padding: 22px;
+  position:relative;
+  overflow:hidden;
 }
 
-.form-group label {
-  display: block;
-  color: #d4af37;
-  font-size: 1.1em;
-  font-weight: 600;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
+.auth-card::before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  background: radial-gradient(520px 260px at 10% 0%, rgba(194,23,30,.12), transparent 60%);
+  pointer-events:none;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"] {
-  width: 100%;
-  padding: 12px 15px;
-  background: #1b1b1b;
-  border: 2px solid #8e44ad;
-  border-radius: 10px;
-  color: #e0e0e0;
-  font-size: 1em;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(217, 7, 255, 0.2);
+/* ====== HEADER ====== */
+.auth-header{
+  position:relative;
+  margin-bottom: 14px;
 }
 
-.form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus,
-.form-group input[type="password"]:focus {
-  outline: none;
-  border-color: #d4af37;
-  box-shadow: 0 0 15px rgba(217, 7, 255, 0.5);
-  background: #252525;
+.auth-header h1{
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #121212;
 }
 
-/* ====== CHECKBOX TERMS ====== */
-.form-group input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  cursor: pointer;
-  accent-color: #8e44ad;
-  vertical-align: middle;
+.auth-header p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-.form-group label[for*="agreeTerms"] {
-  display: inline;
-  color: #e0e0e0;
-  font-size: 1em;
-  font-weight: normal;
-  cursor: pointer;
+/* ====== ALERT ====== */
+.alert-box{
+  position:relative;
+  background: #f5f5f7;
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 12px 0 14px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.08);
+  color:#1a1a1a;
+  font-size: 13px;
 }
 
-/* ====== ERREURS ====== */
-.form-error,
-.alert-danger {
-  background: rgba(231, 76, 60, 0.2);
-  border: 2px solid #e74c3c;
-  border-radius: 10px;
-  padding: 15px;
-  color: #ff6b6b;
-  margin-bottom: 20px;
-  font-size: 0.95em;
+/* ====== FORM ====== */
+.auth-form{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
 }
 
-.invalid-feedback {
-  color: #ff6b6b;
-  font-size: 0.9em;
-  margin-top: 5px;
-  display: block;
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
 }
 
-.form-group .is-invalid {
-  border-color: #e74c3c !important;
-  box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+/* labels symfony */
+.auth-card label{
+  font-size: 13px;
+  font-weight: 900;
+  color: #2a2a2a;
 }
 
-/* ====== BOUTON SUBMIT ====== */
-button[type="submit"],
-.btn-primary {
-  width: 100%;
-  background: linear-gradient(135deg, #8e44ad, #6c3483);
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.2em;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(217, 7, 255, 0.4);
-  margin-top: 10px;
+/* inputs symfony */
+.auth-card input,
+.auth-card select,
+.auth-card textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  background:#f5f5f7;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  transition: box-shadow .2s ease, background .2s ease;
 }
 
-button[type="submit"]:hover,
-.btn-primary:hover {
-  background: linear-gradient(135deg, #9b59b6, #8e44ad);
-  box-shadow: 0 0 25px rgba(217, 7, 255, 0.6);
-  transform: translateY(-2px);
+.auth-card input:focus,
+.auth-card select:focus,
+.auth-card textarea:focus{
+  background:#f2f2f6;
+  box-shadow: 0 0 0 4px rgba(194,23,30,.16);
 }
 
-button[type="submit"]:active,
-.btn-primary:active {
-  transform: translateY(0);
-  box-shadow: 0 0 10px rgba(217, 7, 255, 0.4);
+/* ====== errors under fields ====== */
+.auth-card .invalid-feedback,
+.auth-card .form-error-message,
+.auth-card ul,
+.auth-card li{
+  font-size: 12px;
+  font-weight: 800;
+  color: #8b1116;
 }
 
-/* ====== LIENS ADDITIONNELS ====== */
-.register-footer {
-  text-align: center;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid #ff00eb;
+/* ====== BUTTONS ====== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border:none;
+  text-decoration:none;
+  font-weight: 900;
+  font-size: 14px;
+  cursor:pointer;
+  user-select:none;
+  transition: transform .2s ease, filter .25s ease, box-shadow .25s ease;
 }
 
-.register-footer a {
-  color: #d4af37;
-  text-decoration: none;
-  transition: color 0.3s ease;
+.btn:active{ transform: scale(.98); }
+
+.btn-primary{
+  color:#fff;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  box-shadow: 0 18px 45px rgba(194,23,30,.28);
 }
 
-.register-footer a:hover {
-  color: #8e44ad;
+.btn-primary:hover{
+  filter: brightness(1.05);
+  box-shadow: 0 26px 60px rgba(194,23,30,.40);
+}
+
+.w-100{ width:100%; }
+
+/* ====== BOTTOM (agree + déjà un compte) ====== */
+.auth-bottom{
+  position:relative;
+  margin-top: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* agree en petit + case à côté */
+.agree-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.agree-row input[type="checkbox"]{
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+}
+
+.agree-row label{
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor:pointer;
+}
+
+/* déjà un compte en bas */
+.auth-footer{
+  text-align:center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.auth-footer a{
+  color: #7b0e13;
+  font-weight: 900;
+  text-decoration:none;
+}
+
+.auth-footer a:hover{
   text-decoration: underline;
 }
 
 /* ====== RESPONSIVE ====== */
-@media (max-width: 768px) {
-  .register-container {
-    margin: 20px;
-    padding: 30px 20px;
+@media (max-width: 520px){
+  .auth-card{
+    padding: 18px;
+    border-radius: 18px;
   }
-
-  .register-container h1 {
-    font-size: 2em;
-  }
-
-  button[type="submit"],
-  .btn-primary {
-    font-size: 1.1em;
-    padding: 12px 25px;
+  .auth-header h1{
+    font-size: 22px;
   }
 }
