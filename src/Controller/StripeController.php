@@ -35,7 +35,6 @@ class StripeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // On affiche juste la page (cartes + JS stripe)
         return $this->render('stripe/subscribe.html.twig', [
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
         ]);
@@ -53,12 +52,10 @@ class StripeController extends AbstractController
         $plan = (string) ($data['plan'] ?? '');
         $amount = (float) ($data['amount'] ?? 0);
 
-        // ✅ Validation simple (empêche paiement 0€ / plan vide)
         if ($plan === '' || $amount <= 0) {
             return new JsonResponse(['error' => 'Plan ou montant invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        // ✅ Table de correspondance côté serveur (ne jamais faire confiance au client)
         $plans = [
             '1 semaine - 5 €' => ['duration' => '+1 week',   'price' => 5.00],
             '1 mois - 15 €'   => ['duration' => '+1 month',  'price' => 15.00],
@@ -67,7 +64,6 @@ class StripeController extends AbstractController
             '1 an - 80 €'     => ['duration' => '+1 year',   'price' => 80.00],
         ];
 
-        // ✅ On impose le prix serveur (ignore le amount client)
         if (!isset($plans[$plan])) {
             return new JsonResponse(['error' => 'Plan inconnu'], Response::HTTP_BAD_REQUEST);
         }
@@ -79,8 +75,11 @@ class StripeController extends AbstractController
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
         $session = Session::create([
-            'payment_method_types' => ['card'],
+            // ✅ PayPal + carte
+            'payment_method_types' => ['card', 'paypal'],
+
             'customer_email' => $user->getEmail(),
+
             'line_items' => [[
                 'price_data' => [
                     'currency' => 'eur',
@@ -89,9 +88,12 @@ class StripeController extends AbstractController
                 ],
                 'quantity' => 1,
             ]],
+
             'mode' => 'payment',
+
             'success_url' => $this->urlGenerator->generate('app_stripe_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'cancel_url'  => $this->urlGenerator->generate('app_stripe_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+
             'metadata' => [
                 'user_id' => (string) $user->getId(),
                 'plan'    => $plan,
@@ -99,7 +101,6 @@ class StripeController extends AbstractController
             ],
         ]);
 
-        // ✅ On crée la subscription en attente, avec les bonnes dates selon le plan
         $startDate = new \DateTime();
         $endDate = (clone $startDate)->modify($duration);
 
@@ -122,7 +123,7 @@ class StripeController extends AbstractController
     public function webhook(
         Request $request,
         SubscriptionRepository $subscriptionRepo,
-        UserRepository $userRepo // gardé même si pas utilisé directement
+        UserRepository $userRepo
     ): Response {
         $payload   = $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
@@ -138,9 +139,8 @@ class StripeController extends AbstractController
 
         if ($event->type === 'checkout.session.completed') {
             $session = $event->data->object;
-            $stripeSessionId = $session->id;
 
-            $subscription = $subscriptionRepo->findOneBy(['stripeSessionId' => $stripeSessionId]);
+            $subscription = $subscriptionRepo->findOneBy(['stripeSessionId' => $session->id]);
             if ($subscription) {
                 $subscription->setActive(true);
                 $this->em->persist($subscription);
