@@ -1,166 +1,202 @@
-/* ====== STYLES GÉNÉRAUX ====== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* =========================
+   RESET
+   ========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
-  background-color: #121212;
-  font-family: "Roboto", sans-serif;
-  color: #e0e0e0;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ====== NAVBAR ====== */
-.navbar {
-  background-color: #4b0082;
-  /* violet foncé */
-}
-
-.navbar .nav-link,
-.navbar .navbar-brand {
-  color: #fff;
-}
-
-.navbar .nav-link:hover,
-.navbar .navbar-brand:hover {
-  color: #d4af37;
-}
-
-/* Container général */
-.home-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 50px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-}
-
-/* Hero section */
-.hero-section {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.hero-section h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: #222;
-}
-
-.hero-section .lead {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto 20px;
-}
-
-.hero-section .special-offer {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #ff4d6d;
-}
-
-.hero-section .premium {
-    color: #ff7f50;
-}
-
-/* Cartes Connexion / Inscription */
-.cards-container {
+    min-height: 100vh;
+    background: #300616; /* sombre grenat */
+    color: #fff;
     display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   HEADER / TITRE
+   ========================= */
+.site-header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+
+.site-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+.navbar {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    margin: auto;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 1rem;
+    z-index: 1000;
+}
+
+.hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* LISTE NAV */
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 0.8rem;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 40px;
+    align-items: center;
+    transition: all 0.3s ease;
 }
 
-.card {
-    background-color: #fff;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-    text-align: center;
-    flex: 1 1 300px;
-    max-width: 400px;
-    transition: transform 0.3s, box-shadow 0.3s;
+.nav-list.open {
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.85);
+    position: absolute;
+    top: -17%;
+    left: -2px;
+    right: -1px;
+    padding: 25px 4px;
+    border-radius: 0 0 12px 12px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-}
-
-.card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: #222;
-}
-
-.card p {
-    font-size: 1rem;
-    margin-bottom: 25px;
-    color: #555;
-}
-
-.card .btn {
-    padding: 12px 30px;
-    font-size: 1rem;
-    border-radius: 50px;
+/* =========================
+   BOUTONS (Glassmorphism + Dégradé)
+   ========================= */
+.nav-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.6rem;
+    font-weight: 600;
+    font-size: 0.95rem;
     text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s;
-}
-
-.btn-primary {
-    background-color: #ff4d6d;
     color: #fff;
-    border: none;
+
+    /* Glass effect */
+    background: rgba(128, 0, 32, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+
+    /* Dégradé subtil */
+    background-image: linear-gradient(
+        to right,
+        rgba(139, 0, 0, 0.3) 0%,
+        rgba(128, 0, 32, 0.6) 50%,
+        rgba(139, 0, 0, 0.3) 100%
+    );
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background-color: #ff7f50;
+.nav-list a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.45), 0 0 15px rgba(128,0,32,0.5);
+    background-image: linear-gradient(
+        to right,
+        rgba(139,0,0,0.45) 0%,
+        rgba(128,0,32,0.75) 50%,
+        rgba(139,0,0,0.45) 100%
+    );
 }
 
-.btn-secondary {
-    background-color: #6c63ff;
-    color: #fff;
-    border: none;
+.nav-list a.logout {
+    background: rgba(200,0,0,0.35);
+    background-image: linear-gradient(
+        to right,
+        rgba(200,0,0,0.3) 0%,
+        rgba(180,0,0,0.6) 50%,
+        rgba(200,0,0,0.3) 100%
+    );
 }
 
-.btn-secondary:hover {
-    background-color: #5848c2;
+.nav-list a.logout:hover {
+    background-image: linear-gradient(
+        to right,
+        rgba(200,0,0,0.45) 0%,
+        rgba(180,0,0,0.8) 50%,
+        rgba(200,0,0,0.45) 100%
+    );
 }
 
-
-
-
-.btn-info {
-  background-color: #8e44ad;
-  border-color: #d4af37;
-  color: white;
+/* ICONES */
+.nav-list i {
+    stroke-width: 2px;
 }
 
-.btn-info:hover {
-  background-color: #732d91;
+/* =========================
+   MAIN CONTENT
+   ========================= */
+.container {
+    flex-grow: 1;
+    padding: 2rem 1rem;
 }
 
-/* ====== FOOTER TOUJOURS EN BAS ====== */
+/* =========================
+   FOOTER
+   ========================= */
 footer {
-  background-color: #4b0082;
-  color: #fff;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: auto;
+    background: #2b0613;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.4);
 }
 
-/* Responsive */
+/* =========================
+   MEDIA QUERY (MOBILE)
+   ========================= */
 @media (max-width: 768px) {
-    .cards-container {
-        flex-direction: column;
-        align-items: center;
+    .hamburger {
+        display: flex;
     }
-
-    .card {
-        max-width: 90%;
+    .nav-list {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+    .navbar {
+    margin: 0 1rem;
     }
 }

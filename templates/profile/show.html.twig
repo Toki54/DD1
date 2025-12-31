@@ -1,134 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil
-{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
-	{% block stylesheet %}
-		<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
-	{% endblock %}
-
-	<div class="profile-container">
-		<h1 class="pseudo">Profil de
-			{{ app.user.pseudo }}</h1>
-
-		<div class="profile-card">
-			<div class="avatar-section">
-				{% if userProfile.avatar %}
-					<img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="avatar">
-
-
-				{% else %}
-<img src="{{ asset('uploads/avatars/default-avatar.png' ~ userProfile.avatar) }}" alt="Avatar" class="avatar">
-
-
-				{% endif %}
-				<div class="profile-header">
-					<h3>Description</h3>
-<p>{{ userProfile.biography|default('Aucune biographie disponible.') }}</p>
-
-				</div>
-				
-			</div>
-
-			<div class="info-section">
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Sexe</h3>
-					</div>
-					<p>{{ userProfile.sex|default('Non spécifié.') }}</p>
-				</div>
-<div class="info-item">
-<div class="info-header">
-<h3>Âge</h3>
-</div>
-<p>{{ userProfile.age|default('Non spécifié') }}</p>
-</div>
-
-
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Situation</h3>
-					</div>
-					<p>{{ userProfile.situation|default('Non renseigné.') }}</p>
-				</div>
-
-{% if userProfile.research is not empty %}
-<div class="info-item">
-
-	<div class="info-header">
-		<h3>Recherche </h3>
-		{{ userProfile.research|join(', ') }}
-	</div>
-</div>
-
-{% endif %}
-
-
-
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Département</h3>
-					</div>
-					<p>{{ userProfile.department|default('Non spécifié.') }}</p>
-				</div>
-
-				<div class="info-item">
-					<div class="info-header">
-						<h3>Ville</h3>
-					</div>
-					<p>{{ userProfile.city|default('Non spécifiée.') }}</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="photos">
-			<h3>Photos</h3>
-			{% set photos = userProfile.photos|default([]) %}
-
-			{% if photos is not empty %}
-				<div class="photo-gallery">
-					{% for photo in photos %}
-						<img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
-						
-					{% endfor %}
-				</div>
-			{% else %}
-				<p>Aucune photo uploadée.</p>
-			{% endif %}
-		</div>
-
-		<a href="{{ path('app_profile_edit') }}" class="btn">Éditer mon profil</a>
-	</div>
-
-	{# CAROUSEL MODAL #}
-	<div class="modal fade" id="photoCarousel" tabindex="-1">
-		<div class="modal-dialog modal-fullscreen">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-						<div class="carousel-inner">
-							{% for photo in photos %}
-								<div class="carousel-item {% if loop.first %}active{% endif %}">
-									<img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo">
-								</div>
-							{% endfor %}
-						</div>
-						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Previous</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Next</span>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 {% endblock %}
 
+<div class="profile-container">
+    <h1 class="pseudo">Profil de {{ app.user.pseudo }}</h1>
+
+    <div class="profile-card">
+        <div class="avatar-section">
+            {% if userProfile.avatar %}
+                <img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="avatar">
+            {% else %}
+                <img src="{{ asset('uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar">
+            {% endif %}
+			<div class="photos">
+        <h3>Photos</h3>
+        {% set photos = userProfile.photos|default([]) %}
+        {% if photos is not empty %}
+            <div class="photo-gallery">
+                {% for photo in photos %}
+                    <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="User Photo" class="photo-thumbnail" data-bs-toggle="modal" data-bs-target="#photoCarousel" data-bs-slide-to="{{ loop.index0 }}">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucune photo uploadée.</p>
+        {% endif %}
+    </div>
+        </div>
+		
+
+        <div class="info-section">
+            <div class="info-item">
+                <h3>Sexe</h3>
+                <p>{{ userProfile.sex|default('Non spécifié.') }}</p>
+            </div>
+            <div class="info-item">
+                <h3>Âge</h3>
+                <p>{{ userProfile.age|default('Non spécifié.') }}</p>
+            </div>
+            <div class="info-item">
+                <h3>Situation</h3>
+                <p>{{ userProfile.situation|default('Non renseigné.') }}</p>
+            </div>
+            {% if userProfile.research is not empty %}
+            <div class="info-item">
+                <h3>Recherche</h3>
+                <p>{{ userProfile.research|join(', ') }}</p>
+            </div>
+            {% endif %}
+            <div class="info-item">
+                <h3>Département</h3>
+                <p>{{ userProfile.department|default('Non spécifié.') }}</p>
+            </div>
+            <div class="info-item">
+                <h3>Ville</h3>
+                <p>{{ userProfile.city|default('Non spécifiée.') }}</p>
+            </div>
+            <div class="profile-header">
+                <h3>Description</h3>
+                <p>{{ userProfile.biography|default('Aucune biographie disponible.') }}</p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <a href="{{ path('app_profile_edit') }}" class="btn">Éditer mon profil</a>
+</div>
+
+<!-- Modal Carousel -->
+<div class="modal fade" id="photoCarousel" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for photo in photos %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100" alt="User Photo">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

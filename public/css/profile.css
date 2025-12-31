@@ -1,171 +1,202 @@
-/* ====== SECTION PROFIL ====== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+/* ===== RESET ===== */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #600b28;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* ===== CONTAINER ===== */
 .profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 900px;
-  margin: 40px auto;
-  background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
-  color: #e0e0e0;
-  font-family: 'Segoe UI', sans-serif;
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* PSEUDO */
 .profile-container h1.pseudo {
-  text-align: center;
-  color: #d4af37;
-  font-size: 2.5em;
-  margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #b82151;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-/* ====== CARTE PROFIL ====== */
+/* ===== CARTE PROFIL ===== */
 .profile-card {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
-  width: 100%;
-  background: #1b1b1b;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(217, 7, 255, 0.4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 2rem;
 }
 
-/* ====== AVATAR + DESCRIPTION ====== */
+/* AVATAR */
 .avatar-section {
-  text-align: center;
-  flex: 1 1 250px;
+    flex: 1 1 250px;
+    text-align: center;
 }
 
 .avatar-section img.avatar {
-  display: block;
-  margin: 0 auto 20px;
-  border-radius: 33%;
-  border: 3px solid #8e44ad;
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  box-shadow: 0 0 10px rgba(217, 7, 255, 0.3);
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid #b82151;
+    box-shadow: 0 5px 15px rgba(184,33,81,0.4);
+    margin-bottom: 20px;
 }
 
-.profile-header h3 {
-  color: #d4af37;
-  margin-bottom: 10px;
-}
-
-.profile-header p {
-  font-size: 1.1em;
-  color: #e0e0e0;
-}
-
-/* ====== INFOS UTILISATEUR ====== */
+/* INFOS */
 .info-section {
-  flex: auto;
+    flex: 2 1 400px;
 }
 
 .info-item {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
-.info-header h3 {
-  color: #d4af37;
-  font-size: 1.2em;
-  margin-bottom: 5px;
+.info-item h3 {
+    color: #b82151;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
 }
 
 .info-item p {
-  font-size: 1.1em;
+    font-size: 1rem;
+    color: #333;
 }
 
-/* ====== GALERIE DE PHOTOS ====== */
+/* DESCRIPTION */
+.profile-header h3 {
+    color: #b82151;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.profile-header p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* PHOTOS */
 .photos {
-  width: 100%;
-  margin-top: 30px;
+    width: 100%;
+    margin-top: 30px;
 }
 
 .photos h3 {
-  color: #d4af37;
-  text-align: center;
-  margin-bottom: 15px;
+    color: #b82151;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .photo-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding-top: 15px;
-  border-top: 1px solid #ff00eb;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
 }
 
 .photo-thumbnail {
-  border: 2px solid #8e44ad;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  box-shadow: 0 0 8px rgba(217, 7, 255, 0.3);
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #b82151;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
 }
 
 .photo-thumbnail:hover {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 
-/* ====== BOUTON EDITER ====== */
+/* BOUTON EDITER */
 a.btn {
-  display: inline-block;
-  margin: 30px auto 0;
-  background-color: #8e44ad;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(90deg, rgba(184,33,81,0.7), rgba(128,0,32,0.8));
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
 }
 
 a.btn:hover {
-  background-color: #6c3483;
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, rgba(128,0,32,0.8), rgba(184,33,81,0.9));
 }
 
-/* ====== MODAL CAROUSEL ====== */
-
-.modal-header, .btn-close
- {
-color: white !important;
+/* MODAL CAROUSEL */
+.modal-header, .btn-close {
+    color: #fff !important;
 }
 
 .modal-content {
-  background: #470058;
-  border: 3px solid #8e44ad;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
+    background: #fff;
+    border-radius: 15px;
+    border: 2px solid #b82151;
 }
 
 .carousel-item img {
-  
-  object-fit: contain;
-  margin: auto;
+    object-fit: contain;
+    margin: auto;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: #d4af37;
-  border-radius: 5px;
+    background-color: #b82151;
+    border-radius: 5px;
 }
 
 .btn-close {
-  color: white !important;
-  filter: invert(1);
-  background-color: white;
-  border: none;
-  width: 2rem;
-  height: 2rem;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: white;
+    filter: invert(1);
 }
 
-/* ====== IMAGE FLOUE (si nécessaire) ====== */
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem;
+    }
+
+    .avatar-section img.avatar {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .info-section {
+        width: 100%;
+    }
+
+    .photo-gallery {
+        justify-content: center;
+    }
+}
