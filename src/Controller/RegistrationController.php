@@ -40,27 +40,30 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush(); // IMPORTANT : ID requis
 
-            /* ===== OFFRE 100 PREMIERS ===== */
+            /* ===== OFFRE 100 PREMIERS : 1 AN D'ABONNEMENT ===== */
             $totalUsers = $entityManager
                 ->getRepository(User::class)
                 ->count([]);
 
             if ($totalUsers <= 100) {
 
-                // Rôle premium à vie
+                // Rôle premium (à gérer/retirer à l’expiration si tu utilises les roles pour l’accès)
                 $roles = $user->getRoles();
                 if (!in_array('ROLE_PREMIUM', $roles, true)) {
                     $roles[] = 'ROLE_PREMIUM';
                     $user->setRoles($roles);
                 }
 
-                // Abonnement à vie
+                // Abonnement offert 1 an
+                $startDate = new \DateTime();
+                $endDate = (clone $startDate)->modify('+1 year');
+
                 $subscription = new Subscription();
                 $subscription->setUser($user);
-                $subscription->setPlan('Premium à vie');
+                $subscription->setPlan('Offert 1 an (100 premiers)');
                 $subscription->setPrice(0.0);
-                $subscription->setStartDate(new \DateTime());
-                $subscription->setEndDate(null); // À VIE
+                $subscription->setStartDate($startDate);
+                $subscription->setEndDate($endDate);
                 $subscription->setActive(true);
 
                 $entityManager->persist($subscription);
