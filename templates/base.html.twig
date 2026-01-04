@@ -1,3 +1,4 @@
+{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
@@ -15,67 +16,82 @@
 	<body>
 
 		<!-- TITRE -->
-    <header class="site-header">
-        <h1>Parlottes</h1>
-    </header>
+		<header class="site-header">
+			<h1>Parlottes</h1>
+		</header>
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <button class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-list" id="nav-list">
-                {% if app.user %}
-                    <li><a href="{{ path('app_profile_show') }}"><i data-feather="user"></i> Mon Profil</a></li>
-                    <li><a href="{{ path('app_messages') }}"><i data-feather="message-circle"></i> Mes messages</a></li>
-                    <li><a href="{{ path('app_profile_likes') }}"><i data-feather="heart"></i> Mes likes et visites</a></li>
-                    <li><a href="{{ path('app_profiles_list') }}"><i data-feather="users"></i> Liste des profils</a></li>
-                    <li><a href="{{ path('app_stripe_subscribe') }}"><i data-feather="credit-card"></i> Abonnements</a></li>
-                    <li><a href="{{ path('app_logout') }}" class="logout"><i data-feather="log-out"></i> Logout</a></li>
-                {% else %}
-                    <li><a href="{{ path('app_home') }}"><i data-feather="home"></i> Accueil</a></li>
-                    <li><a href="{{ path('app_login') }}"><i data-feather="log-in"></i> Login</a></li>
-                    <li><a href="{{ path('app_register') }}"><i data-feather="user-plus"></i> Inscription</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+		<!-- NAVBAR -->
+		<nav class="navbar">
+			<div class="nav-container">
+				<button class="hamburger" id="hamburger">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+				<ul class="nav-list" id="nav-list">
+					{% if app.user %}
+						<li><a href="{{ path('app_profile_show') }}"><i data-feather="user"></i> Mon Profil</a></li>
+						<li><a href="{{ path('app_messages') }}"><i data-feather="message-circle"></i> Mes messages</a></li>
+						<li><a href="{{ path('app_profile_likes') }}"><i data-feather="heart"></i> Mes likes et visites</a></li>
+						<li><a href="{{ path('app_profiles_list') }}"><i data-feather="users"></i> Liste des profils</a></li>
 
-    <!-- CONTENU PRINCIPAL -->
-    <main class="container">
-        {% block body %}{% endblock %}
-    </main>
+						{# ✅ Bouton abonnement change si ROLE_PREMIUM #}
+						{% if is_granted('ROLE_PREMIUM') %}
+							<li>
+								<a href="{{ path('app_stripe_subscribe') }}" class="nav-subscribed">
+									<i data-feather="check-circle"></i> Abonné
+								</a>
+							</li>
+						{% else %}
+							<li>
+								<a href="{{ path('app_stripe_subscribe') }}">
+									<i data-feather="credit-card"></i> Abonnements
+								</a>
+							</li>
+						{% endif %}
 
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; {{ "now"|date("Y") }} Site de Rencontre. Tous droits réservés.</p>
-    </footer>
+						<li><a href="{{ path('app_logout') }}" class="logout"><i data-feather="log-out"></i> Logout</a></li>
+					{% else %}
+						<li><a href="{{ path('app_home') }}"><i data-feather="home"></i> Accueil</a></li>
+						<li><a href="{{ path('app_login') }}"><i data-feather="log-in"></i> Login</a></li>
+						<li><a href="{{ path('app_register') }}"><i data-feather="user-plus"></i> Inscription</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
 
-    <script>
-        feather.replace();
+		<!-- CONTENU PRINCIPAL -->
+		<main class="container">
+			{% block body %}{% endblock %}
+		</main>
 
-const hamburger = document.getElementById('hamburger');
-const navList = document.getElementById('nav-list');
+		<!-- FOOTER -->
+		<footer>
+			<p>&copy; {{ "now"|date("Y") }} Site de Rencontre. Tous droits réservés.</p>
+		</footer>
 
-// Toggle menu
-hamburger.addEventListener('click', () => {
-    navList.classList.toggle('open');
-});
+		<script>
+			feather.replace();
 
-// Fermer le menu si on passe en desktop
-function checkResize() {
-    if(window.innerWidth > 768) {
-        navList.classList.remove('open');
-    }
-}
-window.addEventListener('resize', checkResize);
-checkResize();
-    </script>
+			const hamburger = document.getElementById('hamburger');
+			const navList = document.getElementById('nav-list');
 
-			{# Bootstrap JS #}
-			 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-		</body>
-	</html>
+			// Toggle menu
+			hamburger.addEventListener('click', () => {
+				navList.classList.toggle('open');
+			});
+
+			// Fermer le menu si on passe en desktop
+			function checkResize() {
+				if (window.innerWidth > 768) {
+					navList.classList.remove('open');
+				}
+			}
+			window.addEventListener('resize', checkResize);
+			checkResize();
+		</script>
+
+		{# Bootstrap JS #}
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

@@ -1,3 +1,4 @@
+/* public/css/base.css */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 /* =========================
@@ -36,8 +37,6 @@ body {
 
 /* =========================
    NAVBAR (boutons en haut, Logout dessous)
-   - Compatible avec ta structure .navbar > .nav-container > .nav-list
-   - Le bouton logout est détecté via .logout
    ========================= */
 .navbar {
   background: rgba(0, 0, 0, 0.25);
@@ -80,77 +79,17 @@ body {
 }
 
 /* =========================
-   NAV LIST : 2 LIGNES
-   - Ligne 1 : tous les liens sauf .logout
-   - Ligne 2 : lien .logout centré
+   NAV LIST
    ========================= */
 .nav-list {
   list-style: none;
-  display: grid;
-  grid-template-columns: 1fr;          /* 1 colonne (2 lignes en grid-areas) */
-  grid-template-areas:
-    "top"
-    "logout";
-  gap: 12px;
-  width: 100%;
-  justify-items: center;
-  align-items: center;
-}
-
-/* Ligne du haut : wrap en plusieurs boutons */
-.nav-list > li:not(.logout-item) {
-  display: inline-flex;
-}
-
-/* IMPORTANT :
-   Pour que ça marche sans changer ton Twig, on gère en CSS :
-   - Tous les <a> sauf .logout vont dans la ligne du haut
-   - Le <a>.logout va dans la ligne du bas
-*/
-.nav-list {
-  /* on crée 2 "rangées" via wrappers virtuels : on utilise flex-wrap sur un conteneur interne */
-}
-
-/* Conteneur de la ligne du haut (on l'émule en mettant les éléments non-logout en "inline-flex"
-   et en forçant leur parent à se comporter comme un wrap center) */
-.nav-list {
-  position: relative;
-}
-
-/* Ligne du haut : on centre, on wrap */
-.nav-list::before {
-  content: "";
-  grid-area: top;
-  display: block;
-}
-
-/* On force tous les liens non-logout à se placer comme une “ligne” */
-.nav-list a:not(.logout) {
-  /* rien ici, la position est gérée par le flux + le wrapper .nav-top (ci-dessous) */
-}
-
-/* On crée un vrai layout : on transforme .nav-list en 2 blocs */
-.nav-list {
-  display: grid;
-  grid-template-areas:
-    "top"
-    "logout";
-}
-
-/* Bloc TOP : on utilise un conteneur flex via :has() quand dispo,
-   sinon fallback : tout reste centré et le logout est isolé (en bas) */
-.nav-list {
-  justify-items: stretch;
-}
-
-/* Fallback universel : on fait tout en flex-wrap et on isole logout en bas */
-.nav-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 0.8rem;
   width: 100%;
+  position: relative;
 }
 
 /* Le lien logout passe sur une ligne en dessous */
@@ -169,7 +108,6 @@ body {
   justify-content: center;
   gap: 0.4rem;
 
-  /* tailles comme le screen */
   min-width: 210px;
   height: 46px;
 
@@ -179,13 +117,11 @@ body {
   text-decoration: none;
   color: #fff;
 
-  /* Glass effect */
   background: rgba(128, 0, 32, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
 
-  /* Dégradé subtil */
   background-image: linear-gradient(
     to right,
     rgba(139, 0, 0, 0.3) 0%,
@@ -232,6 +168,30 @@ body {
   );
 }
 
+/* ✅ NAV : Abonné vert */
+.nav-list a.nav-subscribed {
+  background: rgba(15, 122, 42, 0.25) !important;
+  border: 1px solid rgba(189, 232, 198, 0.55) !important;
+  color: #eaffef !important;
+
+  background-image: linear-gradient(
+    to right,
+    rgba(15, 122, 42, 0.25) 0%,
+    rgba(9, 143, 9, 0.55) 50%,
+    rgba(15, 122, 42, 0.25) 100%
+  ) !important;
+}
+
+.nav-list a.nav-subscribed:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(9, 143, 9, 0.55) !important;
+  background-image: linear-gradient(
+    to right,
+    rgba(15, 122, 42, 0.35) 0%,
+    rgba(9, 143, 9, 0.70) 50%,
+    rgba(15, 122, 42, 0.35) 100%
+  ) !important;
+}
+
 /* ICONES */
 .nav-list i {
   stroke-width: 2px;
@@ -259,8 +219,6 @@ footer {
 
 /* =========================
    MOBILE
-   - menu déroulant : liste en colonne
-   - logout reste dessous (mais dans la même colonne)
    ========================= */
 @media (max-width: 768px) {
   .hamburger {

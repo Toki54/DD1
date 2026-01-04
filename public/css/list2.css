@@ -1,3 +1,4 @@
+/* public/css/list2.css */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 :root{
@@ -152,16 +153,12 @@ body{
 }
 
 /* =========================================================
-   GRID PROFILES : TOUJOURS 3 COLONNES sur grand écran
-   - On force 3 colonnes, et on centre le tout via max-width.
-   - Responsive : 2 colonnes puis 1.
+   GRID PROFILES
    ========================================================= */
 
 .profiles-grid{
   display:grid;
   gap: 18px;
-
-  /* Toujours 3 colonnes à partir d'une largeur confortable */
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -199,6 +196,7 @@ body{
   position:relative;
 }
 
+/* ✅ nécessaire pour le badge premium en overlay */
 .avatar-wrap{
   width: 78px;
   height: 78px;
@@ -207,6 +205,7 @@ body{
   background:#f5f5f7;
   flex: 0 0 auto;
   box-shadow: 0 14px 35px rgba(0,0,0,.14);
+  position: relative;
 }
 
 .avatar-wrap img{
@@ -229,6 +228,42 @@ body{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+/* ✅ badge premium (dans le nom) */
+.premium-badge{
+  width: 70px;
+  display:inline-flex;
+  align-items:center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background:#fff7d6;
+  border:1px solid #f0d27a;
+  color:#8a5a00;
+  font-weight: 900;
+  font-size: 12px;
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+/* ✅ badge étoile sur avatar */
+.premium-dot{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff7d6;
+  border:1px solid #f0d27a;
+  font-size: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.18);
 }
 
 .meta{
@@ -271,10 +306,10 @@ body{
   color: #333;
   line-height: 1.55;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 2 lignes max */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 40px; /* garde les cards alignées */
+  min-height: 40px;
 }
 
 /* actions */
@@ -346,21 +381,18 @@ body{
    RESPONSIVE
    ========================================================= */
 
-/* filtres en 1 colonne */
 @media (max-width: 980px){
   .filter-row{
     grid-template-columns: 1fr;
   }
 }
 
-/* passe en 2 colonnes */
 @media (max-width: 1100px){
   .profiles-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* 1 colonne + actions verticales */
 @media (max-width: 720px){
   .profiles-grid{
     grid-template-columns: 1fr;
@@ -369,7 +401,6 @@ body{
     flex-direction: column;
   }
 
-  /* navbar : boutons moins larges */
   .nav-btn,
   .navbar .nav-link,
   .site-nav .nav-link,

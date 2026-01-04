@@ -1,3 +1,4 @@
+{# templates/profile/view.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Profil de {{ userProfile.user.pseudo }}{% endblock %}
@@ -7,11 +8,32 @@
         <link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
     {% endblock %}
 
+    {# ✅ IMPORTANT :
+       Ici, on veut afficher le badge PREMIUM DU PROFIL AFFICHÉ (userProfile.user),
+       pas celui du visiteur connecté.
+    #}
+    {% set viewedIsPremium = ('ROLE_PREMIUM' in userProfile.user.roles) %}
+
     <section class="profile-page">
         <div class="profile-container">
 
             <header class="profile-header">
-                <h1>{{ userProfile.user.pseudo }}</h1>
+                <div class="profile-header-top">
+                    <h1 class="profile-title">
+                        {{ userProfile.user.pseudo }}
+
+                        {# ✅ Logo à côté du pseudo (si LE PROFIL affiché est premium) #}
+                        {% if viewedIsPremium %}
+                            <span class="premium-logo" title="Profil Premium" aria-label="Premium">⭐</span>
+                        {% endif %}
+                    </h1>
+
+                    {# ✅ Badge Premium #}
+                    {% if viewedIsPremium %}
+                        <span class="premium-badge-header" title="Profil Premium">Premium</span>
+                    {% endif %}
+                </div>
+
                 <p>Profil public</p>
             </header>
 
@@ -86,7 +108,10 @@
                 <article class="card panel gallery-card">
                     <h2 class="panel-title">Galerie de photos</h2>
 
-                    {% if isSubscribed %}
+                    {# ✅ Galerie visible seulement si le VISITEUR est premium #}
+                    {% set viewerIsPremium = is_granted('ROLE_PREMIUM') %}
+
+                    {% if viewerIsPremium %}
                         <div class="photo-gallery" id="gallery-{{ userProfile.id }}">
                             {% if userProfile.photos %}
                                 {% for photo in userProfile.photos %}
@@ -138,12 +163,11 @@
                             </div>
                         </div>
                     {% else %}
-                        <p class="locked">
-                            <em>
-                                Pour voir la galerie de photos, vous devez être abonné.
-                                <a href="{{ path('app_stripe_subscribe') }}">S'abonner</a>
-                            </em>
-                        </p>
+                        <div class="gallery-locked">
+                            <div class="lock-icon">🔒</div>
+                            <div class="lock-title">Vous devez vous abonner pour voir les photos</div>
+                            <a class="btn btn-primary" href="{{ path('app_stripe_subscribe') }}">S'abonner</a>
+                        </div>
                     {% endif %}
                 </article>
 

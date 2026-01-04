@@ -1,8 +1,7 @@
+{# templates/profile/list.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des Profils{% endblock %}
-
-
 
 {% block body %}
 {% block stylesheets %}
@@ -86,15 +85,27 @@
     <section class="profiles-grid">
         {% for profile in profiles %}
             {% if profile.user.pseudo != app.user.pseudo %}
+
+                {% set profileIsPremium = ('ROLE_PREMIUM' in profile.user.roles) %}
+
                 <article class="profile-card">
 
                     <a class="card-top" href="{{ path('app_profile_view', { id: profile.id }) }}">
                         <div class="avatar-wrap">
                             <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+                            {% if profileIsPremium %}
+                                <span class="premium-dot" title="Profil Premium">⭐</span>
+                            {% endif %}
                         </div>
 
                         <div class="card-main">
-                            <h2 class="name">{{ profile.user.pseudo }}</h2>
+                            <h2 class="name">
+                                {{ profile.user.pseudo }}
+                                
+                            </h2>
+                            {% if profileIsPremium %}
+                                    <span class="premium-badge" title="Profil Premium">Premium</span>
+                                {% endif %}
 
                             <div class="meta">
                                 <span class="pill">{{ profile.sex|default('Inc') }}</span>

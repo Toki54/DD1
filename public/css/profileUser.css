@@ -1,117 +1,259 @@
-/* ====== SECTION PROFIL ====== */
-.profile-detail {
-    display: flex;
-    max-width: 800px;
-    margin: 40px auto;
-    background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 25px 4px rgb(217 7 255 / 64%);
-    color: #e0e0e0;
-    font-family: 'Segoe UI', sans-serif;
-    align-items: center;
-    flex-direction: column;
+/* public/css/profileUser.css */
+/* =========================
+   PAGE PROFIL
+   ========================= */
+.profile-page {
+    padding: 40px 20px;
+    background: #6a0328;
+    min-height: 100vh;
 }
 
-.blur-photo {
-    filter: blur(8px);
-    transition: filter 0.3s ease;
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.blurred {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-}
-
-.blurred:hover {
-    filter: none;
-    /* Le flou disparaît au survol de l'image */
-}
-/* ====== TITRE PRINCIPAL ====== */
-.profile-detail h1 {
+/* =========================
+   HEADER
+   ========================= */
+.profile-header {
     text-align: center;
-    color: #d4af37;
-    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.profile-header-top{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.profile-header h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.profile-header p {
+    color: rgba(255,255,255,.75);
+}
+
+/* ✅ badge premium header */
+.premium-badge-header{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 10px;
+    border-radius:999px;
+    background: rgba(9,143,9,.25);
+    color:#eaffef;
+    font-weight:800;
+    border:1px solid rgba(189,232,198,.55);
+}
+
+/* ✅ titre + logo */
+.profile-title{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+}
+
+.premium-logo{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:26px;
+    height:26px;
+    border-radius:999px;
+    background:#fff7d6;
+    border:1px solid #f0d27a;
+    color:#8a5a00;
+    font-size:14px;
+    line-height:1;
+    box-shadow: 0 10px 25px rgba(0,0,0,.18);
+}
+
+/* =========================
+   GRID
+   ========================= */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* =========================
+   CARDS
+   ========================= */
+.card.panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.panel-title {
+    font-size: 1.4rem;
     margin-bottom: 20px;
 }
 
-/* ====== INFOS UTILISATEUR ====== */
-.profile-detail p {
-    font-size: 1.1em;
-    margin: 10px 0;
-}
-
-.profile-detail strong {
-    color: #d4af37;
-}
-
-/* ====== AVATAR ====== */
-.profile-detail img[alt="Avatar"] {
-    display: block;
-    margin: 0 auto 20px;
-    border-radius: 33%;
-    border: 3px solid #8e44ad;
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    box-shadow: 0 0 10px rgba(217, 7, 255, 0.3);
-}
-
-/* ====== GALERIE DE PHOTOS ====== */
-.photo-gallery {
+/* =========================
+   PROFIL (LEFT)
+   ========================= */
+.profile-top {
     display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* ✅ AVATAR 150px */
+.avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.profile-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.meta-value {
+    font-weight: 500;
+}
+
+/* =========================
+   BIO
+   ========================= */
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+.bio-text {
+    line-height: 1.5;
+    color: #444;
+}
+
+/* =========================
+   ACTIONS
+   ========================= */
+.actions {
+    display: flex;
+    gap: 15px;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding-top: 15px;
-    border-top: 1px solid #ff00eb;
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.btn-like {
+    background: #ffe4e6;
+    border: none;
+    color: #be123c;
+}
+
+/* =========================
+   GALERIE (RIGHT)
+   ========================= */
+.gallery-card {
+    overflow: hidden;
+}
+
+/* ✅ Photos 100px max */
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
 }
 
 .photo-thumbnail {
-    border: 2px solid #8e44ad;
+    width: 100%;
+    max-width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0 0 8px rgba(217, 7, 255, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .photo-thumbnail:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
-/* ====== TITRE GALERIE ====== */
-.profile-detail h3 {
-    color: #d4af37;
-    text-align: center;
-    margin-top: 30px;
-}
-
-/* ====== MODAL CAROUSEL ====== */
-.modal-content {
-    background: #470058;
-    border: 3px solid #8e44ad;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(217, 7, 255, 0.8);
-}
-
-.carousel-item img {
-    max-width: 100%;
-    max-height: 80vh;
+/* =========================
+   MODAL (photos grandes)
+   ========================= */
+.modal-photo {
+    max-width: 90vw;
+    max-height: 90vh;
     object-fit: contain;
     margin: auto;
+    display: block;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #d4af37;
-    border-radius: 5px;
+/* =========================
+   GALERIE BLOQUÉE (non premium)
+   ========================= */
+.gallery-locked{
+    padding:30px;
+    border:1px dashed #cfd6df;
+    background:#f9fafb;
+    border-radius:12px;
+    text-align:center;
 }
 
-.btn-close {
-    filter: invert(1);
-    opacity: 1;
-    background-color: transparent;
-    border: none;
-    width: 2rem;
-    height: 2rem;
+.gallery-locked .lock-icon{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.gallery-locked .lock-title{
+    font-weight:700;
+    color:#333;
+    margin-bottom:14px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .avatar {
+        margin-bottom: 15px;
+    }
 }

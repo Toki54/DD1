@@ -36,14 +36,11 @@ class UserProfileController extends AbstractController
             $entityManager->flush();
         }
 
-        $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles());
-
-        // Récupère les photos à afficher, floutées si non abonné
-        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+        // ✅ Abonné = ROLE_PREMIUM
+        $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles(), true);
 
         return $this->render('profile/show.html.twig', [
             'userProfile'  => $userProfile,
-            'photos'       => $photosToDisplay,
             'isSubscribed' => $isSubscribed,
         ]);
     }
@@ -89,7 +86,6 @@ class UserProfileController extends AbstractController
                         break;
                     }
 
-                    // Vérifie la taille du fichier (supplémentaire sécurité)
                     if ($photo->getSize() > 8 * 1024 * 1024) {
                         $this->addFlash('error', 'Une photo dépasse 8 Mo et n’a pas été uploadée.');
                         continue;
@@ -123,18 +119,18 @@ class UserProfileController extends AbstractController
             throw $this->createNotFoundException('Profil non trouvé.');
         }
 
+        // ✅ Abonné = ROLE_PREMIUM (celui qui visite)
         $isSubscribed = false;
         $user = $this->getUser();
-        if ($user && method_exists($user, 'getSubscription')) {
-            $isSubscribed = (bool) $user->getSubscription();
+        if ($user) {
+            $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles(), true);
         }
 
-        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
-
+        // Visite
         if ($this->getUser()) {
             $visitorProfile = $this->getUser()->getProfile();
             if ($visitorProfile && $visitorProfile !== $userProfile) {
-                $visit = new \App\Entity\ProfileVisit();
+                $visit = new ProfileVisit();
                 $visit->setVisited($userProfile);
                 $visit->setVisitor($visitorProfile);
                 $entityManager->persist($visit);
@@ -143,8 +139,7 @@ class UserProfileController extends AbstractController
         }
 
         return $this->render('profile/view.html.twig', [
-            'userProfile' => $userProfile,
-            'photos' => $photosToDisplay,
+            'userProfile'  => $userProfile,
             'isSubscribed' => $isSubscribed,
         ]);
     }
@@ -188,14 +183,8 @@ class UserProfileController extends AbstractController
             $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
         }
 
-        $user         = $this->getUser();
-        $isSubscribed = $user && method_exists($user, 'getSubscription') && $user->getSubscription() ? true : false;
-
-        // Remplace les photos des profils par la version floutée si non abonné
-        foreach ($profiles as $profile) {
-            $photos = $this->getPhotosForDisplay($profile, $isSubscribed);
-            $profile->setPhotos($photos); // Attention : si getPhotos() est persistant, créer un setter temporaire ou une variable temporaire
-        }
+        $user = $this->getUser();
+        $isSubscribed = $user ? in_array('ROLE_PREMIUM', $user->getRoles(), true) : false;
 
         return $this->render('profile/list.html.twig', [
             'profiles'        => $profiles,
@@ -207,8 +196,6 @@ class UserProfileController extends AbstractController
             'isSubscribed'    => $isSubscribed,
         ]);
     }
-
-
 
     #[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
     public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
@@ -232,14 +219,12 @@ class UserProfileController extends AbstractController
             return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre profil'], 400);
         }
 
-        // Vérifie si déjà liké
         $existingLike = $entityManager->getRepository(ProfileLike::class)->findOneBy([
             'liker' => $likerProfile,
             'liked' => $likedProfile,
         ]);
 
         if ($existingLike) {
-            // Déjà liké
             return new JsonResponse(['message' => 'Déjà liké'], 200);
         }
 
@@ -296,7 +281,6 @@ class UserProfileController extends AbstractController
 
         $userProfile = $user->getProfile();
 
-        // Profils qui ont liké ton profil
         $likes = $entityManager->getRepository(ProfileLike::class)
             ->createQueryBuilder('pl')
             ->where('pl.liked = :profile')
@@ -307,14 +291,12 @@ class UserProfileController extends AbstractController
 
         $likers = array_map(fn($like) => $like->getLiker(), $likes);
 
-        // Récupérer la dernière visite par visiteur (donc un seul par visiteur)
-        $qb = $entityManager->getRepository(\App\Entity\ProfileVisit::class)
+        $qb = $entityManager->getRepository(ProfileVisit::class)
             ->createQueryBuilder('v');
 
-        // Sélectionner la visite la plus récente par visiteur
         $subQuery = $entityManager->createQueryBuilder()
             ->select('MAX(v2.visitedAt)')
-            ->from(\App\Entity\ProfileVisit::class, 'v2')
+            ->from(ProfileVisit::class, 'v2')
             ->where('v2.visitor = v.visitor')
             ->andWhere('v2.visited = :profile');
 
@@ -326,7 +308,6 @@ class UserProfileController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Extraire les profils visiteurs uniques
         $visitorProfiles = array_map(fn($visit) => $visit->getVisitor(), $visits);
 
         return $this->render('profile/likes_and_visits.html.twig', [
@@ -334,8 +315,6 @@ class UserProfileController extends AbstractController
             'likerProfiles'   => $likers,
         ]);
     }
-
-
 
     #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
     public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
@@ -369,44 +348,5 @@ class UserProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profile_edit');
-    }
-
-    /**
-     * Retourne le tableau de photos à afficher, floutées si utilisateur non abonné
-     */
-    private function getPhotosForDisplay(UserProfile $profile, bool $isSubscribed): array
-    {
-        $photos = $profile->getPhotos() ?? [];
-
-        if ($isSubscribed) {
-            // Utilisateur abonné : renvoie toutes les photos originales
-            return $photos;
-        }
-
-        // Utilisateur non abonné : on ne renvoie que la 1ère photo floutée, les autres masquées
-
-        if (empty($photos)) {
-            return [];
-        }
-
-        // Exemple : on renvoie une version floutée de la première photo
-        // ATTENTION : il faut avoir pré-généré une version floutée en amont,
-        // ou utiliser une image floue par défaut (ex: 'blurred_placeholder.jpg')
-        // ici on suppose que la version floutée porte un préfixe 'blurred_' + filename
-
-        $blurredPhotos = [];
-
-        $firstPhoto       = $photos[0];
-        $blurredPhotoPath = 'blurred_' . $firstPhoto;
-
-        $blurredPhotoFullPath = $this->getParameter('photos_directory') . '/' . $blurredPhotoPath;
-        if (file_exists($blurredPhotoFullPath)) {
-            $blurredPhotos[] = $blurredPhotoPath;
-        } else {
-            // Si pas de version floutée dispo, on peut utiliser une image floue générique
-            $blurredPhotos[] = 'blurred_placeholder.jpg'; // à placer dans le dossier photos
-        }
-
-        return $blurredPhotos;
     }
 }
