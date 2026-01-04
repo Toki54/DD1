@@ -1,22 +1,25 @@
+{# templates/home/home.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Accueil - Site de Rencontre{% endblock %}
-
-
 
 {% block body %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 {% endblock %}
+
 <div class="home-container">
     <div class="hero-section">
         <h1>Revenons à l'essentiel de la rencontre !</h1>
         <p class="lead">
-            Ici, pas d’algorithme pour comparer vos critères. 
+            Ici, pas d’algorithme pour comparer vos critères.
             Nous croyons en la vraie rencontre : parler, échanger et apprendre à se connaître.
         </p>
+
         <p class="special-offer">
             Les <strong>100 premiers inscrits</strong> seront <span class="premium">premium à vie</span> !
+            <br>
+            <strong class="vie">Il reste {{ premiumRemaining }} abonnement{% if premiumRemaining > 1 %}s{% endif %} à vie !</strong>
         </p>
     </div>
 

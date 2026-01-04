@@ -32,6 +32,10 @@
   gap:34px;
 }
 
+.vie{
+  color: #2ec217;
+}
+
 /* ====== HERO ====== */
 .hero-section{
   background: rgba(255,255,255,.08);
