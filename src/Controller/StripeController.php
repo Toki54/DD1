@@ -41,8 +41,11 @@ class StripeController extends AbstractController
     }
 
     #[Route('/create-checkout-session', name: 'app_stripe_checkout', methods: ['POST'])]
-    public function checkout(Request $request, Security $security): JsonResponse
-    {
+    public function checkout(
+        Request $request,
+        Security $security,
+        SubscriptionRepository $subscriptionRepo
+    ): JsonResponse {
         $user = $security->getUser();
         if (!$user instanceof \App\Entity\User) {
             return new JsonResponse(['error' => 'Utilisateur invalide'], Response::HTTP_UNAUTHORIZED);
@@ -62,6 +65,7 @@ class StripeController extends AbstractController
             '3 mois - 30 €'   => ['duration' => '+3 months', 'price' => 30.00],
             '6 mois - 50 €'   => ['duration' => '+6 months', 'price' => 50.00],
             '1 an - 80 €'     => ['duration' => '+1 year',   'price' => 80.00],
+            'À vie - 100 €'   => ['duration' => 'LIFETIME',  'price' => 100.00],
         ];
 
         if (!isset($plans[$plan])) {
@@ -69,43 +73,63 @@ class StripeController extends AbstractController
         }
 
         $serverPrice = (float) $plans[$plan]['price'];
-        $duration = (string) $plans[$plan]['duration'];
+        $duration    = (string) $plans[$plan]['duration'];
         $priceInCents = (int) round($serverPrice * 100);
 
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-        $session = Session::create([
-            // ✅ PayPal + carte
-            'payment_method_types' => ['card', 'paypal'],
+        try {
+            $session = Session::create([
+                // ✅ Compatible avec anciennes versions stripe-php
+                'payment_method_types' => ['card'],
 
-            'customer_email' => $user->getEmail(),
+                'customer_email' => $user->getEmail(),
 
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => ['name' => $plan],
-                    'unit_amount' => $priceInCents,
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => ['name' => $plan],
+                        'unit_amount' => $priceInCents,
+                    ],
+                    'quantity' => 1,
+                ]],
+
+                'mode' => 'payment',
+
+                'success_url' => $this->urlGenerator->generate('app_stripe_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url'  => $this->urlGenerator->generate('app_stripe_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+
+                'metadata' => [
+                    'user_id' => (string) $user->getId(),
+                    'plan'    => $plan,
+                    'price'   => (string) $serverPrice,
                 ],
-                'quantity' => 1,
-            ]],
-
-            'mode' => 'payment',
-
-            'success_url' => $this->urlGenerator->generate('app_stripe_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'cancel_url'  => $this->urlGenerator->generate('app_stripe_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
-
-            'metadata' => [
-                'user_id' => (string) $user->getId(),
-                'plan'    => $plan,
-                'price'   => (string) $serverPrice,
-            ],
-        ]);
+            ]);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'error' => 'Erreur Stripe: ' . $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         $startDate = new \DateTime();
-        $endDate = (clone $startDate)->modify($duration);
 
-        $subscription = new Subscription();
-        $subscription->setUser($user);
+        // endDate NOT NULL dans ton entity => date très loin pour "à vie"
+        if ($duration === 'LIFETIME') {
+            $endDate = new \DateTime('9999-12-31 23:59:59');
+        } else {
+            $endDate = (clone $startDate)->modify($duration);
+        }
+
+        // ✅ IMPORTANT : OneToOne => on UPDATE si existe déjà, sinon on CREATE
+        $subscription = $subscriptionRepo->findOneBy(['user' => $user]);
+        $isNew = false;
+
+        if (!$subscription) {
+            $subscription = new Subscription();
+            $subscription->setUser($user);
+            $isNew = true;
+        }
+
         $subscription->setPlan($plan);
         $subscription->setPrice($serverPrice);
         $subscription->setStartDate($startDate);
@@ -113,8 +137,16 @@ class StripeController extends AbstractController
         $subscription->setActive(false);
         $subscription->setStripeSessionId($session->id);
 
-        $this->em->persist($subscription);
-        $this->em->flush();
+        try {
+            if ($isNew) {
+                $this->em->persist($subscription);
+            }
+            $this->em->flush();
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'error' => 'Erreur DB: ' . $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return new JsonResponse(['id' => $session->id]);
     }

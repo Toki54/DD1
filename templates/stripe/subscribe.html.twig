@@ -2,8 +2,6 @@
 
 {% block title %}Souscription{% endblock %}
 
-
-
 {% block body %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/abo.css') }}">
@@ -57,6 +55,17 @@
                 <div class="card-top"><h3>1 An</h3></div>
                 <p class="price">80 €</p>
                 <p class="desc">Accès complet pendant 1 an</p>
+                <div class="cta">Choisir</div>
+            </button>
+
+            {# ✅ NOUVEAU : À vie #}
+            <button type="button" class="subscription-card" data-plan="À vie - 100 €" data-amount="100">
+                <div class="card-top">
+                    <h3>À Vie</h3>
+                    <span class="badge badge-dark">Définitif</span>
+                </div>
+                <p class="price">100 €</p>
+                <p class="desc">Accès complet sans limite de durée</p>
                 <div class="cta">Choisir</div>
             </button>
         </div>
@@ -125,36 +134,37 @@ document.addEventListener('DOMContentLoaded', () => {
         '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
         '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
         '1 an - 80 €': { duration: '1 an', price: '80 €' },
+
+        // ✅ NOUVEAU
+        'À vie - 100 €': { duration: 'à vie', price: '100 €' },
     };
 
     function selectPlan(plan, amount) {
-    if (!plans[plan]) return;
+        if (!plans[plan]) return;
 
-    selectedPlan = plan;
-    selectedAmount = Number(amount) || 0;
+        selectedPlan = plan;
+        selectedAmount = Number(amount) || 0;
 
-    planName.textContent = plan;
-    planDuration.textContent = plans[plan].duration;
-    planPrice.textContent = plans[plan].price;
+        planName.textContent = plan;
+        planDuration.textContent = plans[plan].duration;
+        planPrice.textContent = plans[plan].price;
 
-    document.querySelectorAll('.subscription-card')
-        .forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.subscription-card')
+            .forEach(c => c.classList.remove('selected'));
 
-    const selected = document.querySelector(`.subscription-card[data-plan="${plan}"]`);
-    if (selected) selected.classList.add('selected');
+        const selected = document.querySelector(`.subscription-card[data-plan="${plan}"]`);
+        if (selected) selected.classList.add('selected');
 
-    payBtn.disabled = false;
+        payBtn.disabled = false;
 
-    // ⬇️ SCROLL VERS LE BAS (Validation)
-    const target = document.getElementById('paymentSection');
-    if (target) {
-        target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
+        const target = document.getElementById('paymentSection');
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     }
-}
-
 
     document.querySelectorAll('.subscription-card').forEach(card => {
         card.addEventListener('click', () => {

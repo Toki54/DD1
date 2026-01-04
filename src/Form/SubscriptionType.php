@@ -20,11 +20,13 @@ class SubscriptionType extends AbstractType
             '3 mois - 30 €'   => ['duration' => '+3 months', 'price' => 30.00],
             '6 mois - 50 €'   => ['duration' => '+6 months', 'price' => 50.00],
             '1 an - 80 €'     => ['duration' => '+1 year',   'price' => 80.00],
+
+            // ✅ NOUVEAU : Abonnement à vie
+            'À vie - 100 €'   => ['duration' => 'LIFETIME',  'price' => 100.00],
         ];
 
         $builder
             ->add('plan', HiddenType::class)
-            // Tu peux garder ces champs (mais ils ne sont plus nécessaires côté client)
             ->add('price', HiddenType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -53,9 +55,13 @@ class SubscriptionType extends AbstractType
             $subscription = $event->getForm()->getData();
 
             $startDate = new \DateTime();
-            $endDate   = (clone $startDate)->modify($plans[$plan]['duration']);
 
-            // ✅ On hydrate l'ENTITY directement (DateTimeInterface OK)
+            if ($plans[$plan]['duration'] === 'LIFETIME') {
+                $endDate = new \DateTime('9999-12-31 23:59:59');
+            } else {
+                $endDate = (clone $startDate)->modify($plans[$plan]['duration']);
+            }
+
             $subscription->setPlan($plan);
             $subscription->setPrice((float) $plans[$plan]['price']);
             $subscription->setStartDate($startDate);
