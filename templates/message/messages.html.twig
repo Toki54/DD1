@@ -85,41 +85,72 @@
                 </div>
 
                 <div class="chat-box">
+                    {# ✅ Badge "Discussion acceptée" affiché 1 seule fois #}
+                    {% set acceptedBadgeShown = false %}
+
                     {% for message in messages %}
-                        <div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
-                            <div class="message-meta">
-                                <span class="who">
-                                    {% if message.sender == app.user %}Moi{% else %}{{ receiver.pseudo }}{% endif %}
-                                </span>
-                            </div>
 
-                            <div class="bubble">
-                                {{ message.content }}
-                            </div>
-
-                            {# ✅ BOUTONS UNIQUEMENT SI LA CONVERSATION N'EST PAS ACCEPTÉE #}
-                            {% if not chatAccepted
-                                and message.isChatRequest
-                                and message.content == 'Demande de discussion en attente...'
-                                and message.receiver == app.user
-                            %}
-                                <div class="request-actions">
-                                    <form action="{{ path('app_message_response', {
-                                        'id': message.sender.id,
-                                        'status': 'accept'
-                                    }) }}" method="POST">
-                                        <button type="submit" class="btn btn-success btn-sm">Accepter</button>
-                                    </form>
-
-                                    <form action="{{ path('app_message_response', {
-                                        'id': message.sender.id,
-                                        'status': 'refuse'
-                                    }) }}" method="POST">
-                                        <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
-                                    </form>
+                        {# ✅ Messages système ACCEPTED => badge (une fois) puis masqué #}
+                        {% if message.isChatRequest and message.content == 'ACCEPTED' %}
+                            {% if not acceptedBadgeShown %}
+                                {% set acceptedBadgeShown = true %}
+                                <div class="text-center my-3">
+                                    <span class="badge bg-success">
+                                        Discussion acceptée — vous pouvez envoyer des messages
+                                    </span>
                                 </div>
                             {% endif %}
-                        </div>
+                        {% else %}
+
+                            {# ✅ REFUSED masqué #}
+                            {% if message.isChatRequest and message.content == 'REFUSED' %}
+                                {# rien #}
+                            {% else %}
+
+                                {# ✅ "Demande en attente..." masquée si déjà accepté #}
+                                {% if chatAccepted and message.isChatRequest and message.content == 'Demande de discussion en attente...' %}
+                                    {# rien #}
+                                {% else %}
+
+                                    <div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
+                                        <div class="message-meta">
+                                            <span class="who">
+                                                {% if message.sender == app.user %}Moi{% else %}{{ receiver.pseudo }}{% endif %}
+                                            </span>
+                                        </div>
+
+                                        <div class="bubble">
+                                            {{ message.content }}
+                                        </div>
+
+                                        {# ✅ Boutons UNIQUEMENT si pas accepté #}
+                                        {% if not chatAccepted
+                                            and message.isChatRequest
+                                            and message.content == 'Demande de discussion en attente...'
+                                            and message.receiver == app.user
+                                        %}
+                                            <div class="request-actions">
+                                                <form action="{{ path('app_message_response', {
+                                                    'id': message.sender.id,
+                                                    'status': 'accept'
+                                                }) }}" method="POST">
+                                                    <button type="submit" class="btn btn-success btn-sm">Accepter</button>
+                                                </form>
+
+                                                <form action="{{ path('app_message_response', {
+                                                    'id': message.sender.id,
+                                                    'status': 'refuse'
+                                                }) }}" method="POST">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
                     {% endfor %}
                 </div>
 
