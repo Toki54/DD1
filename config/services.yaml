@@ -17,6 +17,3 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
-    # Si tu as un service UserProfileService, sinon supprime cette ligne :
-    App\Service\UserProfileService: ~

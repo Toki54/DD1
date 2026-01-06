@@ -31,7 +31,20 @@
 				<ul class="nav-list" id="nav-list">
 					{% if app.user %}
 						<li><a href="{{ path('app_profile_show') }}"><i data-feather="user"></i> Mon Profil</a></li>
-						<li><a href="{{ path('app_messages') }}"><i data-feather="message-circle"></i> Mes messages</a></li>
+
+						<li>
+							<a href="{{ path('app_messages') }}">
+								<i data-feather="message-circle"></i>
+								Mes messages
+								{# ✅ Compteur si pas premium #}
+								{% if messageQuota and messageQuota.isLimited %}
+									<span class="badge bg-light text-dark ms-2">
+										{{ messageQuota.remaining }}/{{ messageQuota.limit }}
+									</span>
+								{% endif %}
+							</a>
+						</li>
+
 						<li><a href="{{ path('app_profile_likes') }}"><i data-feather="heart"></i> Mes likes et visites</a></li>
 						<li><a href="{{ path('app_profiles_list') }}"><i data-feather="users"></i> Liste des profils</a></li>
 

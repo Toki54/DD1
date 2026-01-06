@@ -2,17 +2,27 @@
 
 {% block title %}Mes Discussions{% endblock %}
 
-
-
 {% block body %}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/mess1.css') }}">
 {% endblock %}
+
 <div class="messages-page">
 
     <header class="messages-header">
         <h1>Mes Discussions</h1>
         <p>Retrouvez vos conversations et discutez en temps réel.</p>
+
+        {# ✅ Info quota visible (uniquement si pas premium) #}
+        {% if app.user and messageQuota and messageQuota.isLimited %}
+            <div class="alert alert-info mt-3 mb-0">
+                Messages du jour :
+                <strong>{{ messageQuota.sentToday }}/{{ messageQuota.limit }}</strong>
+                — Restants :
+                <strong>{{ messageQuota.remaining }}</strong>
+                <span class="ms-2">Abonnement = messages illimités.</span>
+            </div>
+        {% endif %}
     </header>
 
     <div class="messages-layout">
@@ -32,7 +42,9 @@
                             <a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
                                 <div class="conv-head">
                                     <img
-                                        src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}"
+                                        src="{{ asset(conversation.user.profile.avatar
+                                            ? 'uploads/avatars/' ~ conversation.user.profile.avatar
+                                            : 'uploads/avatars/default-avatar.png') }}"
                                         alt="Avatar"
                                         class="avatar"
                                     >
@@ -63,6 +75,12 @@
                     <div class="chat-title">
                         <h2>Conversation</h2>
                         <p>avec <strong>{{ receiver.pseudo }}</strong></p>
+
+                        {% if app.user and messageQuota and messageQuota.isLimited %}
+                            <span class="badge bg-light text-dark mt-2">
+                                {{ messageQuota.remaining }}/{{ messageQuota.limit }} messages restants
+                            </span>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -79,12 +97,24 @@
                                 {{ message.content }}
                             </div>
 
-                            {% if message.isChatRequest and message.content == 'Demande de discussion en attente...' and message.receiver == app.user %}
+                            {# ✅ BOUTONS UNIQUEMENT SI LA CONVERSATION N'EST PAS ACCEPTÉE #}
+                            {% if not chatAccepted
+                                and message.isChatRequest
+                                and message.content == 'Demande de discussion en attente...'
+                                and message.receiver == app.user
+                            %}
                                 <div class="request-actions">
-                                    <form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'accept' }) }}" method="POST">
+                                    <form action="{{ path('app_message_response', {
+                                        'id': message.sender.id,
+                                        'status': 'accept'
+                                    }) }}" method="POST">
                                         <button type="submit" class="btn btn-success btn-sm">Accepter</button>
                                     </form>
-                                    <form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'refuse' }) }}" method="POST">
+
+                                    <form action="{{ path('app_message_response', {
+                                        'id': message.sender.id,
+                                        'status': 'refuse'
+                                    }) }}" method="POST">
                                         <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
                                     </form>
                                 </div>
@@ -95,20 +125,58 @@
 
                 <div class="chat-footer">
                     {% if chatAccepted %}
-                        <form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST" class="send-form">
-                            <input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
-                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                        {% set quotaReached = (
+                            app.user
+                            and messageQuota
+                            and messageQuota.isLimited
+                            and messageQuota.remaining <= 0
+                        ) %}
+
+                        {% if quotaReached %}
+                            <div class="alert alert-warning mb-2">
+                                Limite atteinte : <strong>{{ messageQuota.limit }}</strong> messages/jour.
+                                <a href="{{ path('app_stripe_subscribe') }}" class="alert-link">
+                                    S’abonner
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        <form action="{{ path('app_message_send', { 'id': receiver.id }) }}"
+                              method="POST"
+                              class="send-form">
+                            <input
+                                type="text"
+                                name="content"
+                                class="form-control"
+                                placeholder="{% if quotaReached %}Limite atteinte aujourd'hui{% else %}Écrire un message...{% endif %}"
+                                required
+                                {% if quotaReached %}disabled{% endif %}
+                            >
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {% if quotaReached %}disabled{% endif %}
+                            >
+                                Envoyer
+                                {% if messageQuota and messageQuota.isLimited %}
+                                    <span class="ms-2 badge bg-light text-dark">
+                                        {{ messageQuota.remaining }}/{{ messageQuota.limit }}
+                                    </span>
+                                {% endif %}
+                            </button>
                         </form>
                     {% else %}
                         <form action="{{ path('app_message_request', { 'id': receiver.id }) }}" method="POST">
-                            <button type="submit" class="btn btn-warning w-100">Demander une discussion</button>
+                            <button type="submit" class="btn btn-warning w-100">
+                                Demander une discussion
+                            </button>
                         </form>
                     {% endif %}
                 </div>
             {% else %}
                 <div class="chat-empty">
                     <h2>Ouvrez une conversation</h2>
-                    <p>Sélectionnez une personne afficher la discussion.</p>
+                    <p>Sélectionnez une personne pour afficher la discussion.</p>
                 </div>
             {% endif %}
         </section>
