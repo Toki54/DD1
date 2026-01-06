@@ -7,11 +7,21 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/list2.css') }}">
 {% endblock %}
+
 <section class="list-page">
 
     <header class="page-header">
         <h1>Liste des profils</h1>
         <p>Trouve des profils selon tes critères.</p>
+
+        {# ✅ Quota profils/jour pour non premium #}
+        {% if app.user and profileViewQuota and profileViewQuota.isLimited %}
+            <div class="alert alert-info mt-3 mb-0">
+                Profils vus aujourd’hui : <strong>{{ profileViewQuota.usedToday }}/{{ profileViewQuota.limit }}</strong>
+                — Restants : <strong>{{ profileViewQuota.remaining }}</strong>
+                <span class="ms-2">Abonnement = profils illimités.</span>
+            </div>
+        {% endif %}
     </header>
 
     {# ----------- TRI ------------ #}
@@ -81,6 +91,16 @@
         </form>
     </article>
 
+    {# Quota atteint ? #}
+    {% set quotaReached = (app.user and profileViewQuota and profileViewQuota.isLimited and profileViewQuota.remaining <= 0) %}
+
+    {% if quotaReached %}
+        <div class="alert alert-warning">
+            Limite atteinte : <strong>{{ profileViewQuota.limit }}</strong> profils/jour.
+            <a href="{{ path('app_stripe_subscribe') }}" class="alert-link">S’abonner</a> pour voir des profils en illimité.
+        </div>
+    {% endif %}
+
     {# ----------- LISTE DES PROFILS ------------ #}
     <section class="profiles-grid">
         {% for profile in profiles %}
@@ -90,7 +110,12 @@
 
                 <article class="profile-card">
 
-                    <a class="card-top" href="{{ path('app_profile_view', { id: profile.id }) }}">
+                    {# ✅ Si quota atteint (non premium), on redirige vers abonnement côté UI #}
+                    <a
+                        class="card-top {% if quotaReached %}card-disabled{% endif %}"
+                        href="{% if quotaReached %}{{ path('app_stripe_subscribe') }}{% else %}{{ path('app_profile_view', { id: profile.id }) }}{% endif %}"
+                        {% if quotaReached %}title="Limite atteinte : abonne-toi pour voir plus de profils"{% endif %}
+                    >
                         <div class="avatar-wrap">
                             <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
                             {% if profileIsPremium %}
@@ -101,11 +126,11 @@
                         <div class="card-main">
                             <h2 class="name">
                                 {{ profile.user.pseudo }}
-                                
                             </h2>
+
                             {% if profileIsPremium %}
-                                    <span class="premium-badge" title="Profil Premium">Premium</span>
-                                {% endif %}
+                                <span class="premium-badge" title="Profil Premium">Premium</span>
+                            {% endif %}
 
                             <div class="meta">
                                 <span class="pill">{{ profile.sex|default('Inc') }}</span>
@@ -154,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleBtn = document.getElementById('toggleSortBtn');
     const sortContainer = document.getElementById('sortContainer');
 
-    // 🔒 MASQUÉ PAR DÉFAUT
     sortContainer.classList.add('collapsed');
 
     toggleBtn.addEventListener('click', () => {

@@ -14,6 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Entity\ProfileLike;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use App\Services\ProfileViewQuotaService;
 
 class UserProfileController extends AbstractController
 {
@@ -36,11 +37,13 @@ class UserProfileController extends AbstractController
             $entityManager->flush();
         }
 
-        // ✅ Abonné = ROLE_PREMIUM
         $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles(), true);
+
+        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
 
         return $this->render('profile/show.html.twig', [
             'userProfile'  => $userProfile,
+            'photos'       => $photosToDisplay,
             'isSubscribed' => $isSubscribed,
         ]);
     }
@@ -111,24 +114,42 @@ class UserProfileController extends AbstractController
     }
 
     #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
-    public function view(int $id, EntityManagerInterface $entityManager): Response
-    {
+    public function view(
+        int $id,
+        EntityManagerInterface $entityManager,
+        ProfileViewQuotaService $profileViewQuotaService
+    ): Response {
         $userProfile = $entityManager->getRepository(UserProfile::class)->find($id);
 
         if (!$userProfile) {
             throw $this->createNotFoundException('Profil non trouvé.');
         }
 
-        // ✅ Abonné = ROLE_PREMIUM (celui qui visite)
-        $isSubscribed = false;
         $user = $this->getUser();
-        if ($user) {
-            $isSubscribed = in_array('ROLE_PREMIUM', $user->getRoles(), true);
+        $isSubscribed = $this->isGranted('ROLE_PREMIUM');
+
+        // ✅ Quota : 10 profils/jour si pas premium (uniquement si connecté)
+        if ($user && !$isSubscribed) {
+            $visitorProfile = $user->getProfile();
+
+            // si pas de profile, on laisse passer (ou tu peux forcer la création)
+            if ($visitorProfile && $visitorProfile !== $userProfile) {
+                // Bloqué uniquement si c'est un "nouveau" profil aujourd'hui
+                if ($profileViewQuotaService->isBlockedForNewProfileToday($visitorProfile, $userProfile)) {
+                    $this->addFlash(
+                        'danger',
+                        'Limite atteinte : 10 profils par jour. Abonnez-vous pour voir des profils en illimité.'
+                    );
+                    return $this->redirectToRoute('app_stripe_subscribe');
+                }
+            }
         }
 
-        // Visite
-        if ($this->getUser()) {
-            $visitorProfile = $this->getUser()->getProfile();
+        $photosToDisplay = $this->getPhotosForDisplay($userProfile, $isSubscribed);
+
+        // Enregistrer la visite (si connecté + pas soi-même)
+        if ($user) {
+            $visitorProfile = $user->getProfile();
             if ($visitorProfile && $visitorProfile !== $userProfile) {
                 $visit = new ProfileVisit();
                 $visit->setVisited($userProfile);
@@ -139,7 +160,8 @@ class UserProfileController extends AbstractController
         }
 
         return $this->render('profile/view.html.twig', [
-            'userProfile'  => $userProfile,
+            'userProfile' => $userProfile,
+            'photos' => $photosToDisplay,
             'isSubscribed' => $isSubscribed,
         ]);
     }
@@ -183,8 +205,13 @@ class UserProfileController extends AbstractController
             $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
         }
 
-        $user = $this->getUser();
-        $isSubscribed = $user ? in_array('ROLE_PREMIUM', $user->getRoles(), true) : false;
+        $user         = $this->getUser();
+        $isSubscribed = $this->isGranted('ROLE_PREMIUM');
+
+        foreach ($profiles as $profile) {
+            $photos = $this->getPhotosForDisplay($profile, $isSubscribed);
+            $profile->setPhotos($photos);
+        }
 
         return $this->render('profile/list.html.twig', [
             'profiles'        => $profiles,
@@ -333,7 +360,7 @@ class UserProfileController extends AbstractController
             return $this->redirectToRoute('app_profile_show');
         }
 
-        if (in_array($photoFilename, $userProfile->getPhotos())) {
+        if (in_array($photoFilename, $userProfile->getPhotos(), true)) {
             $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
 
             $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
@@ -348,5 +375,27 @@ class UserProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profile_edit');
+    }
+
+    private function getPhotosForDisplay(UserProfile $profile, bool $isSubscribed): array
+    {
+        $photos = $profile->getPhotos() ?? [];
+
+        if ($isSubscribed) {
+            return $photos;
+        }
+
+        if (empty($photos)) {
+            return [];
+        }
+
+        $blurredPhotos = [];
+
+        $firstPhoto       = $photos[0];
+        $blurredPhotoPath = 'blurred_' . $firstPhoto;
+
+        $blurredPhotos[] = $blurredPhotoPath;
+
+        return $blurredPhotos;
     }
 }
