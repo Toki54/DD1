@@ -53,19 +53,42 @@ class StripeController extends AbstractController
 
         $data = json_decode($request->getContent(), true) ?? [];
         $plan = (string) ($data['plan'] ?? '');
-        $amount = (float) ($data['amount'] ?? 0);
 
-        if ($plan === '' || $amount <= 0) {
-            return new JsonResponse(['error' => 'Plan ou montant invalide'], Response::HTTP_BAD_REQUEST);
+        if ($plan === '') {
+            return new JsonResponse(['error' => 'Plan invalide'], Response::HTTP_BAD_REQUEST);
         }
 
         $plans = [
-            '1 semaine - 5 €' => ['duration' => '+1 week',   'price' => 5.00],
-            '1 mois - 15 €'   => ['duration' => '+1 month',  'price' => 15.00],
-            '3 mois - 30 €'   => ['duration' => '+3 months', 'price' => 30.00],
-            '6 mois - 50 €'   => ['duration' => '+6 months', 'price' => 50.00],
-            '1 an - 80 €'     => ['duration' => '+1 year',   'price' => 80.00],
-            'À vie - 100 €'   => ['duration' => 'LIFETIME',  'price' => 100.00],
+            '1 semaine - 5 €' => [
+                'duration' => '+1 week',
+                'price' => 5.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_week'),
+            ],
+            '1 mois - 15 €' => [
+                'duration' => '+1 month',
+                'price' => 15.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_month'),
+            ],
+            '3 mois - 30 €' => [
+                'duration' => '+3 months',
+                'price' => 30.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_3months'),
+            ],
+            '6 mois - 50 €' => [
+                'duration' => '+6 months',
+                'price' => 50.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_6months'),
+            ],
+            '1 an - 80 €' => [
+                'duration' => '+1 year',
+                'price' => 80.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_year'),
+            ],
+            'À vie - 100 €' => [
+                'duration' => 'LIFETIME',
+                'price' => 100.00,
+                'stripe_price_id' => (string) $this->getParameter('stripe_price_lifetime'),
+            ],
         ];
 
         if (!isset($plans[$plan])) {
@@ -73,24 +96,22 @@ class StripeController extends AbstractController
         }
 
         $serverPrice = (float) $plans[$plan]['price'];
-        $duration    = (string) $plans[$plan]['duration'];
-        $priceInCents = (int) round($serverPrice * 100);
+        $duration = (string) $plans[$plan]['duration'];
+        $stripePriceId = (string) $plans[$plan]['stripe_price_id'];
+
+        if ($stripePriceId === '') {
+            return new JsonResponse(['error' => 'Price Stripe manquant (env/config)'], Response::HTTP_BAD_REQUEST);
+        }
 
         Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
         try {
             $session = Session::create([
-                // ✅ Compatible avec anciennes versions stripe-php
                 'payment_method_types' => ['card'],
-
                 'customer_email' => $user->getEmail(),
 
                 'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'eur',
-                        'product_data' => ['name' => $plan],
-                        'unit_amount' => $priceInCents,
-                    ],
+                    'price' => $stripePriceId,
                     'quantity' => 1,
                 ]],
 
@@ -106,21 +127,17 @@ class StripeController extends AbstractController
                 ],
             ]);
         } catch (\Throwable $e) {
-            return new JsonResponse([
-                'error' => 'Erreur Stripe: ' . $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Erreur Stripe: ' . $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         $startDate = new \DateTime();
 
-        // endDate NOT NULL dans ton entity => date très loin pour "à vie"
         if ($duration === 'LIFETIME') {
             $endDate = new \DateTime('9999-12-31 23:59:59');
         } else {
             $endDate = (clone $startDate)->modify($duration);
         }
 
-        // ✅ IMPORTANT : OneToOne => on UPDATE si existe déjà, sinon on CREATE
         $subscription = $subscriptionRepo->findOneBy(['user' => $user]);
         $isNew = false;
 
@@ -143,9 +160,7 @@ class StripeController extends AbstractController
             }
             $this->em->flush();
         } catch (\Throwable $e) {
-            return new JsonResponse([
-                'error' => 'Erreur DB: ' . $e->getMessage(),
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Erreur DB: ' . $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
 
         return new JsonResponse(['id' => $session->id]);

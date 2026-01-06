@@ -6,6 +6,7 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/abo.css') }}">
 {% endblock %}
+
 <div class="abo-page">
 
     <header class="page-header">
@@ -15,7 +16,6 @@
 
     <section class="abo-layout">
 
-        <!-- CARTES -->
         <div class="subscription-cards">
             <button type="button" class="subscription-card" data-plan="1 semaine - 5 €" data-amount="5">
                 <div class="card-top">
@@ -58,7 +58,6 @@
                 <div class="cta">Choisir</div>
             </button>
 
-            {# ✅ NOUVEAU : À vie #}
             <button type="button" class="subscription-card" data-plan="À vie - 100 €" data-amount="100">
                 <div class="card-top">
                     <h3>À Vie</h3>
@@ -70,10 +69,8 @@
             </button>
         </div>
 
-        <!-- COLONNE DROITE -->
         <aside class="right-column">
 
-            <!-- RÉSUMÉ -->
             <div id="subscription-summary" class="card panel">
                 <h2 class="panel-title">Résumé</h2>
 
@@ -95,7 +92,6 @@
                 <div class="hint">Sélectionne un plan puis clique sur “Payer”.</div>
             </div>
 
-            <!-- VALIDATION STRIPE -->
             <div class="card panel form-container" id="paymentSection">
                 <h2 class="panel-title">Validation</h2>
 
@@ -126,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const payBtn = document.getElementById('payBtn');
 
     let selectedPlan = null;
-    let selectedAmount = 0;
 
     const plans = {
         '1 semaine - 5 €': { duration: '1 semaine', price: '5 €' },
@@ -134,24 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
         '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
         '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
         '1 an - 80 €': { duration: '1 an', price: '80 €' },
-
-        // ✅ NOUVEAU
         'À vie - 100 €': { duration: 'à vie', price: '100 €' },
     };
 
-    function selectPlan(plan, amount) {
+    function selectPlan(plan) {
         if (!plans[plan]) return;
 
         selectedPlan = plan;
-        selectedAmount = Number(amount) || 0;
 
         planName.textContent = plan;
         planDuration.textContent = plans[plan].duration;
         planPrice.textContent = plans[plan].price;
 
-        document.querySelectorAll('.subscription-card')
-            .forEach(c => c.classList.remove('selected'));
-
+        document.querySelectorAll('.subscription-card').forEach(c => c.classList.remove('selected'));
         const selected = document.querySelector(`.subscription-card[data-plan="${plan}"]`);
         if (selected) selected.classList.add('selected');
 
@@ -159,21 +149,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const target = document.getElementById('paymentSection');
         if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
     document.querySelectorAll('.subscription-card').forEach(card => {
         card.addEventListener('click', () => {
-            selectPlan(card.dataset.plan, card.dataset.amount);
+            selectPlan(card.dataset.plan);
         });
     });
 
     payBtn.addEventListener('click', async () => {
-        if (!selectedPlan || selectedAmount <= 0) return;
+        if (!selectedPlan) return;
 
         payBtn.disabled = true;
         payBtn.textContent = "Redirection...";
@@ -186,8 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "X-Requested-With": "XMLHttpRequest"
                 },
                 body: JSON.stringify({
-                    plan: selectedPlan,
-                    amount: selectedAmount
+                    plan: selectedPlan
                 })
             });
 
