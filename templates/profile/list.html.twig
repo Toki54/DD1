@@ -110,64 +110,75 @@
 
                 <article class="profile-card">
 
-                    {# ✅ Si quota atteint (non premium), on redirige vers abonnement côté UI #}
-                    <a
-                        class="card-top {% if quotaReached %}card-disabled{% endif %}"
-                        href="{% if quotaReached %}{{ path('app_stripe_subscribe') }}{% else %}{{ path('app_profile_view', { id: profile.id }) }}{% endif %}"
-                        {% if quotaReached %}title="Limite atteinte : abonne-toi pour voir plus de profils"{% endif %}
-                    >
-                        <div class="avatar-wrap">
-                            <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-                            {% if profileIsPremium %}
-                                <span class="premium-dot" title="Profil Premium">⭐</span>
-                            {% endif %}
+                    <div class="card-inner">
+                        {# Bloc gauche (avatar + boutons) #}
+                        <div class="card-left">
+                            <a
+                                class="avatar-link {% if quotaReached %}card-disabled{% endif %}"
+                                href="{% if quotaReached %}{{ path('app_stripe_subscribe') }}{% else %}{{ path('app_profile_view', { id: profile.id }) }}{% endif %}"
+                                {% if quotaReached %}title="Limite atteinte : abonne-toi pour voir plus de profils"{% endif %}
+                            >
+                                <div class="avatar-wrap">
+                                    <img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
+                                    {% if profileIsPremium %}
+                                        <span class="premium-dot" title="Profil Premium">⭐</span>
+                                    {% endif %}
+                                </div>
+                            </a>
+
+                            <div class="left-actions">
+                                <a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-primary btn-small">Message</a>
+
+                                <button class="btn btn-outline btn-small"
+                                        data-id="{{ profile.id }}"
+                                        data-token="{{ csrf_token('like' ~ profile.id) }}"
+                                        data-url="{{ path('app_profile_like', { id: profile.id }) }}">
+                                    Like ❤️
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="card-main">
-                            {% if profileIsPremium %}
-                                <span class="premium-badge" title="Profil Premium">Premium</span>
-                            {% endif %}
-                            <h2 class="name">
-                                {{ profile.user.pseudo }}
-                            </h2>
-
-                            
-
-                            <div class="meta">
-                                <span class="pill">{{ profile.sex|default('Inc') }}</span>
-                                {% if profile.age %}
-                                    <span class="sep">—</span>
-                                    <span>{{ profile.age }} ans</span>
+                        {# Bloc droit (infos cliquables) #}
+                        <a
+                            class="card-right {% if quotaReached %}card-disabled{% endif %}"
+                            href="{% if quotaReached %}{{ path('app_stripe_subscribe') }}{% else %}{{ path('app_profile_view', { id: profile.id }) }}{% endif %}"
+                            {% if quotaReached %}title="Limite atteinte : abonne-toi pour voir plus de profils"{% endif %}
+                        >
+                            <div class="card-main">
+                                {% if profileIsPremium %}
+                                    <span class="premium-badge" title="Profil Premium">Premium</span>
                                 {% endif %}
+
+                                <h2 class="name">
+                                    {{ profile.user.pseudo }}
+                                </h2>
+
+                                <div class="meta">
+                                    <span class="pill">{{ profile.sex|default('Inc') }}</span>
+                                    {% if profile.age %}
+                                        <span class="sep">—</span>
+                                        <span>{{ profile.age }} ans</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="city"><strong>De </strong>{{ profile.city|default('Inc') }}</div>
+
+                                <div class="search">
+                                    <strong>Ici pour </strong>
+                                    {% if profile.research is iterable %}
+                                        {{ profile.research|join(', ')|default('Inc') }}
+                                    {% else %}
+                                        {{ profile.research|default('Inc') }}
+                                    {% endif %}
+                                </div>
+
+                                <p class="bio">
+                                    {{ profile.biography|default('Aucune biographie.') }}
+                                </p>
                             </div>
-
-                            <div class="city"><strong>De </strong>{{ profile.city|default('Inc') }}</div>
-
-                            <div class="search">
-                                <strong>Ici pour </strong>
-                                {% if profile.research is iterable %}
-                                    {{ profile.research|join(', ')|default('Inc') }}
-                                {% else %}
-                                    {{ profile.research|default('Inc') }}
-                                {% endif %}
-                            </div>
-
-                            <p class="bio">
-                                {{ profile.biography|default('Aucune biographie.') }}
-                            </p>
-                        </div>
-                    </a>
-
-                    <div class="card-actions">
-                        <a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-primary btn-small">Message</a>
-
-                        <button class="btn btn-outline btn-small"
-                                data-id="{{ profile.id }}"
-                                data-token="{{ csrf_token('like' ~ profile.id) }}"
-                                data-url="{{ path('app_profile_like', { id: profile.id }) }}">
-                            Like ❤️
-                        </button>
+                        </a>
                     </div>
+
                 </article>
             {% endif %}
         {% endfor %}

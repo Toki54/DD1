@@ -1,4 +1,4 @@
-/* public/css/list2.css */
+/* public/css/ProfiList.css */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 :root{
@@ -7,21 +7,10 @@
 
   --grenat:#6a0328;
 
-  --white:#ffffff;
-  --text:#121212;
-  --muted:#666;
-
-  --card-bg: rgba(255,255,255,.12);
-  --card-bg-2: rgba(255,255,255,.16);
-  --card-border: rgba(255,255,255,.14);
-  --card-text: rgba(255,255,255,.92);
-  --card-muted: rgba(255,255,255,.72);
-
   --shadow: 0 25px 60px rgba(0,0,0,.28);
   --shadow-hover: 0 40px 80px rgba(0,0,0,.35);
 
   --radius: 22px;
-  --radius-sm: 14px;
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -172,10 +161,10 @@ body{
 
 /* ====== PROFILE CARD ====== */
 .profile-card{
-  background: var(--card-bg);
+  background: rgba(255,255,255,.12);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  border: 1px solid var(--card-border);
+  border: 1px solid rgba(255,255,255,.14);
   overflow:hidden;
   position:relative;
   transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
@@ -187,7 +176,7 @@ body{
 .profile-card:hover{
   transform: translateY(-5px);
   box-shadow: var(--shadow-hover);
-  background: var(--card-bg-2);
+  background: rgba(255,255,255,.16);
 }
 
 .profile-card::before{
@@ -198,23 +187,34 @@ body{
   pointer-events:none;
 }
 
-.card-top{
+/* ✅ nouveau layout interne */
+.card-inner{
   display:flex;
   gap: 14px;
   padding: 16px;
-  text-decoration:none;
-  color: var(--card-text);
   position:relative;
 }
 
-/* ✅ nécessaire pour le badge premium en overlay */
+/* ✅ colonne gauche avatar + boutons */
+.card-left{
+  width: 120px;
+  flex: 0 0 120px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 10px;
+}
+
+.avatar-link{
+  text-decoration:none;
+}
+
 .avatar-wrap{
-  width: 78px;
-  height: 78px;
-  border-radius: 20px;
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
   overflow:hidden;
   background: rgba(255,255,255,.10);
-  flex: 0 0 auto;
   box-shadow: 0 14px 35px rgba(0,0,0,.22);
   position: relative;
   border: 1px solid rgba(255,255,255,.14);
@@ -226,6 +226,29 @@ body{
   object-fit: cover;
 }
 
+/* ✅ actions sous l'avatar */
+.left-actions{
+  width: 100%;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+
+.left-actions .btn{
+  width: 100%;
+  justify-content:center;
+}
+
+/* ✅ colonne droite cliquable */
+.card-right{
+  flex: 1 1 auto;
+  min-width: 0;
+  text-decoration:none;
+  color: rgba(255,255,255,.92);
+  display:block;
+}
+
+/* contenu */
 .card-main{
   min-width: 0;
   display:flex;
@@ -247,7 +270,7 @@ body{
     align-items: center;
 }
 
-/* ✅ badge premium (dans le nom) */
+/* badge premium (texte) */
 .premium-badge{
   width: 70px;
   display:inline-flex;
@@ -259,11 +282,10 @@ body{
   color:#8a5a00;
   font-weight: 900;
   font-size: 12px;
-  flex: 0 0 auto;
   justify-content: center;
 }
 
-/* ✅ badge étoile sur avatar */
+/* étoile sur avatar */
 .premium-dot{
   position:absolute;
   right:6px;
@@ -284,7 +306,7 @@ body{
   display:flex;
   align-items:center;
   gap: 8px;
-  color: var(--card-muted);
+  color: rgba(255,255,255,.72);
   font-size: 13px;
   flex-wrap: wrap;
 }
@@ -307,6 +329,7 @@ body{
 
 .city{
   font-size: 13px;
+  font-weight: 800;
   color: rgba(255,255,255,.78);
 }
 
@@ -324,14 +347,6 @@ body{
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 40px;
-}
-
-/* actions */
-.card-actions{
-  position:relative;
-  display:flex;
-  gap: 10px;
-  padding: 0 16px 16px;
 }
 
 /* ====== BUTTONS ====== */
@@ -412,27 +427,13 @@ body{
   .profiles-grid{
     grid-template-columns: 1fr;
   }
-  .card-actions{
-    flex-direction: column;
+
+  .card-inner{
+    gap: 12px;
   }
 
-  .nav-btn,
-  .navbar .nav-link,
-  .site-nav .nav-link,
-  .header-nav .nav-link{
-    min-width: 160px;
-    width: 100%;
-  }
-  .navbar .nav-row,
-  .site-nav .nav-row,
-  .header-nav .nav-row{
-    width: 100%;
-  }
-  .btn-logout,
-  .navbar .logout,
-  .site-nav .logout,
-  .header-nav .logout{
-    width: 100%;
-    min-width: 0;
+  .card-left{
+    width: 110px;
+    flex: 0 0 110px;
   }
 }
