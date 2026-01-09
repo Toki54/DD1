@@ -14,6 +14,9 @@ parameters:
     stripe_price_year: '%env(STRIPE_PRICE_YEAR)%'
     stripe_price_lifetime: '%env(STRIPE_PRICE_LIFETIME)%'
 
+    recaptcha_site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha_secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+
 services:
     _defaults:
         autowire: true
