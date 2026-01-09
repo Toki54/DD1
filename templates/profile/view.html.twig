@@ -54,7 +54,13 @@
                             <div class="meta-item">
                                 <span class="meta-label">Sexe</span>
                                 <span class="meta-value">
-                                    {{ userProfile.sex is iterable ? userProfile.sex|join(', ') : userProfile.sex|default('Non spécifié') }}
+                                    {# ✅ Sexe + âge (ex: Homme - 25 ans) #}
+                                    {% set sexValue = (userProfile.sex is iterable ? userProfile.sex|join(', ') : userProfile.sex|default('Non spécifié')) %}
+                                    {% if userProfile.age is defined and userProfile.age %}
+                                        {{ sexValue }} - {{ userProfile.age }} ans
+                                    {% else %}
+                                        {{ sexValue }}
+                                    {% endif %}
                                 </span>
                             </div>
 
@@ -66,7 +72,7 @@
                             </div>
 
                             <div class="meta-item">
-                                <span class="meta-label">Recherche</span>
+                                <span class="meta-label">Ici pour </span>
                                 <span class="meta-value">
                                     {{ userProfile.research is iterable ? userProfile.research|join(', ') : userProfile.research|default('Non spécifié') }}
                                 </span>
@@ -83,8 +89,8 @@
 
                     <div class="divider"></div>
 
+                    {# ✅ On garde le cadre, mais on enlève le titre "Biographie" #}
                     <div class="bio-block">
-                        <h3 class="sub-title">Biographie</h3>
                         <p class="bio-text">
                             {{ userProfile.biography is iterable ? userProfile.biography|join(', ') : userProfile.biography|default('Aucune biographie') }}
                         </p>

@@ -5,7 +5,7 @@
 
 {% block body %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/list2.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ProfiList.css') }}">
 {% endblock %}
 
 <section class="list-page">
@@ -124,13 +124,14 @@
                         </div>
 
                         <div class="card-main">
+                            {% if profileIsPremium %}
+                                <span class="premium-badge" title="Profil Premium">Premium</span>
+                            {% endif %}
                             <h2 class="name">
                                 {{ profile.user.pseudo }}
                             </h2>
 
-                            {% if profileIsPremium %}
-                                <span class="premium-badge" title="Profil Premium">Premium</span>
-                            {% endif %}
+                            
 
                             <div class="meta">
                                 <span class="pill">{{ profile.sex|default('Inc') }}</span>
@@ -140,10 +141,10 @@
                                 {% endif %}
                             </div>
 
-                            <div class="city">{{ profile.city|default('Inc') }}</div>
+                            <div class="city"><strong>De </strong>{{ profile.city|default('Inc') }}</div>
 
                             <div class="search">
-                                <strong>Recherche :</strong>
+                                <strong>Ici pour </strong>
                                 {% if profile.research is iterable %}
                                     {{ profile.research|join(', ')|default('Inc') }}
                                 {% else %}
