@@ -1,10 +1,21 @@
 # config/services.yaml
-
 parameters:
     avatars_directory: '%kernel.project_dir%/public/uploads/avatars'
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
-    stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
+
     stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
+    stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
+    stripe_webhook_secret: '%env(STRIPE_WEBHOOK_SECRET)%'
+
+    stripe_price_week: '%env(STRIPE_PRICE_WEEK)%'
+    stripe_price_month: '%env(STRIPE_PRICE_MONTH)%'
+    stripe_price_3months: '%env(STRIPE_PRICE_3MONTHS)%'
+    stripe_price_6months: '%env(STRIPE_PRICE_6MONTHS)%'
+    stripe_price_year: '%env(STRIPE_PRICE_YEAR)%'
+    stripe_price_lifetime: '%env(STRIPE_PRICE_LIFETIME)%'
+
+    recaptcha_site_key: '%env(RECAPTCHA_SITE_KEY)%'
+    recaptcha_secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
 
 services:
     _defaults:
@@ -17,6 +28,3 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
-    # Si tu as un service UserProfileService, sinon supprime cette ligne :
-    App\Service\UserProfileService: ~

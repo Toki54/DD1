@@ -17,11 +17,10 @@
 			<p>
 				<strong>{{ profile.sex|default('Inc') }}</strong>
 				-
-				{% if profile.birthdate %}
-					{% set now = "now"|date("Y") %}
-					{% set birthYear = profile.birthdate|date("Y") %}
-					{{ now - birthYear }}
-					ans
+				{% if profile.age %}
+					{{ profile.age }} ans
+				{% else %}
+					Non spécifié
 				{% endif %}
 			</p>
 

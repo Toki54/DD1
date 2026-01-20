@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints\IsTrue;
 
 class RegistrationFormType extends AbstractType
 {
@@ -25,13 +26,10 @@ class RegistrationFormType extends AbstractType
                     'autofocus' => true,
                 ],
             ])
-            ->add ('pseudo', TextType::class, [
+            ->add('pseudo', TextType::class, [
                 'required' => false,
                 'label' => 'pseudo',
-            
-                
-                ])
-            
+            ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Password',
                 'mapped' => false,
@@ -42,7 +40,6 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
@@ -51,7 +48,7 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Agree to terms',
                 'mapped' => false,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\IsTrue([
+                    new IsTrue([
                         'message' => 'You must agree to our terms',
                     ]),
                 ],

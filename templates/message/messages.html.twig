@@ -1,93 +1,217 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Discussions
-{% endblock %}
+{% block title %}Mes Discussions{% endblock %}
 
 {% block body %}
-	{% block stylesheet %}
-		<link rel="stylesheet" href="{{ asset('css/mess1.css') }}">
-	{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/mess1.css') }}">
+{% endblock %}
 
-	<div class="container">
-		<div
-			class="row">
-			<!-- Liste des Conversations -->
-			<div class="col-md-4">
-				<h3>Conversations</h3>
-				{% if conversations is empty %}
-					<p>Aucune conversation.</p>
-				{% else %}
-					<div class="conversation-list">
-						{% for conversation in conversations %}
-							<div class="conversation-card">
-								<a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
-									<div class="card-header">
-										<img src="{{ asset(conversation.user.profile.avatar ? 'uploads/avatars/' ~ conversation.user.profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar">
+<div class="messages-page">
 
-										<strong class="pseudo">{{ conversation.user.pseudo }}</strong>
-									</div>
-								</a>
-								<!-- Séparation entre avatar et contenu -->
-								<hr class="divider">
-								<form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
-									<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-								</form>
+    <header class="messages-header">
+        <h1>Mes Discussions</h1>
+        <p>Retrouvez vos conversations et discutez en temps réel.</p>
 
-							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-			</div>
+        {# ✅ Info quota visible (uniquement si pas premium) #}
+        {% if app.user and messageQuota and messageQuota.isLimited %}
+            <div class="alert alert-info mt-3 mb-0">
+                Messages du jour :
+                <strong>{{ messageQuota.sentToday }}/{{ messageQuota.limit }}</strong>
+                — Restants :
+                <strong>{{ messageQuota.remaining }}</strong>
+                <span class="ms-2">Abonnement = messages illimités.</span>
+            </div>
+        {% endif %}
+    </header>
 
-			<!-- Détails de la conversation -->
-			<div class="col-md-8">
-				{% if receiver %}
-					<div class="conversation-detail-card">
-						<div class="card-header">
-							<h4>Conversation avec
-								{{ receiver.pseudo }}</h4>
-						</div>
-						<div class="card-body chat-box">
-							{% for message in messages %}
-								<div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
-									<p>
-										<strong>
-											{% if message.sender == app.user %}Moi
-											{% else %}
-												{{ receiver.pseudo }}
-											{% endif %}:
-										</strong>
-										{{ message.content }}
-									</p>
+    <div class="messages-layout">
 
-									{% if message.isChatRequest and message.content == 'Demande de discussion en attente...' and message.receiver == app.user %}
-										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'accept' }) }}" method="POST">
-											<button type="submit" class="btn btn-success">Accepter</button>
-										</form>
-										<form action="{{ path('app_message_response', { 'id': message.sender.id, 'status': 'refuse' }) }}" method="POST">
-											<button type="submit" class="btn btn-danger">Refuser</button>
-										</form>
-									{% endif %}
-								</div>
-							{% endfor %}
-						</div>
+        <!-- LISTE CONVERSATIONS -->
+        <aside class="card panel conversations-panel">
+            <div class="panel-top">
+                <h2 class="panel-title">Conversations</h2>
+            </div>
 
-						<div class="card-footer">
-							{% if chatAccepted %}
-								<form action="{{ path('app_message_send', { 'id': receiver.id }) }}" method="POST">
-									<input type="text" name="content" class="form-control" placeholder="Écrire un message..." required>
-									<button type="submit" class="btn btn-primary">Envoyer</button>
-								</form>
-							{% else %}
-								<form action="{{ path('app_message_request', { 'id': receiver.id }) }}" method="POST">
-									<button type="submit" class="btn btn-warning">Demander une discussion</button>
-								</form>
-							{% endif %}
-						</div>
-					</div>
-				{% endif %}
+            {% if conversations is empty %}
+                <div class="empty">Aucune conversation.</div>
+            {% else %}
+                <div class="conversation-list">
+                    {% for conversation in conversations %}
+                        <div class="conversation-card">
+                            <a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
+                                <div class="conv-head">
+                                    <img
+                                        src="{{ asset(conversation.user.profile.avatar
+                                            ? 'uploads/avatars/' ~ conversation.user.profile.avatar
+                                            : 'uploads/avatars/default-avatar.png') }}"
+                                        alt="Avatar"
+                                        class="avatar"
+                                    >
+                                    <div class="conv-meta">
+                                        <div class="pseudo">{{ conversation.user.pseudo }}</div>
+                                        <div class="sub">Ouvrir la discussion</div>
+                                    </div>
+                                </div>
+                            </a>
 
-			</div>
-		</div>
-	</div>
+                            <div class="divider"></div>
+
+                            <form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Supprimer</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </aside>
+
+        <!-- CONVERSATION -->
+        <section class="card panel chat-panel">
+            {% if receiver %}
+                <div class="chat-header">
+                    <div class="chat-title">
+                        <h2>Conversation</h2>
+                        <p>avec <strong>{{ receiver.pseudo }}</strong></p>
+
+                        {% if app.user and messageQuota and messageQuota.isLimited %}
+                            <span class="badge bg-light text-dark mt-2">
+                                {{ messageQuota.remaining }}/{{ messageQuota.limit }} messages restants
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="chat-box">
+                    {# ✅ Badge "Discussion acceptée" affiché 1 seule fois #}
+                    {% set acceptedBadgeShown = false %}
+
+                    {% for message in messages %}
+
+                        {# ✅ Messages système ACCEPTED => badge (une fois) puis masqué #}
+                        {% if message.isChatRequest and message.content == 'ACCEPTED' %}
+                            {% if not acceptedBadgeShown %}
+                                {% set acceptedBadgeShown = true %}
+                                <div class="text-center my-3">
+                                    <span class="badge bg-success">
+                                        Discussion acceptée — vous pouvez envoyer des messages
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% else %}
+
+                            {# ✅ REFUSED masqué #}
+                            {% if message.isChatRequest and message.content == 'REFUSED' %}
+                                {# rien #}
+                            {% else %}
+
+                                {# ✅ "Demande en attente..." masquée si déjà accepté #}
+                                {% if chatAccepted and message.isChatRequest and message.content == 'Demande de discussion en attente...' %}
+                                    {# rien #}
+                                {% else %}
+
+                                    <div class="message {% if message.sender == app.user %}my-message{% else %}other-message{% endif %}">
+                                        <div class="message-meta">
+                                            <span class="who">
+                                                {% if message.sender == app.user %}Moi{% else %}{{ receiver.pseudo }}{% endif %}
+                                            </span>
+                                        </div>
+
+                                        <div class="bubble">
+                                            {{ message.content }}
+                                        </div>
+
+                                        {# ✅ Boutons UNIQUEMENT si pas accepté #}
+                                        {% if not chatAccepted
+                                            and message.isChatRequest
+                                            and message.content == 'Demande de discussion en attente...'
+                                            and message.receiver == app.user
+                                        %}
+                                            <div class="request-actions">
+                                                <form action="{{ path('app_message_response', {
+                                                    'id': message.sender.id,
+                                                    'status': 'accept'
+                                                }) }}" method="POST">
+                                                    <button type="submit" class="btn btn-success btn-sm">Accepter</button>
+                                                </form>
+
+                                                <form action="{{ path('app_message_response', {
+                                                    'id': message.sender.id,
+                                                    'status': 'refuse'
+                                                }) }}" method="POST">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+
+                <div class="chat-footer">
+                    {% if chatAccepted %}
+                        {% set quotaReached = (
+                            app.user
+                            and messageQuota
+                            and messageQuota.isLimited
+                            and messageQuota.remaining <= 0
+                        ) %}
+
+                        {% if quotaReached %}
+                            <div class="alert alert-warning mb-2">
+                                Limite atteinte : <strong>{{ messageQuota.limit }}</strong> messages/jour.
+                                <a href="{{ path('app_stripe_subscribe') }}" class="alert-link">
+                                    S’abonner
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        <form action="{{ path('app_message_send', { 'id': receiver.id }) }}"
+                              method="POST"
+                              class="send-form">
+                            <input
+                                type="text"
+                                name="content"
+                                class="form-control"
+                                placeholder="{% if quotaReached %}Limite atteinte aujourd'hui{% else %}Écrire un message...{% endif %}"
+                                required
+                                {% if quotaReached %}disabled{% endif %}
+                            >
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {% if quotaReached %}disabled{% endif %}
+                            >
+                                Envoyer
+                                {% if messageQuota and messageQuota.isLimited %}
+                                    <span class="ms-2 badge bg-light text-dark">
+                                        {{ messageQuota.remaining }}/{{ messageQuota.limit }}
+                                    </span>
+                                {% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_message_request', { 'id': receiver.id }) }}" method="POST">
+                            <button type="submit" class="btn btn-warning w-100">
+                                Demander une discussion
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="chat-empty">
+                    <h2>Ouvrez une conversation</h2>
+                    <p>Sélectionnez une personne pour afficher la discussion.</p>
+                </div>
+            {% endif %}
+        </section>
+
+    </div>
+</div>
 {% endblock %}

@@ -1,105 +1,324 @@
-/* ====== STYLE POUR LES CARTES D'ABONNEMENT ====== */
-.subscription-cards {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    gap: 20px;
-    padding: 0 10px;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+:root{
+  --bg-1:#2b0507;
+  --bg-2:#5a0f14;
+
+  --accent:#c2171e;
+  --accent-2:#8b1116;
+
+  --white:#ffffff;
+  --text:#121212;
+  --muted:#666;
+
+  --shadow: 0 25px 60px rgba(0,0,0,.28);
+  --shadow-hover: 0 40px 80px rgba(0,0,0,.35);
+
+  --radius: 22px;
 }
 
-.subscription-card {
-    width: 220px;
-    padding: 20px;
-    background: linear-gradient(135deg, #4b4b4b, #333333);
-    border-radius: 15px;
-    text-align: center;
-    color: #f1f1f1;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid #8e44ad;
-    font-family: 'Segoe UI', sans-serif;
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+  font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-.subscription-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+/* ====== PAGE ====== */
+.abo-page{
+  padding: 10px 0 40px;
 }
 
-.subscription-card h3 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-    color: #d4af37;
+.page-header{
+  margin-bottom: 16px;
 }
 
-.subscription-card p {
-    font-size: 1.2em;
-    margin: 10px 0;
+.page-header h1{
+  color:#fff;
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
 }
 
-.subscription-card button {
-    margin-top: 20px;
-    background: linear-gradient(135deg, #d4af37, #ff00eb);
-    border-radius: 10px;
-    font-size: 1.2em;
-    transition: background 0.3s ease;
-    padding: 10px 15px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
+.page-header p{
+  color: rgba(255,255,255,.86);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 75ch;
 }
 
-.subscription-card button:hover {
-    background: linear-gradient(135deg, #ff00eb, #d4af37);
+/* ====== LAYOUT ====== */
+.abo-layout{
+  display:grid;
+  grid-template-columns: 1.25fr 420px;
+  gap: 22px;
+  align-items: start;
 }
 
-/* ====== STYLE DU RÉSUMÉ DE L'ABONNEMENT ====== */
-#subscription-summary {
-    margin-top: 30px;
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 25px rgba(217, 7, 255, 0.4);
-    color: #e0e0e0;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
+/* ====== LEFT: PLANS ====== */
+.subscription-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
 }
 
-#subscription-summary h3 {
-    font-size: 2em;
-    color: #d4af37;
-    margin-bottom: 20px;
+/* Plan card as button */
+.subscription-card{
+  width: 100%;
+  border: none;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  cursor:pointer;
+
+  position:relative;
+  overflow:hidden;
+
+  transition: transform .25s ease, box-shadow .25s ease, outline .2s ease;
 }
 
-#subscription-summary p {
-    font-size: 1.2em;
-    margin: 10px 0;
+.subscription-card::before{
+  content:"";
+  position:absolute;
+  inset:-70px;
+  background: radial-gradient(520px 260px at 10% 0%, rgba(194,23,30,.12), transparent 60%);
+  pointer-events:none;
 }
 
-#subscription-summary strong {
-    color: #ff00eb;
+.subscription-card:hover{
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
 }
 
-/* ====== STYLE POUR LE BOUTON DE PAIEMENT ====== */
-#checkout-button {
-    background: linear-gradient(135deg, #8e44ad, #d4af37);
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 1.2em;
-    border: none;
-    cursor: not-allowed;
-    opacity: 0.5;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+.subscription-card:active{
+  transform: scale(.98);
 }
 
-#checkout-button.enabled {
-    cursor: pointer;
-    opacity: 1;
+/* selected */
+.subscription-card.selected{
+  outline: 3px solid rgba(194,23,30,.35);
+  box-shadow: 0 40px 90px rgba(0,0,0,.38);
 }
 
-#checkout-button.enabled:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(135deg, #d4af37, #8e44ad);
+/* header row in card */
+.subscription-card .card-top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.subscription-card h3{
+  position:relative;
+  margin:0;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+/* badges */
+.badge{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(194,23,30,.12);
+  color: #7b0e13;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.badge-dark{
+  background: rgba(0,0,0,.10);
+  color: #1a1a1a;
+}
+
+/* price / desc */
+.price{
+  position:relative;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 6px 0 6px;
+}
+
+.desc{
+  position:relative;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 12px;
+}
+
+/* CTA pill inside card */
+.cta{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f5f5f7;
+  color: #1a1a1a;
+  font-weight: 900;
+  font-size: 13px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.08);
+  transition: background .25s ease, box-shadow .25s ease, color .25s ease;
+}
+
+.subscription-card.selected .cta{
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color:#fff;
+  box-shadow: 0 18px 45px rgba(194,23,30,.32);
+}
+
+/* ====== RIGHT COLUMN ====== */
+.right-column{
+  display:flex;
+  flex-direction:column;
+  gap: 18px;
+}
+
+/* ====== PANELS ====== */
+.card.panel{
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  border:none;
+  position:relative;
+  overflow:hidden;
+}
+
+.card.panel::before{
+  content:"";
+  position:absolute;
+  inset:-70px;
+  background: radial-gradient(520px 260px at 10% 0%, rgba(194,23,30,.10), transparent 60%);
+  pointer-events:none;
+}
+
+.panel-title{
+  position:relative;
+  font-size: 16px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+/* ====== SUMMARY ====== */
+.summary-row{
+  position:relative;
+  display:flex;
+  justify-content:space-between;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: #f5f5f7;
+  margin-bottom: 10px;
+}
+
+.k{
+  font-size: 12px;
+  font-weight: 900;
+  color: #2a2a2a;
+}
+
+.v{
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align:right;
+}
+
+.price-v{
+  color: #7b0e13;
+}
+
+.hint{
+  position:relative;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ====== VALIDATION / STRIPE ====== */
+.form-container{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+#payBtn{
+  position:relative;
+  font-size: 16px;
+  padding: 14px 18px;
+  border-radius: 16px;
+}
+
+#payBtn:disabled{
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pay-note{
+  font-size: 12px;
+  color: var(--muted);
+  text-align:center;
+  margin-top: 6px;
+}
+
+.pay-note::before{
+  content:"🔒 ";
+}
+
+/* ====== BUTTONS ====== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border:none;
+  text-decoration:none;
+  font-weight: 900;
+  font-size: 14px;
+  cursor:pointer;
+  user-select:none;
+  transition: transform .2s ease, filter .25s ease, box-shadow .25s ease;
+}
+
+.btn:active{ transform: scale(.98); }
+
+.btn-primary{
+  color:#fff;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  box-shadow: 0 18px 45px rgba(194,23,30,.28);
+}
+
+.btn-primary:hover{
+  filter: brightness(1.05);
+  box-shadow: 0 26px 60px rgba(194,23,30,.40);
+}
+
+.w-100{ width:100%; }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 980px){
+  .abo-layout{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px){
+  #payBtn{
+    font-size: 15px;
+    padding: 14px;
+  }
 }
