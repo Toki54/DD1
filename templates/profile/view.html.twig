@@ -1,17 +1,14 @@
-{# templates/profile/view.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Profil de {{ userProfile.user.pseudo }}{% endblock %}
 
-{% block body %}
-    {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
-    {% endblock %}
 
-    {# ✅ IMPORTANT :
-       Ici, on veut afficher le badge PREMIUM DU PROFIL AFFICHÉ (userProfile.user),
-       pas celui du visiteur connecté.
-    #}
+
+{% block body %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
+{% endblock %}
+    {# Badge premium du profil affiché (pas le visiteur) #}
     {% set viewedIsPremium = ('ROLE_PREMIUM' in userProfile.user.roles) %}
 
     <section class="profile-page">
@@ -22,13 +19,11 @@
                     <h1 class="profile-title">
                         {{ userProfile.user.pseudo }}
 
-                        {# ✅ Logo à côté du pseudo (si LE PROFIL affiché est premium) #}
                         {% if viewedIsPremium %}
                             <span class="premium-logo" title="Profil Premium" aria-label="Premium">⭐</span>
                         {% endif %}
                     </h1>
 
-                    {# ✅ Badge Premium #}
                     {% if viewedIsPremium %}
                         <span class="premium-badge-header" title="Profil Premium">Premium</span>
                     {% endif %}
@@ -39,7 +34,7 @@
 
             <div class="profile-grid">
 
-                {# ===== LEFT : PROFIL ===== #}
+                {# ===== LEFT : INFOS ===== #}
                 <article class="card panel profile-card">
                     <h2 class="panel-title">Informations</h2>
 
@@ -54,7 +49,6 @@
                             <div class="meta-item">
                                 <span class="meta-label">Sexe</span>
                                 <span class="meta-value">
-                                    {# ✅ Sexe + âge (ex: Homme - 25 ans) #}
                                     {% set sexValue = (userProfile.sex is iterable ? userProfile.sex|join(', ') : userProfile.sex|default('Non spécifié')) %}
                                     {% if userProfile.age is defined and userProfile.age %}
                                         {{ sexValue }} - {{ userProfile.age }} ans
@@ -72,7 +66,7 @@
                             </div>
 
                             <div class="meta-item">
-                                <span class="meta-label">Ici pour </span>
+                                <span class="meta-label">Ici pour</span>
                                 <span class="meta-value">
                                     {{ userProfile.research is iterable ? userProfile.research|join(', ') : userProfile.research|default('Non spécifié') }}
                                 </span>
@@ -89,7 +83,6 @@
 
                     <div class="divider"></div>
 
-                    {# ✅ On garde le cadre, mais on enlève le titre "Biographie" #}
                     <div class="bio-block">
                         <p class="bio-text">
                             {{ userProfile.biography is iterable ? userProfile.biography|join(', ') : userProfile.biography|default('Aucune biographie') }}
@@ -114,13 +107,13 @@
                 <article class="card panel gallery-card">
                     <h2 class="panel-title">Galerie de photos</h2>
 
-                    {# ✅ Galerie visible seulement si le VISITEUR est premium #}
                     {% set viewerIsPremium = is_granted('ROLE_PREMIUM') %}
 
                     {% if viewerIsPremium %}
                         <div class="photo-gallery" id="gallery-{{ userProfile.id }}">
-                            {% if userProfile.photos %}
-                                {% for photo in userProfile.photos %}
+                            {% set photos = userProfile.photos|default([]) %}
+                            {% if photos is not empty %}
+                                {% for photo in photos %}
                                     <img
                                         src="{{ asset('uploads/photos/' ~ photo) }}"
                                         alt="Photo"
@@ -135,7 +128,6 @@
                             {% endif %}
                         </div>
 
-                        {# Modal galerie #}
                         <div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-fullscreen">
                                 <div class="modal-content">
@@ -145,7 +137,7 @@
                                     <div class="modal-body">
                                         <div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
-                                                {% for photo in userProfile.photos %}
+                                                {% for photo in photos %}
                                                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                                                         <img
                                                             src="{{ asset('uploads/photos/' ~ photo) }}"

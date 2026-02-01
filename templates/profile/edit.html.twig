@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
 {% endblock %}
 <div class="edit-page">
-
     <div class="edit-container">
 
         <header class="edit-header">
@@ -18,9 +17,10 @@
         </header>
 
         {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
 
         <div class="edit-grid">
@@ -30,9 +30,8 @@
                 <h2 class="panel-title">Informations</h2>
 
                 {% if userProfile.avatar %}
-				<div class="current-avatar-label">Avatar actuel</div>
+                    <div class="current-avatar-label">Avatar actuel</div>
                     <div class="current-avatar">
-                        
                         <img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="avatar-preview">
                     </div>
                 {% endif %}
@@ -43,27 +42,32 @@
                     <div class="field">
                         {{ form_label(form.sex) }}
                         {{ form_widget(form.sex, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.sex) }}
                     </div>
 
                     <div class="field">
                         {{ form_label(form.age) }}
                         {{ form_widget(form.age, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.age) }}
                     </div>
                 </div>
 
                 <div class="field">
                     {{ form_label(form.situation) }}
                     {{ form_widget(form.situation, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.situation) }}
                 </div>
 
                 <div class="field">
                     {{ form_label(form.biography) }}
                     {{ form_widget(form.biography, {'attr': {'class': 'form-control textarea'}}) }}
+                    {{ form_errors(form.biography) }}
                 </div>
 
                 <div class="field">
                     {{ form_label(form.research) }}
                     {{ form_widget(form.research, {'attr': {'class': 'form-control textarea'}}) }}
+                    {{ form_errors(form.research) }}
                 </div>
 
                 <div class="actions">
@@ -78,6 +82,7 @@
                 <div class="field">
                     {{ form_label(form.avatarFile) }}
                     {{ form_widget(form.avatarFile, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.avatarFile) }}
                     <small class="hint">Téléchargez une photo de profil (JPG, PNG, GIF)</small>
                 </div>
 
@@ -85,11 +90,13 @@
                     <div class="field">
                         {{ form_label(form.department) }}
                         {{ form_widget(form.department, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.department) }}
                     </div>
 
                     <div class="field">
                         {{ form_label(form.city) }}
                         {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.city) }}
                         <small class="hint">Vous pouvez saisir la ville manuellement</small>
                     </div>
                 </div>
@@ -97,6 +104,7 @@
                 <div class="field">
                     {{ form_label(form.photoFiles) }}
                     {{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
+                    {{ form_errors(form.photoFiles) }}
                     <small class="hint">Ajoutez jusqu'à 10 photos</small>
                 </div>
 
@@ -105,7 +113,8 @@
                 <h3 class="sub-title">Vos photos</h3>
 
                 <div class="photo-gallery">
-                    {% for photo in userProfile.photos %}
+                    {% set photos = userProfile.photos|default([]) %}
+                    {% for photo in photos %}
                         <div class="photo-item">
                             <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail">
                             <a

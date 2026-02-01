@@ -7,8 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Entity\UserProfile;
-
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -24,23 +22,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string>
      */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column(length: 80)]
     private ?string $pseudo = null;
-
-    /**
-     * @method UserProfile|null getProfile()
-     */
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
@@ -48,26 +39,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Subscription::class, cascade: ['persist', 'remove'])]
     private ?Subscription $subscription = null;
 
+    // ===== Reset password =====
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $resetToken = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $resetTokenExpiresAt = null;
-
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $resetTokenExpiresAt = null;
 
     public function getProfile(): ?UserProfile
     {
         return $this->profile;
     }
 
-
     public function setProfile(?UserProfile $profile): self
     {
         $this->profile = $profile;
 
-        // Assure la relation bidirectionnelle
         if ($profile && $profile->getUser() !== $this) {
             $profile->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        $this->subscription = $subscription;
+
+        if ($subscription && $subscription->getUser() !== $this) {
+            $subscription->setUser($this);
         }
 
         return $this;
@@ -86,31 +91,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
     /**
-     * @see UserInterface
-     *
      * @return list<string>
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -124,7 +119,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
-
         return $this;
     }
 
@@ -134,13 +128,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -149,54 +139,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+    public function eraseCredentials(): void {}
 
-    /**
-     * Get the value of pseudo
-     */
     public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
 
-    /**
-     * Set the value of pseudo
-     */
     public function setPseudo(string $pseudo): static
     {
         $this->pseudo = $pseudo;
-
         return $this;
     }
 
-    public function getSubscription(): ?Subscription
-    {
-        return $this->subscription;
-    }
-
-    public function setSubscription(?Subscription $subscription): static
-    {
-        $this->subscription = $subscription;
-
-        // Assure la cohérence des deux côtés
-        if ($subscription && $subscription->getUser() !== $this) {
-            $subscription->setUser($this);
-        }
-
-        return $this;
-    }
-
+    // ===== Reset password getters/setters =====
     public function getResetToken(): ?string
     {
         return $this->resetToken;
@@ -208,14 +167,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getResetTokenExpiresAt(): ?\DateTimeInterface
+    public function getResetTokenExpiresAt(): ?\DateTimeImmutable
     {
         return $this->resetTokenExpiresAt;
     }
 
-    public function setResetTokenExpiresAt(?\DateTimeInterface $date): self
+    public function setResetTokenExpiresAt(?\DateTimeImmutable $date): self
     {
         $this->resetTokenExpiresAt = $date;
         return $this;
+    }
+
+    // ===== PROXYS pour Twig (app.user.sexe / situation / bio / etc.) =====
+    public function getSexe(): ?string
+    {
+        return $this->profile?->getSex();
+    }
+
+    public function getSituation(): ?string
+    {
+        return $this->profile?->getSituation();
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->profile?->getBiography();
+    }
+
+    public function getBiography(): ?string
+    {
+        return $this->profile?->getBiography();
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->profile?->getAge();
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->profile?->getCity();
+    }
+
+    public function getDepartment(): ?string
+    {
+        return $this->profile?->getDepartment();
+    }
+
+    public function getResearch(): ?array
+    {
+        return $this->profile?->getResearch();
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->profile?->getAvatar();
+    }
+
+    public function getPhotos(): ?array
+    {
+        return $this->profile?->getPhotos();
     }
 }

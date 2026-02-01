@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 {% endblock %}
 <div class="profile-page">
-
     <div class="profile-container">
         <header class="profile-top">
             <h1 class="pseudo">Profil de {{ app.user.pseudo }}</h1>
@@ -42,18 +41,17 @@
 
                 {% if photos is not empty %}
                     <div class="photo-gallery photo-gallery-rect">
-    {% for photo in photos %}
-        <img
-            src="{{ asset('uploads/photos/' ~ photo) }}"
-            alt="User Photo"
-            class="photo-thumbnail"
-            data-bs-toggle="modal"
-            data-bs-target="#photoCarousel"
-            data-bs-slide-to="{{ loop.index0 }}"
-        >
-    {% endfor %}
-</div>
-
+                        {% for photo in photos %}
+                            <img
+                                src="{{ asset('uploads/photos/' ~ photo) }}"
+                                alt="User Photo"
+                                class="photo-thumbnail"
+                                data-bs-toggle="modal"
+                                data-bs-target="#photoCarousel"
+                                data-bs-slide-to="{{ loop.index0 }}"
+                            >
+                        {% endfor %}
+                    </div>
                 {% else %}
                     <div class="empty">Aucune photo uploadée.</div>
                 {% endif %}
@@ -107,7 +105,6 @@
 
         </div>
     </div>
-
 </div>
 
 <!-- Modal Carousel -->
