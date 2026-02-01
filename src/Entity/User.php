@@ -15,179 +15,207 @@ use App\Entity\UserProfile;
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
- #[ORM\Id]
- #[ORM\GeneratedValue]
- #[ORM\Column(type: 'integer')]
- private ?int $id = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
- #[ORM\Column(length: 180)]
- private ?string $email = null;
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
- /**
-  * @var list<string> The user roles
-  */
- #[ORM\Column(type: 'json')]
- private array $roles = [];
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
- /**
-  * @var string The hashed password
-  */
- #[ORM\Column]
- private ?string $password = null;
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
- #[ORM\Column(length: 80)]
- private ?string $pseudo = null;
+    #[ORM\Column(length: 80)]
+    private ?string $pseudo = null;
 
- /**
- * @method UserProfile|null getProfile()
- */
+    /**
+     * @method UserProfile|null getProfile()
+     */
 
- #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Subscription::class, cascade: ['persist', 'remove'])]
     private ?Subscription $subscription = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $resetToken = null;
 
- public function getProfile(): ?UserProfile
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $resetTokenExpiresAt = null;
+
+
+    public function getProfile(): ?UserProfile
     {
         return $this->profile;
     }
 
 
- public function setProfile(?UserProfile $profile): self
-{
-    $this->profile = $profile;
+    public function setProfile(?UserProfile $profile): self
+    {
+        $this->profile = $profile;
 
-    // Assure la relation bidirectionnelle
-    if ($profile && $profile->getUser() !== $this) {
-        $profile->setUser($this);
+        // Assure la relation bidirectionnelle
+        if ($profile && $profile->getUser() !== $this) {
+            $profile->setUser($this);
+        }
+
+        return $this;
     }
 
-    return $this;
-}
-
- public function getId(): ?int
- {
-  return $this->id;
- }
-
- public function getEmail(): ?string
- {
-  return $this->email;
- }
-
- public function setEmail(string $email): static
- {
-  $this->email = $email;
-
-  return $this;
- }
-
- /**
-  * A visual identifier that represents this user.
-  *
-  * @see UserInterface
-  */
- public function getUserIdentifier(): string
- {
-  return (string) $this->email;
- }
-
- /**
-  * @see UserInterface
-  *
-  * @return list<string>
-  */
- public function getRoles(): array
- {
-  $roles = $this->roles;
-  // guarantee every user at least has ROLE_USER
-  $roles[] = 'ROLE_USER';
-
-  return array_unique($roles);
- }
-
- public function isAdmin(): bool
- {
-  return in_array('ROLE_ADMIN', $this->roles, true);
- }
-
- public function addRole(string $role): static
-{
-    if (!in_array($role, $this->roles, true)) {
-        $this->roles[] = $role;
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
-    return $this;
-}
-
- /**
-  * @param list<string> $roles
-  */
- public function setRoles(array $roles): static
- {
-  $this->roles = $roles;
-
-  return $this;
- }
-
- /**
-  * @see PasswordAuthenticatedUserInterface
-  */
- public function getPassword(): ?string
- {
-  return $this->password;
- }
-
- public function setPassword(string $password): static
- {
-  $this->password = $password;
-
-  return $this;
- }
-
- /**
-  * @see UserInterface
-  */
- public function eraseCredentials(): void
- {
-  // If you store any temporary, sensitive data on the user, clear it here
-  // $this->plainPassword = null;
- }
-
- /**
-  * Get the value of pseudo
-  */
- public function getPseudo(): ?string
- {
-  return $this->pseudo;
- }
-
- /**
-  * Set the value of pseudo
-  */
- public function setPseudo(string $pseudo): static
- {
-  $this->pseudo = $pseudo;
-
-  return $this;
- }
-
- public function getSubscription(): ?Subscription
-{
-    return $this->subscription;
-}
-
-public function setSubscription(?Subscription $subscription): static
-{
-    $this->subscription = $subscription;
-
-    // Assure la cohérence des deux côtés
-    if ($subscription && $subscription->getUser() !== $this) {
-        $subscription->setUser($this);
+    public function getEmail(): ?string
+    {
+        return $this->email;
     }
 
-    return $this;
-}
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->roles, true);
+    }
+
+    public function addRole(string $role): static
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    /**
+     * Get the value of pseudo
+     */
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * Set the value of pseudo
+     */
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        $this->subscription = $subscription;
+
+        // Assure la cohérence des deux côtés
+        if ($subscription && $subscription->getUser() !== $this) {
+            $subscription->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    public function getResetTokenExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->resetTokenExpiresAt;
+    }
+
+    public function setResetTokenExpiresAt(?\DateTimeInterface $date): self
+    {
+        $this->resetTokenExpiresAt = $date;
+        return $this;
+    }
 }
