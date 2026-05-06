@@ -1,0 +1,375 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+/* ===== THEME ===== */
+:root {
+  --cyan: #00e6c8;
+  --violet: #9b5cff;
+  --pink: #ff3e7f;
+
+  --bg: #070910;
+  --panel: rgba(255, 255, 255, .04);
+  --panel-2: rgba(255, 255, 255, .02);
+  --border: rgba(255, 255, 255, .08);
+
+  --text: #f4f6ff;
+  --muted: rgba(255, 255, 255, .65);
+
+  --radius: 22px;
+}
+
+/* ===== PAGE ===== */
+body {
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+  background: radial-gradient(circle at 20% 0%, #12142a, var(--bg));
+  color: var(--text);
+}
+
+.list-page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 16px;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-family: "Syne";
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+.page-header p {
+  color: var(--muted);
+}
+
+/* ===== QUOTA ===== */
+.alert {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+/* ===================================================== */
+/* 🔥 FILTER MENU (REFONTE COMPLÈTE) */
+/* ===================================================== */
+
+.filter-card {
+  margin-bottom: 28px;
+  padding: 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+/* HEADER FILTER */
+.filter-header h2 {
+  font-family: "Syne";
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.filter-header p {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* GRID FILTER */
+.filter-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* BOX */
+.filter-group {
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid rgba(255, 255, 255, 0.405);
+  border-radius: 16px;
+  padding: 12px;
+  transition: .2s;
+}
+
+.filter-group:hover {
+  border-color: rgba(0, 230, 199, 0.706);
+  transform: translateY(-2px);
+}
+
+.filter-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+/* CHECKS */
+.filter-group label {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+/* INPUT */
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.258);
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 230, 199, 0.755);
+}
+
+/* ACTIONS */
+.filter-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  border: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  color: #05070a;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+/* ===================================================== */
+/* 🔥 GRID CARDS */
+/* ===================================================== */
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+/* ===================================================== */
+/* 💎 CARD ULTRA PREMIUM */
+/* ===================================================== */
+
+.profile-card {
+  position: relative;
+  height: 100%;
+  min-height: 300px;
+
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+  border: 1px solid var(--border);
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  transition: .25s ease;
+}
+
+.profile-card,
+.card.panel {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp .6s ease forwards;
+}
+
+.profile-card:nth-child(1) {
+  animation-delay: .05s;
+}
+
+.profile-card:nth-child(2) {
+  animation-delay: .1s;
+}
+
+.profile-card:nth-child(3) {
+  animation-delay: .15s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* glow */
+.profile-card::before {
+  content: "";
+  position: absolute;
+  inset: -80px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0, 230, 200, .18), transparent 60%),
+    radial-gradient(circle at 80% 90%, rgba(155, 92, 255, .16), transparent 60%);
+  opacity: .8;
+}
+
+/* hover */
+.profile-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0, 230, 199, 0.888);
+}
+
+/* INNER */
+.card-inner {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  z-index: 2;
+  position: relative;
+}
+
+/* LEFT */
+.card-left {
+  width: 90px;
+}
+
+/* AVATAR */
+.avatar-wrap {
+  width: 82px;
+  height: 82px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+}
+
+.avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RIGHT */
+.card-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+/* NAME */
+.name {
+  font-family: "Syne";
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* META */
+.meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* CITY */
+.city {
+  font-size: 13px;
+  opacity: .85;
+}
+
+/* SEARCH */
+.search {
+  font-size: 13px;
+  opacity: .75;
+}
+
+/* ===== BIO (ULTRA CLEAN + FADE EFFECT) ===== */
+.bio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, .6);
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  position: relative;
+}
+
+/* fade bottom */
+.bio::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, rgba(10, 12, 18, .9));
+}
+
+/* ===================================================== */
+/* BUTTONS AREA (AIR + SPACING) */
+/* ===================================================== */
+
+.left-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px 16px;
+}
+
+.btn {
+  flex: 1;
+  border-radius: 14px;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: var(--cyan);
+  color: #061014;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* ===================================================== */
+/* RESPONSIVE */
+/* ===================================================== */
+
+@media (max-width: 900px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profiles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}

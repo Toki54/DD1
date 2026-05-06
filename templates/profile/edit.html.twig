@@ -5,8 +5,9 @@
 
 
 {% block body %}
+
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
+<link rel="stylesheet" href="{{ asset('css/edit.css') }}">
 {% endblock %}
 <div class="edit-page">
     <div class="edit-container">
@@ -17,95 +18,78 @@
         </header>
 
         {% for message in app.flashes('success') %}
-            <div class="alert alert-success">{{ message }}</div>
+        <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
         {% for message in app.flashes('error') %}
-            <div class="alert alert-danger">{{ message }}</div>
+        <div class="alert alert-danger">{{ message }}</div>
         {% endfor %}
+
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'profile-form'}}) }}
 
         <div class="edit-grid">
 
-            <!-- COLONNE GAUCHE : avatar + infos -->
+            <!-- LEFT -->
             <section class="card panel">
+
                 <h2 class="panel-title">Informations</h2>
 
                 {% if userProfile.avatar %}
-                    <div class="current-avatar-label">Avatar actuel</div>
-                    <div class="current-avatar">
-                        <img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" alt="Avatar" class="avatar-preview">
-                    </div>
+                <div class="current-avatar">
+                    <img src="{{ asset('uploads/avatars/' ~ userProfile.avatar) }}" class="avatar-preview">
+                </div>
                 {% endif %}
-
-                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'profile-form'}}) }}
 
                 <div class="form-row">
                     <div class="field">
-                        {{ form_label(form.sex) }}
-                        {{ form_widget(form.sex, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.sex) }}
+                        {{ form_row(form.sex) }}
                     </div>
 
                     <div class="field">
-                        {{ form_label(form.age) }}
-                        {{ form_widget(form.age, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.age) }}
+                        {{ form_row(form.age) }}
                     </div>
                 </div>
 
                 <div class="field">
-                    {{ form_label(form.situation) }}
-                    {{ form_widget(form.situation, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.situation) }}
+                    {{ form_row(form.situation) }}
                 </div>
 
                 <div class="field">
-                    {{ form_label(form.biography) }}
-                    {{ form_widget(form.biography, {'attr': {'class': 'form-control textarea'}}) }}
-                    {{ form_errors(form.biography) }}
+                    {{ form_row(form.biography) }}
                 </div>
 
+                <!-- 🔥 CHECKBOX PREMIUM -->
                 <div class="field">
-                    {{ form_label(form.research) }}
-                    {{ form_widget(form.research, {'attr': {'class': 'form-control textarea'}}) }}
-                    {{ form_errors(form.research) }}
+                    <label class="custom-label">Je recherche</label>
+                    <div class="checkbox-group">
+                        {{ form_widget(form.research) }}
+                    </div>
                 </div>
 
-                <div class="actions">
-                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
-                </div>
+                <button class="btn btn-primary">Sauvegarder</button>
+
             </section>
 
-            <!-- COLONNE DROITE : localisation + upload photos -->
+            <!-- RIGHT -->
             <section class="card panel">
+
                 <h2 class="panel-title">Photos & Localisation</h2>
 
                 <div class="field">
-                    {{ form_label(form.avatarFile) }}
-                    {{ form_widget(form.avatarFile, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_errors(form.avatarFile) }}
-                    <small class="hint">Téléchargez une photo de profil (JPG, PNG, GIF)</small>
+                    {{ form_row(form.avatarFile) }}
                 </div>
 
                 <div class="form-row">
                     <div class="field">
-                        {{ form_label(form.department) }}
-                        {{ form_widget(form.department, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.department) }}
+                        {{ form_row(form.department) }}
                     </div>
 
                     <div class="field">
-                        {{ form_label(form.city) }}
-                        {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
-                        {{ form_errors(form.city) }}
-                        <small class="hint">Vous pouvez saisir la ville manuellement</small>
+                        {{ form_row(form.city) }}
                     </div>
                 </div>
 
                 <div class="field">
-                    {{ form_label(form.photoFiles) }}
-                    {{ form_widget(form.photoFiles, {'attr': {'class': 'form-control', 'multiple': 'multiple'}}) }}
-                    {{ form_errors(form.photoFiles) }}
-                    <small class="hint">Ajoutez jusqu'à 10 photos</small>
+                    {{ form_row(form.photoFiles) }}
                 </div>
 
                 <div class="divider"></div>
@@ -113,22 +97,19 @@
                 <h3 class="sub-title">Vos photos</h3>
 
                 <div class="photo-gallery">
-                    {% set photos = userProfile.photos|default([]) %}
-                    {% for photo in photos %}
-                        <div class="photo-item">
-                            <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail">
-                            <a
-                                href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')"
-                            >
-                                Supprimer
-                            </a>
-                        </div>
+                    {% for photo in userProfile.photos %}
+                    <div class="photo-item">
+                        <img src="{{ asset('uploads/photos/' ~ photo) }}" class="photo-thumbnail">
+                        <a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}"
+                            class="btn btn-danger btn-sm">
+                            Supprimer
+                        </a>
+                    </div>
                     {% else %}
-                        <div class="empty">Aucune photo pour le moment.</div>
+                    <div class="empty">Aucune photo</div>
                     {% endfor %}
                 </div>
+
             </section>
 
         </div>

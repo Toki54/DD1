@@ -1,0 +1,148 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --bg-1: #2b0507;
+  --bg-2: #5a0f14;
+  --accent: #c2171e;
+  --accent-2: #8b1116;
+
+  --white: #ffffff;
+  --muted: #666;
+
+  --shadow: 0 25px 60px rgba(0, 0, 0, .28);
+  --shadow-hover: 0 40px 80px rgba(0, 0, 0, .35);
+
+  --radius: 22px;
+}
+
+/* ===== PAGE ===== */
+.likes-page {
+  padding: 20px 0 50px;
+}
+
+/* HEADER */
+.page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  color: #fff;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 900;
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, .8);
+}
+
+/* ALERT */
+.premium-lock {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab {
+  border: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+  transition: .2s;
+}
+
+.tab span {
+  margin-left: 6px;
+  background: rgba(0, 0, 0, .2);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+}
+
+.tabs.disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* CONTENT */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* GRID */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.profile-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: .25s;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.profile-card a {
+  display: flex;
+  gap: 15px;
+  padding: 16px;
+  text-decoration: none;
+  color: #000;
+}
+
+/* AVATAR */
+.avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+/* INFOS */
+.infos h2 {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.infos h2 span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.infos p {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  color: #fff;
+  margin-top: 20px;
+}

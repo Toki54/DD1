@@ -1,46 +1,71 @@
-<link rel="stylesheet" href="{{ asset('css/profile-card.css') }}">
-<div class="mil">
-
 <article class="profile-card">
-	<div class="profile-row">
-		<div class="avatar-container">
-			<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}" alt="Avatar de {{ profile.user.pseudo }}">
-		</div>
-		<div class="profile-infos">
-			<h2>
-				<a href="{{ path('app_profile_view', { id: profile.id }) }}" title="Voir le profil de {{ profile.user.pseudo }}">
-					{{ profile.user.pseudo }}
-				</a>
-				-
-				<span>{{ profile.city|default('Inc') }}</span>
-			</h2>
-			<p>
-				<strong>{{ profile.sex|default('Inc') }}</strong>
-				-
-				{% if profile.age %}
-					{{ profile.age }} ans
-				{% else %}
-					Non spécifié
-				{% endif %}
-			</p>
 
-			<p>
-				<strong>Ville :</strong>
-				{{ profile.city|default('Inconnue') }}</p>
-			<p>
-				<strong>Pour :</strong>
-				{% if profile.research is iterable %}
-					{{ profile.research|join(', ') }}
-				{% else %}
-					{{ profile.research|default('Non précisé') }}
-				{% endif %}
-			</p>
+	<div class="card-inner">
 
-			<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn-secondary" title="Envoyer un message">
-				<img src="{{ asset('images/message.png') }}" alt="Envoyer un message">
+		<div class="card-left">
+
+			<a class="avatar-link" href="{{ path('app_profile_view', { id: profile.id }) }}">
+
+				<div class="avatar-wrap">
+					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}"
+						alt="Avatar de {{ profile.user.pseudo }}">
+
+					{% if 'ROLE_PREMIUM' in profile.user.roles %}
+					<span class="premium-dot">⭐</span>
+					{% endif %}
+				</div>
+
 			</a>
-		</div>
-	</div>
-</article>
 
-</div>
+			<div class="left-actions">
+				<a href="{{ path('app_messages', { id: profile.user.id }) }}" class="btn btn-primary btn-small">
+					Message
+				</a>
+			</div>
+
+		</div>
+
+		<a class="card-right" href="{{ path('app_profile_view', { id: profile.id }) }}">
+
+			<div class="card-main">
+
+				{% if 'ROLE_PREMIUM' in profile.user.roles %}
+				<span class="premium-badge">Premium</span>
+				{% endif %}
+
+				<h2 class="name">
+					{{ profile.user.pseudo }}
+				</h2>
+
+				<div class="meta">
+					<span class="pill">{{ profile.sex|default('Inc') }}</span>
+
+					{% if profile.age %}
+					<span class="sep">—</span>{{ profile.age }} ans
+					{% endif %}
+				</div>
+
+				<div class="city">
+					📍 {{ profile.city|default('Inconnue') }}
+				</div>
+
+				<div class="search">
+					💖
+					{% if profile.research is iterable %}
+					{{ profile.research|join(', ') }}
+					{% else %}
+					{{ profile.research|default('Non précisé') }}
+					{% endif %}
+				</div>
+
+				<p class="bio">
+					{{ profile.biography|default('Aucune biographie.')|striptags }}
+				</p>
+
+			</div>
+
+		</a>
+
+	</div>
+
+</article>

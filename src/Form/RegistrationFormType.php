@@ -45,11 +45,18 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
-                'label' => 'Agree to terms',
+                'label' => 'J’accepte les conditions d’utilisation',
                 'mapped' => false,
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label',
+                ],
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You must agree to our terms',
+                        'message' => 'Vous devez accepter les conditions.',
                     ]),
                 ],
             ]);

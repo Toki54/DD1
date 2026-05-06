@@ -1,50 +1,119 @@
 /* public/css/base.css */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
 
 /* =========================
-   RESET
+   RESET & TOKENS
    ========================= */
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --bg-void: #050608;
+  --bg-surface: #0c0d12;
+  --bg-panel: #111318;
+  --bg-glass: rgba(255, 255, 255, .04);
+  --border: rgba(255, 255, 255, .07);
+  --border-glow: rgba(0, 230, 200, .18);
+
+  --cyan: #00e6c8;
+  --violet: #9b5cff;
+  --pink: #ff3e7f;
+  --white: #f0f2ff;
+  --muted: #6b7090;
+  --text: #c8cde8;
+
+  --font-display: "Syne", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --nav-h: 64px;
 }
 
 body {
-  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text);
   min-height: 100vh;
-  background: #300616; /* sombre grenat */
-  color: #fff;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Background grid lines */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 230, 200, .03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 230, 200, .03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient glow blob */
+body::after {
+  content: "";
+  position: fixed;
+  top: -20vh;
+  left: 50%;
+  translate: -50% 0;
+  width: 80vw;
+  height: 60vh;
+  background: radial-gradient(ellipse,
+      rgba(155, 92, 255, .10) 0%,
+      rgba(0, 230, 200, .06) 45%,
+      transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* =========================
-   HEADER / TITRE
+   HEADER
    ========================= */
 .site-header {
+  position: relative;
+  z-index: 10;
   text-align: center;
-  padding: 2rem 1rem 1rem;
+  padding: 2.4rem 1rem 1.2rem;
 }
 
 .site-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  background: linear-gradient(120deg, var(--white) 30%, var(--cyan) 70%, var(--violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* =========================
-   NAVBAR (boutons en haut, Logout dessous)
+   NAVBAR
    ========================= */
 .navbar {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 12px;
-  margin: 0 auto;
-  padding: 0.9rem 1rem 0.8rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  width: min(1200px, calc(100% - 2rem));
+  position: relative;
+  z-index: 100;
+  width: min(1160px, calc(100% - 2rem));
+  margin: 0 auto .5rem;
+  background: rgba(12, 13, 18, .75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: .7rem 1.2rem;
+  box-shadow: 0 0 0 1px rgba(0, 230, 200, .04), 0 8px 40px rgba(0, 0, 0, .5);
 }
 
 .nav-container {
@@ -60,22 +129,25 @@ body {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 24px;
-  height: 20px;
+  width: 22px;
+  height: 18px;
   background: transparent;
   border: none;
   cursor: pointer;
-  margin-right: 1rem;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  translate: 0 -50%;
   z-index: 1000;
 }
 
 .hamburger span {
   display: block;
-  height: 3px;
+  height: 2px;
   width: 100%;
-  background: #fff;
+  background: var(--cyan);
   border-radius: 2px;
-  transition: 0.3s;
+  transition: .3s;
 }
 
 /* =========================
@@ -87,120 +159,108 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.8rem;
+  gap: .55rem;
   width: 100%;
-  position: relative;
 }
 
-/* Le lien logout passe sur une ligne en dessous */
-.nav-list a.logout {
-  flex-basis: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* =========================
-   BOUTONS (Glassmorphism + Dégradé)
-   ========================= */
 .nav-list a {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-
-  min-width: 210px;
-  height: 46px;
-
-  padding: 0 1.6rem;
+  gap: .42rem;
+  padding: 0 1.2rem;
+  height: 40px;
+  font-family: var(--font-display);
+  font-size: .82rem;
   font-weight: 600;
-  font-size: 0.95rem;
+  letter-spacing: .02em;
   text-decoration: none;
-  color: #fff;
+  color: var(--text);
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: color .2s, border-color .2s, box-shadow .2s, transform .2s, background .2s;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-  background: rgba(128, 0, 32, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+/* Shimmer line on top */
+.nav-list a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  transition: left .4s ease;
+}
 
-  background-image: linear-gradient(
-    to right,
-    rgba(139, 0, 0, 0.3) 0%,
-    rgba(128, 0, 32, 0.6) 50%,
-    rgba(139, 0, 0, 0.3) 100%
-  );
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
+.nav-list a:hover::before {
+  left: 120%;
 }
 
 .nav-list a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(128, 0, 32, 0.5);
-  background-image: linear-gradient(
-    to right,
-    rgba(139, 0, 0, 0.45) 0%,
-    rgba(128, 0, 32, 0.75) 50%,
-    rgba(139, 0, 0, 0.45) 100%
-  );
+  color: var(--white);
+  border-color: var(--border-glow);
+  background: rgba(0, 230, 200, .06);
+  box-shadow: 0 0 16px rgba(0, 230, 200, .12), 0 4px 20px rgba(0, 0, 0, .3);
+  transform: translateY(-1px);
 }
 
-/* Logout dessous, centré, un peu plus compact */
+/* Logout */
 .nav-list a.logout {
-  width: min(240px, 100%);
-  height: 44px;
-  margin-top: 4px;
-
-  background: rgba(200, 0, 0, 0.35);
-  background-image: linear-gradient(
-    to right,
-    rgba(200, 0, 0, 0.3) 0%,
-    rgba(180, 0, 0, 0.6) 50%,
-    rgba(200, 0, 0, 0.3) 100%
-  );
+  flex-basis: 100%;
+  justify-content: center;
+  margin-top: .3rem;
+  color: #ff3e7f88;
+  border-color: rgba(255, 62, 127, .15);
 }
 
 .nav-list a.logout:hover {
-  background-image: linear-gradient(
-    to right,
-    rgba(200, 0, 0, 0.45) 0%,
-    rgba(180, 0, 0, 0.8) 50%,
-    rgba(200, 0, 0, 0.45) 100%
-  );
+  color: var(--pink);
+  border-color: rgba(255, 62, 127, .4);
+  background: rgba(255, 62, 127, .06);
+  box-shadow: 0 0 16px rgba(255, 62, 127, .14), 0 4px 20px rgba(0, 0, 0, .3);
 }
 
-/* ✅ NAV : Abonné vert */
+/* Premium / Abonné */
 .nav-list a.nav-subscribed {
-  background: rgba(15, 122, 42, 0.25) !important;
-  border: 1px solid rgba(189, 232, 198, 0.55) !important;
-  color: #eaffef !important;
-
-  background-image: linear-gradient(
-    to right,
-    rgba(15, 122, 42, 0.25) 0%,
-    rgba(9, 143, 9, 0.55) 50%,
-    rgba(15, 122, 42, 0.25) 100%
-  ) !important;
+  color: #4fffb0 !important;
+  border-color: rgba(79, 255, 176, .25) !important;
+  background: rgba(79, 255, 176, .05) !important;
 }
 
 .nav-list a.nav-subscribed:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45), 0 0 15px rgba(9, 143, 9, 0.55) !important;
-  background-image: linear-gradient(
-    to right,
-    rgba(15, 122, 42, 0.35) 0%,
-    rgba(9, 143, 9, 0.70) 50%,
-    rgba(15, 122, 42, 0.35) 100%
-  ) !important;
+  box-shadow: 0 0 18px rgba(79, 255, 176, .18), 0 4px 20px rgba(0, 0, 0, .3) !important;
+  border-color: rgba(79, 255, 176, .5) !important;
+  background: rgba(79, 255, 176, .09) !important;
 }
 
-/* ICONES */
+/* Icons */
 .nav-list i {
+  width: 15px;
+  height: 15px;
   stroke-width: 2px;
+  flex-shrink: 0;
+}
+
+/* Badge messages */
+.badge.bg-light {
+  background: rgba(0, 230, 200, .15) !important;
+  color: var(--cyan) !important;
+  font-size: .7rem;
+  border-radius: 99px;
+  padding: 2px 7px;
+  font-family: var(--font-display);
 }
 
 /* =========================
-   MAIN CONTENT
+   MAIN
    ========================= */
 .container {
+  position: relative;
+  z-index: 1;
   flex-grow: 1;
   padding: 2rem 1rem;
 }
@@ -209,12 +269,16 @@ body {
    FOOTER
    ========================= */
 footer {
-  background: #2b0613;
-  color: #fff;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
   text-align: center;
-  padding: 1rem 0;
-  font-size: 0.9rem;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.4);
+  padding: 1.2rem 0;
+  font-size: .8rem;
+  font-family: var(--font-display);
+  letter-spacing: .04em;
 }
 
 /* =========================
@@ -223,47 +287,41 @@ footer {
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
-    position: absolute;
-    left: 12px;
-    top: 10px;
-  }
-
-  .navbar {
-    margin: 0 1rem;
-    width: calc(100% - 2rem);
   }
 
   .nav-container {
+    padding-top: 2rem;
     justify-content: center;
-    padding-top: 2.1rem; /* place pour l'hamburger */
   }
 
   .nav-list {
     display: none;
     flex-direction: column;
     width: 100%;
-    gap: 10px;
+    gap: .5rem;
   }
 
   .nav-list.open {
     display: flex;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(5, 6, 8, .95);
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    padding: 18px 12px 14px;
-    border-radius: 12px;
+    padding: 3rem .8rem .8rem;
+    border-radius: var(--radius-lg);
     z-index: 999;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(24px);
   }
 
   .nav-list a {
     width: 100%;
-    min-width: 0;
+    justify-content: center;
   }
 
   .nav-list a.logout {
-    width: 100%;
     flex-basis: auto;
+    width: 100%;
   }
 }

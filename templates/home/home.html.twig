@@ -1,40 +1,70 @@
-{# templates/home/home.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - Site de Rencontre{% endblock %}
+{% block title %}Accueil — Parlottes{% endblock %}
 
 {% block body %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+<link rel="stylesheet" href="{{ asset('css/home.css') }}">
 {% endblock %}
 
 <div class="home-container">
+
+    
     <div class="hero-section">
-        <h1>Revenons à l'essentiel de la rencontre !</h1>
+        <div class="hero-tag">Nouveau concept</div>
+
+        <h1>
+            Rencontres vraies.<br>
+            <span class="highlight">Zéro algo.</span>
+        </h1>
+
         <p class="lead">
-            Ici, pas d’algorithme pour comparer vos critères.
-            Nous croyons en la vraie rencontre : parler, échanger et apprendre à se connaître.
+            Pas de matching par critères. Ici on parle, on échange, on se découvre vraiment.
+            La vraie connexion commence par une vraie conversation.
         </p>
 
-        <p class="special-offer">
-            Les <strong>100 premiers inscrits</strong> seront <span class="premium">premium à vie</span> !
-            <br>
-            <strong class="vie">Il reste {{ premiumRemaining }} abonnement{% if premiumRemaining > 1 %}s{% endif %} à vie !</strong>
-        </p>
+        <div class="special-offer">
+            <span>
+                🎁 Les <strong>100 premiers inscrits</strong> sont
+                <span class="premium">✦ premium à vie</span>
+            </span>
+            <strong class="vie">
+                ⚡ {{ premiumRemaining }} abonnement{% if premiumRemaining > 1 %}s{% endif %} à vie restant{% if
+                premiumRemaining > 1 %}s{% endif %}
+            </strong>
+        </div>
     </div>
 
+    
+    <div class="stat-bar">
+        <div class="stat-item">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Authentique</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Algo de matching</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Vraies rencontres</div>
+        </div>
+    </div>
+
+   
     <div class="cards-container">
         <div class="card login-card">
-            <h2>Connexion</h2>
-            <p>Déjà membre ? Connectez-vous et retrouvez vos rencontres.</p>
-            <a href="{{ path('app_login') }}" class="btn btn-primary">Se connecter</a>
+            <h2>Se connecter</h2>
+            <p>Déjà membre ? Retrouve tes conversations et tes rencontres en cours.</p>
+            <a href="{{ path('app_login') }}" class="btn btn-primary">Connexion →</a>
         </div>
 
         <div class="card register-card">
-            <h2>Inscription</h2>
-            <p>Rejoignez-nous et découvrez de nouvelles rencontres authentiques.</p>
-            <a href="{{ path('app_register') }}" class="btn btn-secondary">S'inscrire</a>
+            <h2>Rejoindre Parlottes</h2>
+            <p>Crée ton profil et commence à rencontrer des gens qui ont envie de parler pour vrai.</p>
+            <a href="{{ path('app_register') }}" class="btn btn-secondary">S'inscrire →</a>
         </div>
     </div>
+
 </div>
 {% endblock %}
