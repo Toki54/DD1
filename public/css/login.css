@@ -181,6 +181,8 @@ label {
 
 /* ====== FOOTER ====== */
 .login-footer {
+  position: relative;
+  z-index: 99999;
   margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
@@ -193,6 +195,8 @@ label {
 }
 
 .login-footer a {
+  position: relative;
+  z-index: 99999;
   color: var(--violet);
   font-weight: 700;
   text-decoration: none;

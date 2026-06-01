@@ -1,33 +1,20 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Les filtres sont maintenant toujours visibles, pas besoin de toggle
-  let sortContent = document.querySelector(".sort-content");
+document.addEventListener("DOMContentLoaded", () => {
+	document.querySelectorAll(".photo-thumbnail").forEach((img) => {
+		img.addEventListener("click", () => {
+			const index = parseInt(img.dataset.index);
 
-  // Tu n'as plus besoin de gestion du toggle pour les filtres, donc ce bloc est supprimé
+			const modalId = img.dataset.bsTarget;
+			const modal = document.querySelector(modalId);
 
-  // Gestion de l'affichage des photos pour chaque profil
-  document.querySelectorAll(".toggle-photos-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      let profileId = this.getAttribute("data-profile-id");
-      let gallery = document.getElementById("gallery-" + profileId);
+			if (!modal) return;
 
-      if (gallery) {
-        let isHidden =
-          gallery.style.display === "none" || gallery.style.display === "";
-        gallery.style.display = isHidden ? "flex" : "none";
-        this.textContent = isHidden
-          ? "Masquer les photos"
-          : "Afficher les photos";
-      }
-    });
-  });
+			const carouselElement = modal.querySelector(".carousel");
 
-  // Gestion du modal pour afficher l'image cliquée en premier
-  document.querySelectorAll(".photo-thumbnail").forEach((img, index) => {
-    img.addEventListener("click", function () {
-      let carousel = new bootstrap.Carousel(
-        document.querySelector("#carouselExample")
-      );
-      carousel.to(index);
-    });
-  });
+			if (!carouselElement) return;
+
+			const carousel = bootstrap.Carousel.getOrCreateInstance(carouselElement);
+
+			carousel.to(index);
+		});
+	});
 });

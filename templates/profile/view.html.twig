@@ -2,176 +2,228 @@
 
 {% block title %}Profil de {{ userProfile.user.pseudo }}{% endblock %}
 
-
-
 {% block body %}
+{% set viewedIsPremium = ('ROLE_PREMIUM' in userProfile.user.roles) %}
+
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
+<link rel="stylesheet" href="{{ asset('css/profileUser.css') }}">
 {% endblock %}
-    {# Badge premium du profil affiché (pas le visiteur) #}
-    {% set viewedIsPremium = ('ROLE_PREMIUM' in userProfile.user.roles) %}
 
-    <section class="profile-page">
-        <div class="profile-container">
+<section class="profile-page">
+    <div class="profile-container">
 
-            <header class="profile-header">
-                <div class="profile-header-top">
-                    <h1 class="profile-title">
-                        {{ userProfile.user.pseudo }}
+        <header class="profile-header">
+            <div class="profile-header-top">
 
-                        {% if viewedIsPremium %}
-                            <span class="premium-logo" title="Profil Premium" aria-label="Premium">⭐</span>
-                        {% endif %}
-                    </h1>
+                <h1 class="profile-title">
+                    {{ userProfile.user.pseudo }}
 
                     {% if viewedIsPremium %}
-                        <span class="premium-badge-header" title="Profil Premium">Premium</span>
+                    <span class="premium-logo">⭐</span>
                     {% endif %}
-                </div>
+                </h1>
 
-                <p>Profil public</p>
-            </header>
-
-            <div class="profile-grid">
-
-                {# ===== LEFT : INFOS ===== #}
-                <article class="card panel profile-card">
-                    <h2 class="panel-title">Informations</h2>
-
-                    <div class="profile-top">
-                        <img
-                            class="avatar"
-                            src="{{ asset(userProfile.avatar ? 'uploads/avatars/' ~ userProfile.avatar : 'uploads/avatars/default-avatar.png') }}"
-                            alt="Avatar"
-                        />
-
-                        <div class="profile-meta">
-                            <div class="meta-item">
-                                <span class="meta-label">Sexe</span>
-                                <span class="meta-value">
-                                    {% set sexValue = (userProfile.sex is iterable ? userProfile.sex|join(', ') : userProfile.sex|default('Non spécifié')) %}
-                                    {% if userProfile.age is defined and userProfile.age %}
-                                        {{ sexValue }} - {{ userProfile.age }} ans
-                                    {% else %}
-                                        {{ sexValue }}
-                                    {% endif %}
-                                </span>
-                            </div>
-
-                            <div class="meta-item">
-                                <span class="meta-label">Situation</span>
-                                <span class="meta-value">
-                                    {{ userProfile.situation is iterable ? userProfile.situation|join(', ') : userProfile.situation|default('Non renseignée') }}
-                                </span>
-                            </div>
-
-                            <div class="meta-item">
-                                <span class="meta-label">Ici pour</span>
-                                <span class="meta-value">
-                                    {{ userProfile.research is iterable ? userProfile.research|join(', ') : userProfile.research|default('Non spécifié') }}
-                                </span>
-                            </div>
-
-                            <div class="meta-item">
-                                <span class="meta-label">Ville</span>
-                                <span class="meta-value">
-                                    {{ userProfile.city is iterable ? userProfile.city|join(', ') : userProfile.city|default('Non renseignée') }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="bio-block">
-                        <p class="bio-text">
-                            {{ userProfile.biography is iterable ? userProfile.biography|join(', ') : userProfile.biography|default('Aucune biographie') }}
-                        </p>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="actions">
-                        <a href="{{ path('app_messages', { id: userProfile.user.id }) }}" class="btn btn-primary">
-                            Envoyer un message
-                        </a>
-
-                        <form action="{{ path('app_profile_like', { id: userProfile.id }) }}" method="POST" class="like-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('like' ~ userProfile.id) }}">
-                            <button type="submit" class="btn btn-like" title="Liker ce profil">❤️ Like</button>
-                        </form>
-                    </div>
-                </article>
-
-                {# ===== RIGHT : GALLERY ===== #}
-                <article class="card panel gallery-card">
-                    <h2 class="panel-title">Galerie de photos</h2>
-
-                    {% set viewerIsPremium = is_granted('ROLE_PREMIUM') %}
-
-                    {% if viewerIsPremium %}
-                        <div class="photo-gallery" id="gallery-{{ userProfile.id }}">
-                            {% set photos = userProfile.photos|default([]) %}
-                            {% if photos is not empty %}
-                                {% for photo in photos %}
-                                    <img
-                                        src="{{ asset('uploads/photos/' ~ photo) }}"
-                                        alt="Photo"
-                                        class="photo-thumbnail"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#photoCarousel-{{ userProfile.id }}"
-                                        data-bs-slide-to="{{ loop.index0 }}"
-                                    >
-                                {% endfor %}
-                            {% else %}
-                                <p class="empty">Aucune photo ajoutée.</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-fullscreen">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-ride="carousel">
-                                            <div class="carousel-inner">
-                                                {% for photo in photos %}
-                                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                                        <img
-                                                            src="{{ asset('uploads/photos/' ~ photo) }}"
-                                                            class="d-block modal-photo"
-                                                            alt="Photo utilisateur"
-                                                        >
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon"></span>
-                                                <span class="visually-hidden">Précédent</span>
-                                            </button>
-                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon"></span>
-                                                <span class="visually-hidden">Suivant</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="gallery-locked">
-                            <div class="lock-icon">🔒</div>
-                            <div class="lock-title">Vous devez vous abonner pour voir les photos</div>
-                            <a class="btn btn-primary" href="{{ path('app_stripe_subscribe') }}">S'abonner</a>
-                        </div>
-                    {% endif %}
-                </article>
+                {% if viewedIsPremium %}
+                <span class="premium-badge-header">⭐ Premium</span>
+                {% endif %}
 
             </div>
-        </div>
-    </section>
 
-    <script src="{{ asset('script/js/profile-detail.js') }}" defer></script>
+            <p>Profil public</p>
+        </header>
+
+        <div class="profile-grid">
+
+            <article class="card panel profile-card detail-card">
+
+                <h2 class="panel-title">Informations</h2>
+
+                <div class="profile-top">
+
+                    <img class="avatar"
+                        src="{{ asset(userProfile.avatar ? 'uploads/avatars/' ~ userProfile.avatar : 'uploads/avatars/default-avatar.png') }}"
+                        alt="Avatar de {{ userProfile.user.pseudo }}" />
+
+                    <div class="profile-meta">
+
+                        <div class="meta-item">
+                            <span class="meta-label">Sexe</span>
+
+                            <span class="meta-value">
+                                {% set sexValue = (userProfile.sex is iterable
+                                ? userProfile.sex|join(', ')
+                                : userProfile.sex|default('Non spécifié')) %}
+
+                                {% if userProfile.age is defined and userProfile.age %}
+                                {{ sexValue }} · {{ userProfile.age }} ans
+                                {% else %}
+                                {{ sexValue }}
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="meta-item">
+                            <span class="meta-label">Situation</span>
+
+                            <span class="meta-value">
+                                {{ userProfile.situation is iterable
+                                ? userProfile.situation|join(', ')
+                                : userProfile.situation|default('Non renseignée') }}
+                            </span>
+                        </div>
+
+                        <div class="meta-item">
+                            <span class="meta-label">Ici pour</span>
+
+                            <span class="meta-value">
+                                {{ userProfile.research is iterable
+                                ? userProfile.research|join(', ')
+                                : userProfile.research|default('Non spécifié') }}
+                            </span>
+                        </div>
+
+                        <div class="meta-item">
+                            <span class="meta-label">Ville</span>
+
+                            <span class="meta-value">
+                                {{ userProfile.city is iterable
+                                ? userProfile.city|join(', ')
+                                : userProfile.city|default('Non renseignée') }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="bio-block">
+                    <p class="bio-text">
+                        {{ userProfile.biography is iterable
+                        ? userProfile.biography|join(', ')
+                        : userProfile.biography|default('Aucune biographie renseignée.') }}
+                    </p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="like-alert" id="like-alert"></div>
+
+                <div class="actions">
+
+                    <a href="{{ path('app_messages', { id: userProfile.user.id }) }}" class="btn btn-primary">
+                        💬 Envoyer un message
+                    </a>
+
+                    <button type="button" class="btn btn-like js-like-btn"
+                        data-url="{{ path('app_profile_like', { id: userProfile.id }) }}"
+                        data-token="{{ csrf_token('like' ~ userProfile.id) }}">
+                        ❤️ Like
+                    </button>
+
+                </div>
+
+            </article>
+
+            <article class="card panel gallery-card">
+            
+                <h2 class="panel-title">Galerie de photos</h2>
+            
+                {% set viewerIsPremium = is_granted('ROLE_PREMIUM') %}
+            
+                {% if viewerIsPremium %}
+            
+                {% set photos = userProfile.photos|default([]) %}
+            
+                <div class="photo-gallery">
+            
+                    {% for photo in photos %}
+                    <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal"
+                        data-bs-target="#photoCarousel-{{ userProfile.id }}" data-index="{{ loop.index0 }}">
+                    {% endfor %}
+            
+                </div>
+            
+                {% else %}
+            
+                <div class="gallery-locked">
+            
+                    <div class="lock-icon">🔒</div>
+            
+                    <div class="lock-title">
+                        Abonnez-vous pour voir les photos
+                    </div>
+            
+                    <a class="btn btn-primary" href="{{ path('app_stripe_subscribe') }}">
+                        S'abonner
+                    </a>
+            
+                </div>
+            
+                {% endif %}
+            
+            </article>
+            
+            {# MODAL EN DEHORS DE LA CARD #}
+            {% if viewerIsPremium %}
+            
+            <div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-hidden="true">
+            
+                <div class="modal-dialog modal-fullscreen">
+            
+                    <div class="modal-content">
+            
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4"
+                            data-bs-dismiss="modal" aria-label="Fermer" style="z-index:999999;"></button>
+            
+                        <div class="modal-body">
+            
+                            <div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-interval="false">
+            
+                                <div class="carousel-inner">
+            
+                                    {% for photo in photos %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+            
+                                        <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo utilisateur">
+            
+                                    </div>
+                                    {% endfor %}
+            
+                                </div>
+            
+                                <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+            
+                                <button class="carousel-control-next" type="button"
+                                    data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+            
+                            </div>
+            
+                        </div>
+            
+                    </div>
+            
+                </div>
+            
+            </div>
+            
+            {% endif %}
+
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<script src="{{ asset('script/js/profile-detail.js') }}"></script>
+
+
+
+
 {% endblock %}
