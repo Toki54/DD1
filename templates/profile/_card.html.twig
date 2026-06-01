@@ -10,8 +10,11 @@
 					<img src="{{ asset(profile.avatar ? 'uploads/avatars/' ~ profile.avatar : 'uploads/avatars/default-avatar.png') }}"
 						alt="Avatar de {{ profile.user.pseudo }}">
 
+						
+
 					{% if 'ROLE_PREMIUM' in profile.user.roles %}
 					<span class="premium-dot">⭐</span>
+					<span class="premium-badge">Premium</span>
 					{% endif %}
 				</div>
 
@@ -22,6 +25,7 @@
 					Message
 				</a>
 			</div>
+			
 
 		</div>
 
@@ -29,9 +33,7 @@
 
 			<div class="card-main">
 
-				{% if 'ROLE_PREMIUM' in profile.user.roles %}
-				<span class="premium-badge">Premium</span>
-				{% endif %}
+				
 
 				<h2 class="name">
 					{{ profile.user.pseudo }}
