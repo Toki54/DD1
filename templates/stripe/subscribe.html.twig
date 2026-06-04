@@ -7,7 +7,134 @@
 <link rel="stylesheet" href="{{ asset('css/abo.css') }}">
 {% endblock %}
 
+
+
 <div class="abo-page">
+    <div class="account-status-card">
+    
+        {% if is_granted('ROLE_PREMIUM') and subscription %}
+    
+        <div class="status-badge premium">
+            ⭐ Premium actif
+        </div>
+    
+        <h2 class="status-title">
+            Vous êtes membre Premium
+        </h2>
+    
+        <p class="status-description">
+            Votre abonnement est actuellement actif et vous donne accès à toutes les fonctionnalités du site.
+        </p>
+    
+        <div class="status-grid">
+    
+            <div class="status-item">
+                <span>Abonnement</span>
+                <strong>{{ subscription.plan }}</strong>
+            </div>
+    
+            <div class="status-item">
+                <span>Expiration</span>
+                <strong>{{ subscription.endDate|date('d/m/Y') }}</strong>
+            </div>
+    
+        </div>
+    
+        <div class="status-features">
+    
+            <div class="status-feature">
+                ♾ Profils illimités
+            </div>
+    
+            <div class="status-feature">
+                ❤️ Likes illimités
+            </div>
+    
+            <div class="status-feature">
+                💌 Messages illimités
+            </div>
+    
+            <div class="status-feature">
+                👀 Toutes les photos visibles
+            </div>
+    
+            <div class="status-feature">
+                🔥 Priorité dans les résultats
+            </div>
+    
+            <div class="status-feature">
+                ⭐ Badge Premium
+            </div>
+    
+        </div>
+    
+        {% else %}
+    
+        <div class="status-badge basic">
+            Compte Basic
+        </div>
+    
+        <h2 class="status-title">
+            Version gratuite
+        </h2>
+    
+        <p class="status-description">
+            Vous utilisez actuellement la version gratuite avec certaines limitations.
+        </p>
+    
+        <div class="status-grid">
+    
+            <div class="status-item">
+                <span>Profils consultables</span>
+                <strong>10 / jour</strong>
+            </div>
+    
+            <div class="status-item">
+                <span>Messages</span>
+                <strong>5 / jour</strong>
+            </div>
+    
+        </div>
+    
+        <div class="status-features">
+    
+            <div class="status-feature">
+                ✅ Voir des profils
+            </div>
+    
+            <div class="status-feature">
+                ✅ 5 messages par jour
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Profils illimités
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Likes illimités
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Messages illimités
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Toutes les photos visibles
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Priorité dans les résultats
+            </div>
+    
+            <div class="status-feature disabled">
+                ❌ Badge Premium
+            </div>
+    
+        </div>
+    
+        {% endif %}
+    
+    </div>
 
     <section class="abo-hero">
         <div class="hero-badge">

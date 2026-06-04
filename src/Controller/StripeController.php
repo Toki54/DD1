@@ -28,15 +28,24 @@ class StripeController extends AbstractController
     }
 
     #[Route('/subscribes', name: 'app_stripe_subscribe', methods: ['GET'])]
-    public function subscribe(Security $security): Response
-    {
+    public function subscribe(
+        Security $security,
+        SubscriptionRepository $subscriptionRepository
+    ): Response {
         $user = $security->getUser();
+
         if (!$user instanceof \App\Entity\User) {
             return $this->redirectToRoute('app_login');
         }
 
+        $subscription = $subscriptionRepository->findOneBy([
+            'user' => $user,
+            'active' => true
+        ]);
+
         return $this->render('stripe/subscribe.html.twig', [
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
+            'subscription' => $subscription,
         ]);
     }
 

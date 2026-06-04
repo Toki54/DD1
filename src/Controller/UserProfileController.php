@@ -71,44 +71,139 @@ class UserProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $avatarFile = $form->get('avatarFile')->getData();
+
             if ($avatarFile) {
                 $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
-                $avatarFile->move($this->getParameter('avatars_directory'), $avatarFilename);
+
+                $avatarFile->move(
+                    $this->getParameter('avatars_directory'),
+                    $avatarFilename
+                );
+
                 $userProfile->setAvatar($avatarFilename);
             }
 
             $photoFiles = $form->get('photoFiles')->getData();
+
             if ($photoFiles) {
+
                 $existingPhotos = $userProfile->getPhotos() ?? [];
                 $photoPaths = [];
 
                 foreach ($photoFiles as $photo) {
+
                     if (count($existingPhotos) + count($photoPaths) >= 10) {
-                        $this->addFlash('error', 'Vous ne pouvez pas ajouter plus de 10 photos.');
+                        $this->addFlash(
+                            'error',
+                            'Vous ne pouvez pas ajouter plus de 10 photos.'
+                        );
                         break;
                     }
 
                     if ($photo->getSize() > 8 * 1024 * 1024) {
-                        $this->addFlash('error', 'Une photo dépasse 8 Mo et n’a pas été uploadée.');
+                        $this->addFlash(
+                            'error',
+                            'Une photo dépasse 8 Mo et n’a pas été uploadée.'
+                        );
                         continue;
                     }
 
                     $photoFilename = uniqid() . '.' . $photo->guessExtension();
-                    $photo->move($this->getParameter('photos_directory'), $photoFilename);
+
+                    $photo->move(
+                        $this->getParameter('photos_directory'),
+                        $photoFilename
+                    );
+
                     $photoPaths[] = $photoFilename;
                 }
 
-                $userProfile->setPhotos(array_merge($existingPhotos, $photoPaths));
+                $userProfile->setPhotos(
+                    array_merge($existingPhotos, $photoPaths)
+                );
             }
 
+            // =========================
+            // FEMMES = PREMIUM À VIE
+            // HOMMES = COMPTE NORMAL
+            // =========================
+
+            if ($userProfile->getSex() === 'Femme') {
+
+                $roles = $user->getRoles();
+
+                if (!in_array('ROLE_PREMIUM', $roles, true)) {
+                    $roles[] = 'ROLE_PREMIUM';
+                    $user->setRoles($roles);
+                }
+
+                $subscription = $entityManager
+                    ->getRepository(\App\Entity\Subscription::class)
+                    ->findOneBy([
+                        'user' => $user
+                    ]);
+
+                if (!$subscription) {
+
+                    $subscription = new \App\Entity\Subscription();
+
+                    $subscription->setUser($user);
+
+                    $subscription->setPlan('Premium Femme');
+
+                    $subscription->setPrice(0);
+
+                    $subscription->setStartDate(
+                        new \DateTime()
+                    );
+
+                    $subscription->setEndDate(
+                        new \DateTime('9999-12-31 23:59:59')
+                    );
+
+                    $subscription->setActive(true);
+
+                    $entityManager->persist($subscription);
+                }
+            } else {
+
+                $roles = array_filter(
+                    $user->getRoles(),
+                    fn($role) => $role !== 'ROLE_PREMIUM'
+                );
+
+                if (empty($roles)) {
+                    $roles = ['ROLE_USER'];
+                }
+
+                $user->setRoles($roles);
+
+                $subscription = $entityManager
+                    ->getRepository(\App\Entity\Subscription::class)
+                    ->findOneBy([
+                        'user' => $user
+                    ]);
+
+                if ($subscription) {
+                    $subscription->setActive(false);
+                }
+            }
+
+            $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('success', 'Profil mis à jour avec succès !');
+
+            $this->addFlash(
+                'success',
+                'Profil mis à jour avec succès !'
+            );
+
             return $this->redirectToRoute('app_profile_edit');
         }
 
         return $this->render('profile/edit.html.twig', [
-            'form'        => $form->createView(),
+            'form' => $form->createView(),
             'userProfile' => $userProfile,
         ]);
     }

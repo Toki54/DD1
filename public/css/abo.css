@@ -471,6 +471,139 @@
 }
 
 /* ========================= */
+/* ACCOUNT STATUS */
+/* ========================= */
+
+.account-status-card {
+  margin-bottom: 30px;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .05),
+      rgba(255, 255, 255, .02));
+
+  border: 1px solid rgba(255, 255, 255, .08);
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, .35);
+}
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 8px 16px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+}
+
+.status-badge.premium {
+  background:
+    linear-gradient(135deg,
+      var(--violet),
+      var(--pink));
+
+  color: white;
+}
+
+.status-badge.basic {
+  background:
+    rgba(255, 255, 255, .08);
+
+  color: var(--text);
+}
+
+.status-title {
+  font-family: "Syne";
+  font-size: 28px;
+  font-weight: 800;
+
+  color: white;
+
+  margin-bottom: 20px;
+}
+
+.status-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(180px, 1fr));
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.status-item {
+  padding: 18px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, .03);
+
+  border:
+    1px solid rgba(255, 255, 255, .06);
+}
+
+.status-item span {
+  display: block;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  margin-bottom: 6px;
+}
+
+.status-item strong {
+  color: white;
+
+  font-size: 18px;
+}
+
+.status-features {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 12px;
+}
+
+.status-feature {
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255, 255, 255, .03);
+
+  border:
+    1px solid rgba(255, 255, 255, .06);
+
+  color: var(--text);
+
+  font-weight: 600;
+}
+
+.status-feature.disabled {
+  opacity: .6;
+}
+
+/* ========================= */
 /* MOBILE */
 /* ========================= */
 
