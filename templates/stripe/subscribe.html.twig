@@ -1,203 +1,404 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Souscription{% endblock %}
+{% block title %}Passe Premium{% endblock %}
 
 {% block body %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/abo.css') }}">
+<link rel="stylesheet" href="{{ asset('css/abo.css') }}">
 {% endblock %}
 
 <div class="abo-page">
 
-    <header class="page-header">
-        <h1>Souscrire à un abonnement</h1>
-        <p>Choisis une durée, puis valide le paiement.</p>
-    </header>
-
-    <section class="abo-layout">
-
-        <div class="subscription-cards">
-            <button type="button" class="subscription-card" data-plan="1 semaine - 5 €" data-amount="5">
-                <div class="card-top">
-                    <h3>1 Semaine</h3>
-                    <span class="badge">Populaire</span>
-                </div>
-                <p class="price">5 €</p>
-                <p class="desc">Accès complet pendant 7 jours</p>
-                <div class="cta">Choisir</div>
-            </button>
-
-            <button type="button" class="subscription-card" data-plan="1 mois - 15 €" data-amount="15">
-                <div class="card-top"><h3>1 Mois</h3></div>
-                <p class="price">15 €</p>
-                <p class="desc">Accès complet pendant 1 mois</p>
-                <div class="cta">Choisir</div>
-            </button>
-
-            <button type="button" class="subscription-card" data-plan="3 mois - 30 €" data-amount="30">
-                <div class="card-top">
-                    <h3>3 Mois</h3>
-                    <span class="badge badge-dark">Meilleur deal</span>
-                </div>
-                <p class="price">30 €</p>
-                <p class="desc">Accès complet pendant 3 mois</p>
-                <div class="cta">Choisir</div>
-            </button>
-
-            <button type="button" class="subscription-card" data-plan="6 mois - 50 €" data-amount="50">
-                <div class="card-top"><h3>6 Mois</h3></div>
-                <p class="price">50 €</p>
-                <p class="desc">Accès complet pendant 6 mois</p>
-                <div class="cta">Choisir</div>
-            </button>
-
-            <button type="button" class="subscription-card" data-plan="1 an - 80 €" data-amount="80">
-                <div class="card-top"><h3>1 An</h3></div>
-                <p class="price">80 €</p>
-                <p class="desc">Accès complet pendant 1 an</p>
-                <div class="cta">Choisir</div>
-            </button>
-
-            <button type="button" class="subscription-card" data-plan="À vie - 100 €" data-amount="100">
-                <div class="card-top">
-                    <h3>À Vie</h3>
-                    <span class="badge badge-dark">Définitif</span>
-                </div>
-                <p class="price">100 €</p>
-                <p class="desc">Accès complet sans limite de durée</p>
-                <div class="cta">Choisir</div>
-            </button>
+    <section class="abo-hero">
+        <div class="hero-badge">
+            ✨ Offre Premium
         </div>
 
-        <aside class="right-column">
+        <h1 class="hero-title">
+            Passe <span>Premium</span>
+        </h1>
 
-            <div id="subscription-summary" class="card panel">
-                <h2 class="panel-title">Résumé</h2>
+        <p class="hero-text">
+            Débloque l'expérience complète :
+            profils illimités, photos non floutées,
+            likes sans limite, visites et avantages exclusifs.
+        </p>
+    </section>
 
-                <div class="summary-row">
-                    <div class="k">Abonnement</div>
-                    <div class="v" id="plan-name">Aucun</div>
+    <div class="abo-layout">
+
+        <div>
+
+            <div class="plans-grid">
+
+                <div class="main-plans">
+
+                    <button type="button" class="subscription-card" data-plan="1 mois - 15 €">
+
+                        <div class="plan-name">
+                            1 Mois
+                        </div>
+
+                        <div class="plan-price">
+                            15€
+                        </div>
+
+                        <div class="plan-desc">
+                            Accès Premium complet pendant 1 mois.
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="subscription-card featured" data-plan="3 mois - 30 €">
+
+                        <div class="plan-badge">
+                            ⭐ Meilleur choix
+                        </div>
+
+                        <div class="plan-name">
+                            3 Mois
+                        </div>
+
+                        <div class="plan-price">
+                            30€
+                        </div>
+
+                        <div class="plan-desc">
+                            L'offre la plus populaire avec le meilleur rapport qualité/prix.
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="subscription-card" data-plan="1 an - 80 €">
+
+                        <div class="plan-name">
+                            1 An
+                        </div>
+
+                        <div class="plan-price">
+                            80€
+                        </div>
+
+                        <div class="plan-desc">
+                            Une année complète d'accès Premium.
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
                 </div>
 
-                <div class="summary-row">
-                    <div class="k">Durée</div>
-                    <div class="v" id="plan-duration">Aucune</div>
+                <div class="secondary-plans">
+
+                    <button type="button" class="subscription-card" data-plan="1 semaine - 5 €">
+
+                        <div class="plan-name">
+                            1 Semaine
+                        </div>
+
+                        <div class="plan-price">
+                            5€
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="subscription-card" data-plan="6 mois - 50 €">
+
+                        <div class="plan-name">
+                            6 Mois
+                        </div>
+
+                        <div class="plan-price">
+                            50€
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
+                    <button type="button" class="subscription-card" data-plan="À vie - 100 €">
+
+                        <div class="plan-badge">
+                            ♾ Définitif
+                        </div>
+
+                        <div class="plan-name">
+                            À Vie
+                        </div>
+
+                        <div class="plan-price">
+                            100€
+                        </div>
+
+                        <div class="plan-btn">
+                            Choisir
+                        </div>
+
+                    </button>
+
                 </div>
 
-                <div class="summary-row">
-                    <div class="k">Prix</div>
-                    <div class="v price-v" id="plan-price">0 €</div>
-                </div>
-
-                <div class="hint">Sélectionne un plan puis clique sur “Payer”.</div>
             </div>
 
-            <div class="card panel form-container" id="paymentSection">
-                <h2 class="panel-title">Validation</h2>
+            <div class="features-card">
 
-                <button id="payBtn" class="btn btn-primary w-100" type="button" disabled>
-                    Payer
+                <h2 class="features-title">
+                    Ce que débloque Premium
+                </h2>
+
+                <div class="features-grid">
+
+                    <div class="feature">
+                        ♾ Profils illimités
+                    </div>
+
+                    <div class="feature">
+                        ❤️ Likes illimités
+                    </div>
+
+                    <div class="feature">
+                        👀 Toutes les photos visibles
+                    </div>
+
+                    <div class="feature">
+                        🔥 Priorité dans les résultats
+                    </div>
+
+                    <div class="feature">
+                        ⭐ Badge Premium
+                    </div>
+
+                    <div class="feature">
+                        🚀 Expérience complète
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <aside>
+
+            <div class="summary-card">
+
+                <div class="summary-title">
+                    Votre choix
+                </div>
+
+                <div class="summary-row">
+
+                    <div class="summary-label">
+                        Abonnement
+                    </div>
+
+                    <div class="summary-value" id="plan-name">
+                        Aucun
+                    </div>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <div class="summary-label">
+                        Durée
+                    </div>
+
+                    <div class="summary-value" id="plan-duration">
+                        -
+                    </div>
+
+                </div>
+
+                <div class="summary-price" id="plan-price">
+                    0€
+                </div>
+
+                <button id="payBtn" type="button" disabled>
+
+                    Payer maintenant
+
                 </button>
 
                 <div class="pay-note">
-                    Paiement sécurisé par Stripe.
+                    🔒 Paiement sécurisé via Stripe
                 </div>
+
             </div>
 
         </aside>
 
-    </section>
+    </div>
 
 </div>
 
 <script src="https://js.stripe.com/v3/"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const stripePublicKey = "{{ stripe_public_key }}";
-    const stripe = Stripe(stripePublicKey);
+    document.addEventListener('DOMContentLoaded', () => {
 
-    const planName = document.getElementById('plan-name');
-    const planDuration = document.getElementById('plan-duration');
-    const planPrice = document.getElementById('plan-price');
-    const payBtn = document.getElementById('payBtn');
+        const stripe = Stripe("{{ stripe_public_key }}");
 
-    let selectedPlan = null;
+        const payBtn = document.getElementById('payBtn');
 
-    const plans = {
-        '1 semaine - 5 €': { duration: '1 semaine', price: '5 €' },
-        '1 mois - 15 €': { duration: '1 mois', price: '15 €' },
-        '3 mois - 30 €': { duration: '3 mois', price: '30 €' },
-        '6 mois - 50 €': { duration: '6 mois', price: '50 €' },
-        '1 an - 80 €': { duration: '1 an', price: '80 €' },
-        'À vie - 100 €': { duration: 'à vie', price: '100 €' },
-    };
+        const planName =
+            document.getElementById('plan-name');
 
-    function selectPlan(plan) {
-        if (!plans[plan]) return;
+        const planDuration =
+            document.getElementById('plan-duration');
 
-        selectedPlan = plan;
+        const planPrice =
+            document.getElementById('plan-price');
 
-        planName.textContent = plan;
-        planDuration.textContent = plans[plan].duration;
-        planPrice.textContent = plans[plan].price;
+        let selectedPlan = null;
 
-        document.querySelectorAll('.subscription-card').forEach(c => c.classList.remove('selected'));
-        const selected = document.querySelector(`.subscription-card[data-plan="${plan}"]`);
-        if (selected) selected.classList.add('selected');
+        const plans = {
 
-        payBtn.disabled = false;
+            '1 semaine - 5 €': {
+                duration: '1 semaine',
+                price: '5€'
+            },
 
-        const target = document.getElementById('paymentSection');
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
+            '1 mois - 15 €': {
+                duration: '1 mois',
+                price: '15€'
+            },
 
-    document.querySelectorAll('.subscription-card').forEach(card => {
-        card.addEventListener('click', () => {
-            selectPlan(card.dataset.plan);
-        });
-    });
+            '3 mois - 30 €': {
+                duration: '3 mois',
+                price: '30€'
+            },
 
-    payBtn.addEventListener('click', async () => {
-        if (!selectedPlan) return;
+            '6 mois - 50 €': {
+                duration: '6 mois',
+                price: '50€'
+            },
 
-        payBtn.disabled = true;
-        payBtn.textContent = "Redirection...";
+            '1 an - 80 €': {
+                duration: '1 an',
+                price: '80€'
+            },
 
-        try {
-            const res = await fetch("{{ path('app_stripe_checkout') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                body: JSON.stringify({
-                    plan: selectedPlan
-                })
+            'À vie - 100 €': {
+                duration: 'Illimité',
+                price: '100€'
+            }
+        };
+
+        document
+            .querySelectorAll('.subscription-card')
+            .forEach(card => {
+
+                card.addEventListener('click', () => {
+
+                    const plan = card.dataset.plan;
+
+                    selectedPlan = plan;
+
+                    document
+                        .querySelectorAll('.subscription-card')
+                        .forEach(c => c.classList.remove('selected'));
+
+                    card.classList.add('selected');
+
+                    planName.textContent = plan;
+
+                    planDuration.textContent =
+                        plans[plan].duration;
+
+                    planPrice.textContent =
+                        plans[plan].price;
+
+                    payBtn.disabled = false;
+
+                });
+
             });
 
-            const data = await res.json();
+        payBtn.addEventListener('click', async () => {
 
-            if (!res.ok || !data.id) {
+            if (!selectedPlan) return;
+
+            payBtn.disabled = true;
+            payBtn.textContent = 'Redirection...';
+
+            try {
+
+                const response = await fetch(
+                    "{{ path('app_stripe_checkout') }}",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            plan: selectedPlan
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.id) {
+
+                    payBtn.disabled = false;
+                    payBtn.textContent =
+                        'Payer maintenant';
+
+                    alert(
+                        data.error ||
+                        'Erreur Stripe'
+                    );
+
+                    return;
+                }
+
+                const result =
+                    await stripe.redirectToCheckout({
+                        sessionId: data.id
+                    });
+
+                if (result.error) {
+
+                    payBtn.disabled = false;
+
+                    payBtn.textContent =
+                        'Payer maintenant';
+
+                    alert(result.error.message);
+                }
+
+            } catch (e) {
+
                 payBtn.disabled = false;
-                payBtn.textContent = "Payer";
-                alert(data.error || "Erreur lors de la création de la session Stripe");
-                return;
+
+                payBtn.textContent =
+                    'Payer maintenant';
+
+                alert('Erreur réseau');
             }
 
-            const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-            if (error) {
-                payBtn.disabled = false;
-                payBtn.textContent = "Payer";
-                alert(error.message);
-            }
-        } catch (e) {
-            payBtn.disabled = false;
-            payBtn.textContent = "Payer";
-            alert("Erreur réseau");
-        }
+        });
+
     });
-});
 </script>
+
 {% endblock %}

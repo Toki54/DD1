@@ -25,62 +25,75 @@
         {% endif %}
     </header>
 
-    <article class="filter-card" id="sortContainer">
-
+    <article class="filter-card">
+    
         <header class="filter-header">
             <h2>Filtres</h2>
-            <p>Affinez la recherche</p>
+            <button type="button" id="toggleSortBtn" class="toggle-filter-btn">
+                <span class="toggle-icon">⚙️</span>
+                <span class="toggle-text">Masquer les filtres</span>
+            </button>
         </header>
-
-        <form method="GET" action="{{ path('app_profiles_list') }}" class="filter-form">
-
-            <div class="filter-grid">
-
-                <div class="filter-group">
-                    <div class="filter-label">Sexe</div>
-                    {% for s in ['Homme','Femme','Autre'] %}
-                    <label>
-                        <input type="checkbox" name="sex[]" value="{{ s }}" {% if s in sex %}checked{% endif %}>
-                        <span>{{ s }}</span>
-                    </label>
-                    {% endfor %}
+    
+        <div id="filterContent">
+    
+            <form method="GET" action="{{ path('app_profiles_list') }}" class="filter-form">
+    
+                <div class="filter-grid">
+    
+                    <div class="filter-group">
+                        <div class="filter-label">Sexe</div>
+    
+                        {% for s in ['Homme','Femme','Autre'] %}
+                        <label>
+                            <input type="checkbox" name="sex[]" value="{{ s }}" {% if s in sex %}checked{% endif %}>
+                            <span>{{ s }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+    
+                    <div class="filter-group">
+                        <div class="filter-label">Situation</div>
+    
+                        {% for s in ['Celibataire','En couple'] %}
+                        <label>
+                            <input type="checkbox" name="situation[]" value="{{ s }}" {% if s in situation %}checked{% endif
+                                %}>
+                            <span>{{ s }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+    
+                    <div class="filter-group">
+                        <div class="filter-label">Recherche</div>
+    
+                        {% for r in ['Homme','Femme','Couple'] %}
+                        <label>
+                            <input type="checkbox" name="research[]" value="{{ r }}" {% if r in research %}checked{% endif
+                                %}>
+                            <span>{{ r }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+    
+                    <div class="filter-group">
+                        <div class="filter-label">Ville</div>
+    
+                        <input type="text" name="city" value="{{ city }}" placeholder="Ville">
+                    </div>
+    
                 </div>
-
-                <div class="filter-group">
-                    <div class="filter-label">Situation</div>
-                    {% for s in ['Celibataire','En couple'] %}
-                    <label>
-                        <input type="checkbox" name="situation[]" value="{{ s }}" {% if s in situation %}checked{% endif
-                            %}>
-                        <span>{{ s }}</span>
-                    </label>
-                    {% endfor %}
+    
+                <div class="filter-actions">
+                    <button type="submit" class="btn-primary">
+                        Appliquer les filtres
+                    </button>
                 </div>
-
-                <div class="filter-group">
-                    <div class="filter-label">Recherche</div>
-                    {% for r in ['Homme','Femme','Couple'] %}
-                    <label>
-                        <input type="checkbox" name="research[]" value="{{ r }}" {% if r in research %}checked{% endif
-                            %}>
-                        <span>{{ r }}</span>
-                    </label>
-                    {% endfor %}
-                </div>
-
-                <div class="filter-group">
-                    <div class="filter-label">Ville</div>
-                    <input type="text" name="city" value="{{ city }}" placeholder="Ville">
-                </div>
-
-            </div>
-
-            <div class="filter-actions">
-                <button class="btn-primary">Appliquer</button>
-                <button type="button" id="toggleSortBtn" class="btn-ghost">Afficher / Masquer</button>
-            </div>
-
-        </form>
+    
+            </form>
+    
+        </div>
+    
     </article>
 
     {% set quotaReached = (app.user and profileViewQuota and profileViewQuota.isLimited and profileViewQuota.remaining
@@ -106,9 +119,26 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        document.getElementById('toggleSortBtn').onclick = () => {
-            document.getElementById('sortContainer').classList.toggle('collapsed');
-        };
+        const button =
+            document.getElementById('toggleSortBtn');
+
+        const content =
+            document.getElementById('filterContent');
+
+        const text =
+            button.querySelector('.toggle-text');
+
+        button.addEventListener('click', () => {
+
+            content.classList.toggle('hidden');
+
+            if (content.classList.contains('hidden')) {
+                text.textContent = 'Afficher les filtres';
+            } else {
+                text.textContent = 'Masquer les filtres';
+            }
+
+        });
 
     });
 </script>

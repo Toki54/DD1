@@ -1,324 +1,506 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
 
-:root{
-  --bg-1:#2b0507;
-  --bg-2:#5a0f14;
+:root {
+  --cyan: #00e6c8;
+  --violet: #9b5cff;
+  --pink: #ff3e7f;
 
-  --accent:#c2171e;
-  --accent-2:#8b1116;
+  --bg: #070910;
+  --panel: rgba(255, 255, 255, .04);
+  --border: rgba(255, 255, 255, .08);
 
-  --white:#ffffff;
-  --text:#121212;
-  --muted:#666;
+  --text: #f4f6ff;
+  --muted: rgba(255, 255, 255, .65);
 
-  --shadow: 0 25px 60px rgba(0,0,0,.28);
-  --shadow-hover: 0 40px 80px rgba(0,0,0,.35);
-
-  --radius: 22px;
+  --radius: 24px;
 }
 
-*{ box-sizing:border-box; margin:0; padding:0; }
+/* ========================= */
+/* PAGE */
+/* ========================= */
 
-body{
-  font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+.abo-page {
+  max-width: 1300px;
+  margin: auto;
+  padding: 40px 20px 80px;
 }
 
-/* ====== PAGE ====== */
-.abo-page{
-  padding: 10px 0 40px;
+/* ========================= */
+/* HERO */
+/* ========================= */
+
+.abo-hero {
+  position: relative;
+  overflow: hidden;
+
+  padding: 60px 40px;
+
+  border-radius: 32px;
+
+  background:
+    rgba(255, 255, 255, .03);
+
+  border: 1px solid rgba(255, 255, 255, .08);
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .03),
+    0 40px 100px rgba(0, 0, 0, .5);
+
+  margin-bottom: 35px;
 }
 
-.page-header{
-  margin-bottom: 16px;
+.abo-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -100px;
+
+  width: 500px;
+  height: 500px;
+
+  background:
+    radial-gradient(circle,
+      rgba(155, 92, 255, .25),
+      transparent 70%);
 }
 
-.page-header h1{
-  color:#fff;
-  font-size: clamp(24px, 3.2vw, 36px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
+.abo-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -120px;
+  left: -100px;
+
+  width: 420px;
+  height: 420px;
+
+  background:
+    radial-gradient(circle,
+      rgba(0, 230, 200, .18),
+      transparent 70%);
 }
 
-.page-header p{
-  color: rgba(255,255,255,.86);
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 75ch;
-}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-/* ====== LAYOUT ====== */
-.abo-layout{
-  display:grid;
-  grid-template-columns: 1.25fr 420px;
-  gap: 22px;
-  align-items: start;
-}
+  padding: 8px 18px;
 
-/* ====== LEFT: PLANS ====== */
-.subscription-cards{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
-}
-
-/* Plan card as button */
-.subscription-card{
-  width: 100%;
-  border: none;
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  cursor:pointer;
-
-  position:relative;
-  overflow:hidden;
-
-  transition: transform .25s ease, box-shadow .25s ease, outline .2s ease;
-}
-
-.subscription-card::before{
-  content:"";
-  position:absolute;
-  inset:-70px;
-  background: radial-gradient(520px 260px at 10% 0%, rgba(194,23,30,.12), transparent 60%);
-  pointer-events:none;
-}
-
-.subscription-card:hover{
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
-}
-
-.subscription-card:active{
-  transform: scale(.98);
-}
-
-/* selected */
-.subscription-card.selected{
-  outline: 3px solid rgba(194,23,30,.35);
-  box-shadow: 0 40px 90px rgba(0,0,0,.38);
-}
-
-/* header row in card */
-.subscription-card .card-top{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.subscription-card h3{
-  position:relative;
-  margin:0;
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: -0.01em;
-}
-
-/* badges */
-.badge{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(194,23,30,.12);
-  color: #7b0e13;
-  font-weight: 900;
-  font-size: 12px;
+
+  background: rgba(0, 230, 200, .08);
+
+  border: 1px solid rgba(0, 230, 200, .2);
+
+  color: var(--cyan);
+
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  margin-bottom: 20px;
 }
 
-.badge-dark{
-  background: rgba(0,0,0,.10);
-  color: #1a1a1a;
+.hero-title {
+  font-family: "Syne";
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1;
+
+  color: white;
+
+  margin-bottom: 18px;
 }
 
-/* price / desc */
-.price{
-  position:relative;
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin: 6px 0 6px;
+.hero-title span {
+  background: linear-gradient(120deg,
+      var(--cyan),
+      var(--violet));
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.desc{
-  position:relative;
+.hero-text {
+  max-width: 700px;
+
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
-  margin: 0 0 12px;
+
+  font-size: 16px;
+  line-height: 1.8;
 }
 
-/* CTA pill inside card */
-.cta{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: #f5f5f7;
-  color: #1a1a1a;
-  font-weight: 900;
-  font-size: 13px;
-  box-shadow: 0 18px 45px rgba(0,0,0,.08);
-  transition: background .25s ease, box-shadow .25s ease, color .25s ease;
+/* ========================= */
+/* LAYOUT */
+/* ========================= */
+
+.abo-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
 }
 
-.subscription-card.selected .cta{
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  color:#fff;
-  box-shadow: 0 18px 45px rgba(194,23,30,.32);
-}
+/* ========================= */
+/* PLANS */
+/* ========================= */
 
-/* ====== RIGHT COLUMN ====== */
-.right-column{
-  display:flex;
-  flex-direction:column;
+.plans-grid {
+  display: grid;
   gap: 18px;
 }
 
-/* ====== PANELS ====== */
-.card.panel{
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow);
-  border:none;
-  position:relative;
-  overflow:hidden;
+.main-plans {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 18px;
 }
 
-.card.panel::before{
-  content:"";
-  position:absolute;
-  inset:-70px;
-  background: radial-gradient(520px 260px at 10% 0%, rgba(194,23,30,.10), transparent 60%);
-  pointer-events:none;
+.secondary-plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
 }
 
-.panel-title{
-  position:relative;
-  font-size: 16px;
-  font-weight: 900;
-  margin-bottom: 12px;
+/* ========================= */
+/* CARD */
+/* ========================= */
+
+.subscription-card {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .05),
+      rgba(255, 255, 255, .02));
+
+  border: 1px solid rgba(255, 255, 255, .08);
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(14px);
+
+  transition: .25s;
 }
 
-/* ====== SUMMARY ====== */
-.summary-row{
-  position:relative;
-  display:flex;
-  justify-content:space-between;
-  gap: 14px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: #f5f5f7;
+.subscription-card:hover {
+  transform: translateY(-6px);
+
+  border-color: rgba(0, 230, 200, .25);
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, .45);
+}
+
+.subscription-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background:
+    linear-gradient(90deg,
+      transparent,
+      var(--cyan),
+      transparent);
+}
+
+/* featured */
+
+.subscription-card.featured {
+  border: 1px solid rgba(155, 92, 255, .4);
+
+  transform: scale(1.03);
+
+  box-shadow:
+    0 30px 100px rgba(155, 92, 255, .18);
+}
+
+.subscription-card.featured::before {
+  background:
+    linear-gradient(90deg,
+      transparent,
+      var(--violet),
+      transparent);
+}
+
+.subscription-card.selected {
+  border-color: var(--cyan);
+
+  box-shadow:
+    0 0 0 1px rgba(0, 230, 200, .25),
+    0 20px 80px rgba(0, 230, 200, .15);
+}
+
+.plan-badge {
+  display: inline-flex;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(135deg,
+      var(--violet),
+      var(--pink));
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  margin-bottom: 18px;
+}
+
+.plan-name {
+  font-family: "Syne";
+  font-size: 24px;
+  font-weight: 800;
+
+  color: white;
+
   margin-bottom: 10px;
 }
 
-.k{
-  font-size: 12px;
-  font-weight: 900;
-  color: #2a2a2a;
-}
-
-.v{
-  font-size: 13px;
+.plan-price {
+  font-family: "Syne";
+  font-size: 42px;
   font-weight: 800;
-  color: #1a1a1a;
-  text-align:right;
+
+  color: white;
+
+  margin-bottom: 10px;
 }
 
-.price-v{
-  color: #7b0e13;
-}
-
-.hint{
-  position:relative;
-  margin-top: 6px;
+.plan-price small {
+  font-size: 16px;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
 }
 
-/* ====== VALIDATION / STRIPE ====== */
-.form-container{
-  display:flex;
-  flex-direction:column;
+.plan-desc {
+  color: var(--muted);
+
+  line-height: 1.6;
+
+  margin-bottom: 22px;
+}
+
+.plan-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, .05);
+
+  color: white;
+
+  font-weight: 700;
+
+  transition: .25s;
+}
+
+.subscription-card.selected .plan-btn {
+  background: var(--cyan);
+
+  color: #071014;
+}
+
+/* ========================= */
+/* FEATURES */
+/* ========================= */
+
+.features-card {
+  margin-top: 20px;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .05),
+      rgba(255, 255, 255, .02));
+
+  border: 1px solid rgba(255, 255, 255, .08);
+
+  border-radius: 28px;
+
+  padding: 28px;
+}
+
+.features-title {
+  font-family: "Syne";
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
 
-#payBtn{
-  position:relative;
-  font-size: 16px;
-  padding: 14px 18px;
+.feature {
+  padding: 16px;
+
   border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, .03);
+
+  border: 1px solid rgba(255, 255, 255, .06);
+
+  color: var(--text);
+
+  font-weight: 600;
 }
 
-#payBtn:disabled{
-  opacity: .55;
-  cursor: not-allowed;
-  box-shadow: none;
+/* ========================= */
+/* SUMMARY */
+/* ========================= */
+
+.summary-card {
+  position: sticky;
+  top: 100px;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .05),
+      rgba(255, 255, 255, .02));
+
+  border: 1px solid rgba(255, 255, 255, .08);
+
+  border-radius: 28px;
+
+  padding: 28px;
+
+  backdrop-filter: blur(14px);
 }
 
-.pay-note{
-  font-size: 12px;
+.summary-title {
+  font-family: "Syne";
+  font-size: 24px;
+  font-weight: 800;
+
+  margin-bottom: 25px;
+}
+
+.summary-row {
+  margin-bottom: 18px;
+}
+
+.summary-label {
   color: var(--muted);
-  text-align:center;
-  margin-top: 6px;
+  font-size: 13px;
+  margin-bottom: 5px;
 }
 
-.pay-note::before{
-  content:"🔒 ";
+.summary-value {
+  font-weight: 700;
+  font-size: 18px;
 }
 
-/* ====== BUTTONS ====== */
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  border:none;
-  text-decoration:none;
-  font-weight: 900;
-  font-size: 14px;
-  cursor:pointer;
-  user-select:none;
-  transition: transform .2s ease, filter .25s ease, box-shadow .25s ease;
+.summary-price {
+  font-family: "Syne";
+  font-size: 42px;
+  font-weight: 800;
+
+  color: var(--cyan);
+
+  margin: 25px 0;
 }
 
-.btn:active{ transform: scale(.98); }
+#payBtn {
+  width: 100%;
 
-.btn-primary{
-  color:#fff;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  box-shadow: 0 18px 45px rgba(194,23,30,.28);
+  border: none;
+
+  padding: 16px;
+
+  border-radius: 16px;
+
+  background: var(--cyan);
+
+  color: #061014;
+
+  font-family: "Syne";
+  font-size: 16px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: .25s;
 }
 
-.btn-primary:hover{
-  filter: brightness(1.05);
-  box-shadow: 0 26px 60px rgba(194,23,30,.40);
+#payBtn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 45px rgba(0, 230, 200, .35);
 }
 
-.w-100{ width:100%; }
+#payBtn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
 
-/* ====== RESPONSIVE ====== */
-@media (max-width: 980px){
-  .abo-layout{
+.pay-note {
+  margin-top: 16px;
+
+  text-align: center;
+
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media(max-width:1100px) {
+
+  .abo-layout {
     grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    position: relative;
+    top: auto;
   }
 }
 
-@media (max-width: 520px){
-  #payBtn{
-    font-size: 15px;
-    padding: 14px;
+@media(max-width:850px) {
+
+  .main-plans {
+    grid-template-columns: 1fr;
+  }
+
+  .secondary-plans {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-card.featured {
+    transform: none;
   }
 }

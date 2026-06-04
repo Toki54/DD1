@@ -6,10 +6,10 @@
     --pink: #ff3e7f;
     --bg: #070910;
     --panel: rgba(255, 255, 255, .04);
-    --panel2: rgba(255, 255, 255, .02);
+    --panel2: rgba(192, 9, 9, 0.02);
     --border: rgba(255, 255, 255, .08);
     --text: #f4f6ff;
-    --muted: rgba(255, 255, 255, .65);
+    --muted: rgba(255, 255, 255, 0.65);
     --radius: 24px;
 }
 
@@ -109,7 +109,6 @@
 
 .meta-label {
     display: block;
-    color: var(--muted);
     font-size: .75rem;
     text-transform: uppercase;
     letter-spacing: .1em;
@@ -118,6 +117,7 @@
 
 .meta-value {
     font-weight: 700;
+    color: #9b5cff;
 }
 
 .divider {

@@ -16,7 +16,7 @@
   --bg-void: #050608;
   --bg-surface: #0c0d12;
   --bg-panel: #111318;
-  --bg-glass: rgba(255, 255, 255, .04);
+  --bg-glass: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, .07);
   --border-glow: rgba(0, 230, 200, .18);
 
