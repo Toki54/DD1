@@ -122,18 +122,6 @@ class UserProfileType extends AbstractType
         ];
 
         $builder
-            ->add('sex', ChoiceType::class, [
-                'label' => 'Sexe',
-                'choices' => [
-                    'Homme' => 'Homme',
-                    'Femme' => 'Femme',
-                    'Couple' => 'Couple'
-                ],
-                'placeholder' => 'Sélectionnez votre sexe',
-                'required' => false,
-                'attr' => ['class' => 'form-control'],
-            ])
-
             ->add('age', ChoiceType::class, [
                 'label' => 'Âge',
                 'choices' => $ageChoices,

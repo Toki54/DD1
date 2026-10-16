@@ -11,8 +11,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
@@ -29,6 +32,20 @@ class RegistrationFormType extends AbstractType
             ->add('pseudo', TextType::class, [
                 'required' => false,
                 'label' => 'pseudo',
+            ])
+            ->add('sex', ChoiceType::class, [
+                'label' => 'Sexe',
+                'mapped' => false,
+                'placeholder' => 'Sélectionnez votre sexe',
+                'choices' => [
+                    'Homme' => 'Homme',
+                    'Femme' => 'Femme',
+                    'Couple' => 'Couple',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez sélectionner votre sexe.']),
+                    new Choice(['choices' => ['Homme', 'Femme', 'Couple']]),
+                ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Password',

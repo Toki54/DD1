@@ -45,10 +45,8 @@
                             <img
                                 src="{{ asset('uploads/photos/' ~ photo) }}"
                                 alt="User Photo"
-                                class="photo-thumbnail"
-                                data-bs-toggle="modal"
-                                data-bs-target="#photoCarousel"
-                                data-bs-slide-to="{{ loop.index0 }}"
+                                class="photo-thumbnail js-profile-photo"
+                                data-photo-index="{{ loop.index0 }}"
                             >
                         {% endfor %}
                     </div>
@@ -107,35 +105,68 @@
     </div>
 </div>
 
-<!-- Modal Carousel -->
-<div class="modal fade" id="photoCarousel" tabindex="-1">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content modal-dark">
-            <div class="modal-header modal-dark-header">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+<!-- Visionneuse de photos -->
+<div id="photoCarousel" class="profile-lightbox" aria-hidden="true">
+    <div class="profile-lightbox-content" role="dialog" aria-modal="true" aria-label="Galerie de photos">
+        <button type="button" id="closePhotoCarousel" class="profile-lightbox-close" aria-label="Fermer">×</button>
+        <button type="button" id="profileCarouselPrevious" class="profile-lightbox-nav previous" aria-label="Photo précédente">‹</button>
 
-            <div class="modal-body modal-dark-body">
-                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for photo in photos %}
-                            <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                <img src="{{ asset('uploads/photos/' ~ photo) }}" class="d-block w-100 carousel-img" alt="User Photo">
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
+        <div class="profile-lightbox-slides">
+            {% for photo in photos %}
+                <img src="{{ asset('uploads/photos/' ~ photo) }}" class="profile-lightbox-image" alt="Photo {{ loop.index }}">
+            {% endfor %}
         </div>
+
+        <button type="button" id="profileCarouselNext" class="profile-lightbox-nav next" aria-label="Photo suivante">›</button>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.getElementById('photoCarousel');
+        const images = Array.from(document.querySelectorAll('.profile-lightbox-image'));
+        const closeButton = document.getElementById('closePhotoCarousel');
+        const previousButton = document.getElementById('profileCarouselPrevious');
+        const nextButton = document.getElementById('profileCarouselNext');
+        let currentIndex = 0;
+
+        const displayImage = (index) => {
+            currentIndex = (index + images.length) % images.length;
+            images.forEach((image, imageIndex) => {
+                image.classList.toggle('is-active', imageIndex === currentIndex);
+            });
+        };
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('is-open');
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('lightbox-open');
+        };
+
+        document.querySelectorAll('.js-profile-photo').forEach((photo) => {
+            photo.addEventListener('click', () => {
+                displayImage(Number(photo.dataset.photoIndex));
+                lightbox.classList.add('is-open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('lightbox-open');
+            });
+        });
+
+        previousButton?.addEventListener('click', () => displayImage(currentIndex - 1));
+        nextButton?.addEventListener('click', () => displayImage(currentIndex + 1));
+        closeButton?.addEventListener('click', closeLightbox);
+
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (!lightbox.classList.contains('is-open')) return;
+            if (event.key === 'Escape') closeLightbox();
+            if (event.key === 'ArrowLeft') displayImage(currentIndex - 1);
+            if (event.key === 'ArrowRight') displayImage(currentIndex + 1);
+        });
+    });
+</script>
+
 {% endblock %}

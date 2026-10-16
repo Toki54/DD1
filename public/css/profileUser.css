@@ -76,6 +76,7 @@
     font-family: "Syne", sans-serif;
     font-size: 1.4rem;
     margin-bottom: 25px;
+    color: #a8fff2;
 }
 
 .profile-top {
@@ -152,8 +153,48 @@
 
 .btn-like {
     background: rgba(255, 62, 127, .15);
-    color: var(--pink);
+    color: #ffb0c9;
     border: 1px solid rgba(255, 62, 127, .25);
+    cursor: pointer;
+}
+
+.btn-like:hover:not(:disabled) {
+    background: rgba(255, 62, 127, .25);
+    border-color: rgba(255, 62, 127, .55);
+}
+
+.btn-like:disabled {
+    color: #ffd2df;
+    cursor: default;
+    opacity: .85;
+}
+
+.like-alert {
+    display: none;
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.like-alert.success {
+    background: rgba(0, 230, 200, .12);
+    border-color: rgba(0, 230, 200, .28);
+    color: #a8fff2;
+}
+
+.like-alert.info {
+    background: rgba(155, 92, 255, .14);
+    border-color: rgba(155, 92, 255, .30);
+    color: #dfc8ff;
+}
+
+.like-alert.error {
+    background: rgba(255, 62, 127, .14);
+    border-color: rgba(255, 62, 127, .30);
+    color: #ffc0d4;
 }
 
 .photo-gallery {
@@ -223,6 +264,87 @@
 .btn-close {
     z-index: 9999;
 }
+
+/* ===== VISIONNEUSE DE PHOTOS ===== */
+.lightbox-open {
+    overflow: hidden;
+}
+
+.profile-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background: rgba(5, 6, 8, .94);
+}
+
+.profile-lightbox.is-open {
+    display: flex;
+}
+
+.profile-lightbox-content,
+.profile-lightbox-slides {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(1200px, 100%);
+    height: 100%;
+}
+
+.profile-lightbox-slides {
+    width: 100%;
+    pointer-events: none;
+}
+
+.profile-lightbox-image {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.profile-lightbox-image.is-active {
+    display: block;
+}
+
+.profile-lightbox-close,
+.profile-lightbox-nav {
+    position: absolute;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .28);
+    color: var(--white);
+    background: rgba(12, 13, 18, .80);
+    cursor: pointer;
+}
+
+.profile-lightbox-close {
+    top: 0;
+    right: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 1;
+}
+
+.profile-lightbox-nav {
+    top: 50%;
+    width: 48px;
+    height: 64px;
+    border-radius: 14px;
+    font-size: 48px;
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+.profile-lightbox-nav.previous { left: 16px; }
+.profile-lightbox-nav.next { right: 16px; }
 
 @media(max-width:950px) {
     .profile-grid {

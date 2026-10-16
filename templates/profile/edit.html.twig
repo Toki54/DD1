@@ -41,10 +41,6 @@
 
                 <div class="form-row">
                     <div class="field">
-                        {{ form_row(form.sex) }}
-                    </div>
-
-                    <div class="field">
                         {{ form_row(form.age) }}
                     </div>
                 </div>
@@ -65,7 +61,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary">Sauvegarder</button>
+                <button type="submit" class="btn btn-primary save-profile-btn">Sauvegarder</button>
 
             </section>
 
@@ -101,7 +97,7 @@
                     <div class="photo-item">
                         <img src="{{ asset('uploads/photos/' ~ photo) }}" class="photo-thumbnail">
                         <a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}"
-                            class="btn btn-danger btn-sm">
+                            class="btn btn-danger delete-photo-btn">
                             Supprimer
                         </a>
                     </div>

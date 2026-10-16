@@ -263,18 +263,34 @@
 }
 
 /* input */
-.form-control {
+.send-form .form-control {
   flex: 1;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, .03);
+  background: #151923;
   border-radius: 14px;
   padding: 12px;
   color: var(--white);
+  caret-color: var(--cyan);
 }
 
-.form-control:focus {
+.send-form .form-control::placeholder {
+  color: rgba(240, 242, 255, .62);
+  opacity: 1;
+}
+
+.send-form .form-control:focus {
   border-color: var(--cyan);
   box-shadow: 0 0 0 3px rgba(0, 230, 200, .15);
+  background: #1a1f2b;
+  color: var(--white);
+}
+
+.send-form .form-control:-webkit-autofill,
+.send-form .form-control:-webkit-autofill:hover,
+.send-form .form-control:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--white);
+  -webkit-box-shadow: 0 0 0 1000px #151923 inset;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 /* ====== BUTTONS (cohérents base) ====== */
@@ -287,6 +303,18 @@
 .btn-danger {
   background: linear-gradient(135deg, #ff3e7f, #ff6aa0);
   color: #fff;
+}
+
+.conversation-card .btn-danger {
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .25);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+.conversation-card .btn-danger:hover {
+  color: #fff;
+  filter: brightness(1.12);
 }
 
 .btn-success {

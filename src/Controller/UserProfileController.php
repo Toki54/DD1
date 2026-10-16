@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\UserProfile;
+use App\Entity\User;
 use App\Entity\ProfileVisit;
 use App\Form\UserProfileType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,6 +52,7 @@ class UserProfileController extends AbstractController
     #[Route('/profile/edit', name: 'app_profile_edit')]
     public function edit(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if (!$user) {
@@ -125,72 +127,6 @@ class UserProfileController extends AbstractController
                 );
             }
 
-            // =========================
-            // FEMMES = PREMIUM À VIE
-            // HOMMES = COMPTE NORMAL
-            // =========================
-
-            if ($userProfile->getSex() === 'Femme') {
-
-                $roles = $user->getRoles();
-
-                if (!in_array('ROLE_PREMIUM', $roles, true)) {
-                    $roles[] = 'ROLE_PREMIUM';
-                    $user->setRoles($roles);
-                }
-
-                $subscription = $entityManager
-                    ->getRepository(\App\Entity\Subscription::class)
-                    ->findOneBy([
-                        'user' => $user
-                    ]);
-
-                if (!$subscription) {
-
-                    $subscription = new \App\Entity\Subscription();
-
-                    $subscription->setUser($user);
-
-                    $subscription->setPlan('Premium Femme');
-
-                    $subscription->setPrice(0);
-
-                    $subscription->setStartDate(
-                        new \DateTime()
-                    );
-
-                    $subscription->setEndDate(
-                        new \DateTime('9999-12-31 23:59:59')
-                    );
-
-                    $subscription->setActive(true);
-
-                    $entityManager->persist($subscription);
-                }
-            } else {
-
-                $roles = array_filter(
-                    $user->getRoles(),
-                    fn($role) => $role !== 'ROLE_PREMIUM'
-                );
-
-                if (empty($roles)) {
-                    $roles = ['ROLE_USER'];
-                }
-
-                $user->setRoles($roles);
-
-                $subscription = $entityManager
-                    ->getRepository(\App\Entity\Subscription::class)
-                    ->findOneBy([
-                        'user' => $user
-                    ]);
-
-                if ($subscription) {
-                    $subscription->setActive(false);
-                }
-            }
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -220,6 +156,7 @@ class UserProfileController extends AbstractController
             throw $this->createNotFoundException('Profil non trouvé.');
         }
 
+        /** @var User|null $user */
         $user = $this->getUser();
         $isSubscribed = $this->isGranted('ROLE_PREMIUM');
 
@@ -300,6 +237,7 @@ class UserProfileController extends AbstractController
             $selectedProfile = $entityManager->getRepository(UserProfile::class)->find($id);
         }
 
+        /** @var User|null $user */
         $user         = $this->getUser();
         $isSubscribed = $this->isGranted('ROLE_PREMIUM');
 
@@ -322,6 +260,7 @@ class UserProfileController extends AbstractController
     #[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
     public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) {
             throw new AccessDeniedException('Vous devez être connecté.');
@@ -362,6 +301,7 @@ class UserProfileController extends AbstractController
     #[Route('/profile/unlike/{id}', name: 'app_profile_unlike', methods: ['POST'])]
     public function unlike(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) {
             throw new AccessDeniedException('Vous devez être connecté.');
@@ -395,6 +335,7 @@ class UserProfileController extends AbstractController
     #[Route('/profile/likes', name: 'app_profile_likes')]
     public function likes(EntityManagerInterface $entityManager): Response
     {
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('error', 'Vous devez être connecté pour voir vos likes.');
@@ -441,6 +382,7 @@ class UserProfileController extends AbstractController
     #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
     public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
     {
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if (!$user) {

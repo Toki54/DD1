@@ -37,8 +37,8 @@
 
 /* ===== CARD ===== */
 .card.panel {
-	background: rgba(255, 255, 255, .03);
-	border: 1px solid var(--border);
+	background: linear-gradient(145deg, rgba(17, 19, 24, .92), rgba(10, 12, 18, .82));
+	border: 1px solid rgba(255, 255, 255, .10);
 	border-radius: 22px;
 	padding: 26px;
 	backdrop-filter: blur(14px);
@@ -57,6 +57,16 @@
 	margin-bottom: 18px;
 }
 
+.sub-title,
+.empty {
+	color: var(--white);
+}
+
+.sub-title {
+	margin: 20px 0 14px;
+	font-size: 16px;
+}
+
 /* ===== FORM ===== */
 .profile-form {
 	display: grid;
@@ -69,11 +79,34 @@
 	gap: 6px;
 }
 
+.profile-form label,
+.profile-form .form-label,
+.profile-form .custom-label {
+	color: var(--white);
+	font-weight: 600;
+}
+
+.profile-form .form-text,
+.profile-form .invalid-feedback,
+.profile-form .form-error-message {
+	color: #d7dcf7;
+}
+
 .form-control {
 	background: rgba(255, 255, 255, .05);
 	border: 1px solid var(--border);
 	border-radius: 12px;
 	padding: 10px 12px;
+	color: var(--white);
+}
+
+.profile-form .form-control::placeholder {
+	color: rgba(240, 242, 255, .58);
+	opacity: 1;
+}
+
+.profile-form select.form-control option {
+	background: var(--bg-panel);
 	color: var(--white);
 }
 
@@ -101,12 +134,12 @@ textarea {
 }
 
 .avatar-preview {
-	width: 120px;
-	height: 120px;
-	border-radius: 18px;
-	object-fit: cover;
-	box-shadow: 0 0 20px rgba(0, 230, 200, .2);
-}
+	width: 200px;
+		height: 200px;
+		border-radius: 18px;
+		object-fit: contain;
+		box-shadow: 0 0 20px rgba(0, 230, 200, .2);
+	}
 
 /* ===== CHECKBOX ULTRA STYLE ===== */
 .checkbox-group {
@@ -152,18 +185,51 @@ textarea {
 	transform: translateY(-2px);
 }
 
+.save-profile-btn {
+	margin-top: 26px;
+	padding: 14px 20px;
+	align-self: stretch;
+}
+
 /* ===== GALLERY ===== */
 .photo-gallery {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-	gap: 12px;
+	gap: 18px;
+}
+
+.photo-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
 }
 
 .photo-thumbnail {
 	width: 100%;
-	height: 100px;
-	object-fit: cover;
+	height: 120px;
+	object-fit: contain;
+	background: #090b10;
 	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, .14);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, .28);
+	filter: brightness(1.08);
+}
+
+.delete-photo-btn {
+	width: auto;
+	padding: 6px 12px;
+	font-size: 12px;
+	line-height: 1.2;
+	color: #fff;
+	background: rgba(255, 62, 127, .82);
+	border: 1px solid rgba(255, 255, 255, .22);
+	box-shadow: none;
+}
+
+.delete-photo-btn:hover {
+	color: #fff;
+	background: var(--pink);
 }
 
 /* ===== RESPONSIVE ===== */

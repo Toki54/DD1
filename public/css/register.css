@@ -85,6 +85,39 @@
   box-shadow: 0 0 0 3px rgba(0, 230, 200, .15);
 }
 
+/* select "Sexe" */
+.form-group select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(255, 255, 255, .03);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--cyan) 50%),
+    linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 42px 12px 12px;
+  color: var(--white);
+  cursor: pointer;
+  transition: .25s;
+}
+
+.form-group select:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 230, 200, .15);
+  outline: none;
+}
+
+.form-group select option {
+  background: #171326;
+  color: var(--white);
+}
+
 /* ====== CAPTCHA ====== */
 .captcha {
   display: flex;

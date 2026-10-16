@@ -139,8 +139,8 @@
                 <div class="photo-gallery">
             
                     {% for photo in photos %}
-                    <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail" data-bs-toggle="modal"
-                        data-bs-target="#photoCarousel-{{ userProfile.id }}" data-index="{{ loop.index0 }}">
+                    <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo" class="photo-thumbnail js-profile-photo"
+                        data-photo-index="{{ loop.index0 }}">
                     {% endfor %}
             
                 </div>
@@ -168,49 +168,19 @@
             {# MODAL EN DEHORS DE LA CARD #}
             {% if viewerIsPremium %}
             
-            <div class="modal fade" id="photoCarousel-{{ userProfile.id }}" tabindex="-1" aria-hidden="true">
-            
-                <div class="modal-dialog modal-fullscreen">
-            
-                    <div class="modal-content">
-            
-                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4"
-                            data-bs-dismiss="modal" aria-label="Fermer" style="z-index:999999;"></button>
-            
-                        <div class="modal-body">
-            
-                            <div id="carouselExample{{ userProfile.id }}" class="carousel slide" data-bs-interval="false">
-            
-                                <div class="carousel-inner">
-            
-                                    {% for photo in photos %}
-                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-            
-                                        <img src="{{ asset('uploads/photos/' ~ photo) }}" alt="Photo utilisateur">
-            
-                                    </div>
-                                    {% endfor %}
-            
-                                </div>
-            
-                                <button class="carousel-control-prev" type="button"
-                                    data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-            
-                                <button class="carousel-control-next" type="button"
-                                    data-bs-target="#carouselExample{{ userProfile.id }}" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
-            
-                            </div>
-            
-                        </div>
-            
+            <div id="photoCarousel" class="profile-lightbox" aria-hidden="true">
+                <div class="profile-lightbox-content" role="dialog" aria-modal="true" aria-label="Galerie de photos">
+                    <button type="button" id="closePhotoCarousel" class="profile-lightbox-close" aria-label="Fermer">×</button>
+                    <button type="button" id="profileCarouselPrevious" class="profile-lightbox-nav previous" aria-label="Photo précédente">‹</button>
+
+                    <div class="profile-lightbox-slides">
+                        {% for photo in photos %}
+                            <img src="{{ asset('uploads/photos/' ~ photo) }}" class="profile-lightbox-image" alt="Photo {{ loop.index }}">
+                        {% endfor %}
                     </div>
-            
+
+                    <button type="button" id="profileCarouselNext" class="profile-lightbox-nav next" aria-label="Photo suivante">›</button>
                 </div>
-            
             </div>
             
             {% endif %}

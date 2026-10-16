@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Subscription;
+use App\Entity\UserProfile;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -75,11 +76,29 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            /* ===== ROLE PAR DÉFAUT ===== */
-            $user->setRoles(['ROLE_USER']);
+            $sex = $form->get('sex')->getData();
+
+            $profile = new UserProfile();
+            $profile->setSex($sex);
+            $user->setProfile($profile);
+
+            /* ===== RÔLE DÉFINI À L'INSCRIPTION ===== */
+            $user->setRoles($sex === 'Femme' ? ['ROLE_USER', 'ROLE_PREMIUM'] : ['ROLE_USER']);
 
             $entityManager->persist($user);
-            $entityManager->flush(); // IMPORTANT : ID requis
+
+            if ($sex === 'Femme') {
+                $subscription = new Subscription();
+                $subscription->setUser($user);
+                $subscription->setPlan('Premium Femme');
+                $subscription->setPrice(0);
+                $subscription->setStartDate(new \DateTimeImmutable());
+                $subscription->setEndDate(new \DateTimeImmutable('9999-12-31 23:59:59'));
+                $subscription->setActive(true);
+                $user->setSubscription($subscription);
+            }
+
+            $entityManager->flush();
 
             
 
