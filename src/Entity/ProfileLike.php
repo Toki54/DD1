@@ -25,6 +25,9 @@ private ?UserProfile $liked = null;
  #[ORM\Column(type: 'datetime')]
  private \DateTimeInterface $likedAt;
 
+ #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+ private ?\DateTimeImmutable $seenAt = null;
+
  public function __construct()
  {
   $this->likedAt = new \DateTime();
@@ -70,4 +73,7 @@ private ?UserProfile $liked = null;
 
   return $this;
  }
+
+ public function getSeenAt(): ?\DateTimeImmutable { return $this->seenAt; }
+ public function markAsSeen(): self { $this->seenAt = new \DateTimeImmutable(); return $this; }
 }

@@ -36,6 +36,7 @@
 							<a href="{{ path('app_messages') }}">
 								<i data-feather="message-circle"></i>
 								Mes messages
+								{% if notificationCounts.messages > 0 %}<span class="notification-badge">{{ notificationCounts.messages }}</span>{% endif %}
 								{# ✅ Compteur si pas premium #}
 								{% if messageQuota and messageQuota.isLimited %}
 									<span class="badge bg-light text-dark ms-2">
@@ -45,7 +46,7 @@
 							</a>
 						</li>
 
-						<li><a href="{{ path('app_profile_likes') }}"><i data-feather="heart"></i> Mes likes et visites</a></li>
+						<li><a href="{{ path('app_profile_likes') }}"><i data-feather="heart"></i> Mes likes et visites{% if notificationCounts.likesAndVisits > 0 %}<span class="notification-badge">{{ notificationCounts.likesAndVisits }}</span>{% endif %}</a></li>
 						<li><a href="{{ path('app_profiles_list') }}"><i data-feather="users"></i> Liste des profils</a></li>
 
 						{# ✅ Bouton abonnement change si ROLE_PREMIUM #}

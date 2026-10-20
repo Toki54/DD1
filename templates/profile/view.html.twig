@@ -54,12 +54,13 @@
                                 ? userProfile.sex|join(', ')
                                 : userProfile.sex|default('Non spécifié')) %}
 
-                                {% if userProfile.age is defined and userProfile.age %}
-                                {{ sexValue }} · {{ userProfile.age }} ans
-                                {% else %}
                                 {{ sexValue }}
-                                {% endif %}
                             </span>
+                        </div>
+
+                        <div class="meta-item">
+                            <span class="meta-label">Âge</span>
+                            <span class="meta-value">{{ userProfile.age ? userProfile.age ~ ' ans' : 'Non renseigné' }}</span>
                         </div>
 
                         <div class="meta-item">

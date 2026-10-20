@@ -344,6 +344,14 @@ class UserProfileController extends AbstractController
 
         $userProfile = $user->getProfile();
 
+        foreach ($entityManager->getRepository(ProfileLike::class)->findBy(['liked' => $userProfile, 'seenAt' => null]) as $like) {
+            $like->markAsSeen();
+        }
+        foreach ($entityManager->getRepository(ProfileVisit::class)->findBy(['visited' => $userProfile, 'seenAt' => null]) as $visit) {
+            $visit->markAsSeen();
+        }
+        $entityManager->flush();
+
         $likes = $entityManager->getRepository(ProfileLike::class)
             ->createQueryBuilder('pl')
             ->where('pl.liked = :profile')

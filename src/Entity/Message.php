@@ -32,6 +32,9 @@ class Message
  #[ORM\Column(type: 'boolean')]
     private bool $isChatRequest = false;
 
+ #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+ private ?\DateTimeImmutable $readAt = null;
+
  public function __construct()
  {
   $this->sentAt = new \DateTime();
@@ -99,6 +102,18 @@ class Message
     public function setIsChatRequest(bool $isChatRequest): self
     {
         $this->isChatRequest = $isChatRequest;
+        return $this;
+    }
+
+    public function getReadAt(): ?\DateTimeImmutable
+    {
+        return $this->readAt;
+    }
+
+    public function markAsRead(): self
+    {
+        $this->readAt = new \DateTimeImmutable();
+
         return $this;
     }
 }

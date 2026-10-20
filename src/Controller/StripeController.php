@@ -221,7 +221,9 @@ class StripeController extends AbstractController
     #[Route('/payment-success', name: 'app_stripe_success', methods: ['GET'])]
     public function success(): Response
     {
-        return $this->render('stripe/success.html.twig');
+        $this->addFlash('success', 'Paiement confirmé : votre abonnement Premium est actif.');
+
+        return $this->redirectToRoute('app_profile_show');
     }
 
     #[Route('/payment-cancel', name: 'app_stripe_cancel', methods: ['GET'])]

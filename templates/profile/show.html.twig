@@ -10,8 +10,12 @@
 {% endblock %}
 <div class="profile-page">
     <div class="profile-container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endfor %}
+
         <header class="profile-top">
-            <h1 class="pseudo">Profil de {{ app.user.pseudo }}</h1>
+            <h1 class="pseudo">Mon profil</h1>
             <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Éditer mon profil</a>
         </header>
 

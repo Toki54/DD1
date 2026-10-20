@@ -23,7 +23,8 @@ class MessageController extends AbstractController
     public function index(
         MessageRepository $messageRepository,
         UserRepository $userRepository,
-        Request $request
+        Request $request,
+        EntityManagerInterface $entityManager
     ): Response {
         $user = $this->getUser();
 
@@ -37,6 +38,12 @@ class MessageController extends AbstractController
 
             if ($receiver) {
                 $messages = $messageRepository->findByConversation($user, $receiver);
+                foreach ($messages as $message) {
+                    if ($message->getReceiver() === $user && $message->getReadAt() === null) {
+                        $message->markAsRead();
+                    }
+                }
+                $entityManager->flush();
                 $chatAccepted = $messageRepository->hasAcceptedChat($user, $receiver);
 
                 foreach ($messages as $message) {

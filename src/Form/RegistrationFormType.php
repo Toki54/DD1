@@ -40,11 +40,11 @@ class RegistrationFormType extends AbstractType
                 'choices' => [
                     'Homme' => 'Homme',
                     'Femme' => 'Femme',
-                    'Couple' => 'Couple',
+                    
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez sélectionner votre sexe.']),
-                    new Choice(['choices' => ['Homme', 'Femme', 'Couple']]),
+                    new Choice(['choices' => ['Homme', 'Femme']]),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [

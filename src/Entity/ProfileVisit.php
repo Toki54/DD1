@@ -25,6 +25,9 @@ class ProfileVisit
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $visitedAt;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $seenAt = null;
+
     public function __construct()
     {
         $this->visitedAt = new \DateTime();
@@ -83,5 +86,8 @@ class ProfileVisit
 
         return $this;
     }
+
+    public function getSeenAt(): ?\DateTimeImmutable { return $this->seenAt; }
+    public function markAsSeen(): self { $this->seenAt = new \DateTimeImmutable(); return $this; }
 }
 

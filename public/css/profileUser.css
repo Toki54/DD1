@@ -114,11 +114,13 @@
     text-transform: uppercase;
     letter-spacing: .1em;
     margin-bottom: 6px;
+    color: #f4f6ff;
+    font-weight: 700;
 }
 
 .meta-value {
     font-weight: 700;
-    color: #9b5cff;
+    color: #f4f6ff;
 }
 
 .divider {
