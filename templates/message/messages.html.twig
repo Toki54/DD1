@@ -37,33 +37,33 @@
                 <div class="empty">Aucune conversation.</div>
             {% else %}
                 <div class="conversation-list">
+                    
                     {% for conversation in conversations %}
-                        <div class="conversation-card">
-                            <a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
-                                <div class="conv-head">
-                                    <img
-                                        src="{{ asset(conversation.user.profile.avatar
+                    <div class="conversation-card">
+                        <a href="{{ path('app_messages', { 'id': conversation.user.id }) }}" class="card-link">
+                            <div class="conv-head">
+                                <img src="{{ asset(conversation.user.profile.avatar
                                             ? 'uploads/avatars/' ~ conversation.user.profile.avatar
-                                            : 'uploads/avatars/default-avatar.png') }}"
-                                        alt="Avatar"
-                                        class="avatar"
-                                    >
-                                    <div class="conv-meta">
-                                        <div class="pseudo">{{ conversation.user.pseudo }}</div>
-                                        <div class="sub">Ouvrir la discussion</div>
-                                    </div>
+                                            : 'uploads/avatars/default-avatar.png') }}" alt="Avatar" class="avatar">
+                    
+                                <div class="conv-meta">
+                                    <div class="pseudo">{{ conversation.user.pseudo }}</div>
+                                    <div class="sub">Ouvrir la discussion</div>
                                 </div>
-                            </a>
-
-                            <div class="divider"></div>
-
-                            <form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
-                                <button type="submit" class="btn btn-danger btn-sm w-100">Supprimer</button>
-                            </form>
-                        </div>
+                            </div>
+                        </a>
+                    
+                        <div class="divider"></div>
+                    
+                        <form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}" method="POST"
+                            onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
+                            <button type="submit" class="btn btn-danger btn-sm w-100">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
                     {% endfor %}
+                    
                 </div>
             {% endif %}
         </aside>
@@ -117,6 +117,7 @@
                                             <span class="who">
                                                 {% if message.sender == app.user %}Moi{% else %}{{ receiver.pseudo }}{% endif %}
                                             </span>
+											<span class="message-time">{{ message.sentAt|date('d/m · H:i') }}</span>
                                         </div>
 
                                         <div class="bubble">

@@ -2,6 +2,6 @@
     {{ form_row(form.email) }}
     {{ form_row(form.pseudo) }}
     {{ form_row(form.roles) }}
-    {{ form_row(form.plainPassword) }}
+    {% if form.plainPassword is defined %}{{ form_row(form.plainPassword) }}{% endif %}
     <button class="admin-primary">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

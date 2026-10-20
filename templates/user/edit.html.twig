@@ -1,13 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Modifier un utilisateur · Administration{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+    <section class="admin-page"><header class="admin-hero"><div><div class="admin-kicker">Gestion membre</div><h1 class="admin-title">Modifier {{ user.pseudo }}</h1><p class="admin-subtitle">Les identifiants de connexion ne sont pas modifiables ici.</p></div></header><section class="admin-panel">
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('user/_form.html.twig', {'button_label': 'Enregistrer'}) }}
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+    </section><p style="margin-top:16px"><a class="admin-button" href="{{ path('app_user_index') }}">← Retour aux utilisateurs</a></p>{{ include('user/_delete_form.html.twig') }}</section>
 {% endblock %}

@@ -115,16 +115,55 @@
 
 /* card conversation */
 .conversation-card {
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 12px;
-  transition: .2s;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .conversation-card:hover {
-  border-color: rgba(0, 230, 200, .2);
-  box-shadow: 0 0 20px rgba(0, 230, 200, .08);
+  background-color: rgba(100, 116, 139, 0.08);
+}
+
+.conversation-card .card-link {
+  display: block;
+  padding: 14px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.conversation-card .card-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.conversation-card .conv-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.conversation-card .conv-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-card .pseudo {
+  font-weight: 700;
+}
+
+.conversation-card .sub {
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.conversation-card .card-link:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+}
+
+.conversation-card:has(.card-link:hover) {
+  background: rgba(0, 230, 200, .06);
 }
 
 /* link */
@@ -213,11 +252,21 @@
 }
 
 /* meta */
-.message-meta .who {
+.message-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.message-meta .who,
+.message-time {
   font-size: 11px;
   color: var(--muted);
   font-weight: 600;
 }
+
+.my-message .message-meta { justify-content: flex-end; }
+.message-time { opacity: .75; font-weight: 500; }
 
 /* bubble */
 .bubble {
@@ -237,7 +286,7 @@
 }
 
 .other-message .bubble {
-  background: rgba(255, 255, 255, .04);
+  background: rgba(23, 28, 43, .92);
   border: 1px solid var(--border);
   color: var(--white);
   border-top-left-radius: 6px;

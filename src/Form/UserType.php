@@ -21,14 +21,16 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Mot de passe',
-                'mapped' => false,
-                'required' => $options['require_password'],
-                'help' => $options['require_password'] ? null : 'Laisser vide pour conserver le mot de passe actuel.',
-            ])
             ->add('pseudo')
         ;
+
+        if ($options['require_password']) {
+            $builder->add('plainPassword', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'mapped' => false,
+                'required' => true,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

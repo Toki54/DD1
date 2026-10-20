@@ -75,16 +75,12 @@ public function deletedConversations(
 
  #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
  #[IsGranted('ROLE_ADMIN')]
- public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+ public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
  {
   $form = $this->createForm(UserType::class, $user);
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
-   $plainPassword = (string) $form->get('plainPassword')->getData();
-   if ($plainPassword !== '') {
-    $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
-   }
    $entityManager->flush();
 
    return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
