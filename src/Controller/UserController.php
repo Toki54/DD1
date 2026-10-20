@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\DeletedConversationRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/user')]
@@ -43,13 +44,14 @@ public function deletedConversations(
 
  #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
  #[IsGranted('ROLE_ADMIN')]
- public function new (Request $request, EntityManagerInterface $entityManager): Response
+ public function new (Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
  {
   $user = new User();
-  $form = $this->createForm(UserType::class, $user);
+  $form = $this->createForm(UserType::class, $user, ['require_password' => true]);
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
+   $user->setPassword($passwordHasher->hashPassword($user, (string) $form->get('plainPassword')->getData()));
    $entityManager->persist($user);
    $entityManager->flush();
 
@@ -73,12 +75,16 @@ public function deletedConversations(
 
  #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
  #[IsGranted('ROLE_ADMIN')]
- public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+ public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
  {
   $form = $this->createForm(UserType::class, $user);
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
+   $plainPassword = (string) $form->get('plainPassword')->getData();
+   if ($plainPassword !== '') {
+    $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+   }
    $entityManager->flush();
 
    return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);

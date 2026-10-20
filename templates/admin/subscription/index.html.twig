@@ -3,10 +3,15 @@
 {% block title %}Gestion des abonnements
 {% endblock %}
 
-{% block body %}
-	<h1>Liste des abonnements</h1>
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
-	<table>
+{% block body %}
+	<section class="admin-page">
+		<header class="admin-hero"><div><div class="admin-kicker">Administration</div><h1 class="admin-title">Abonnements</h1><p class="admin-subtitle">Suivez et corrigez les accès Premium.</p></div><a class="admin-primary" href="{{ path('admin_dashboard') }}">Tableau de bord</a></header>
+		{% for message in app.flashes('success') %}<div class="admin-flash">{{ message }}</div>{% endfor %}
+		<section class="admin-panel">
+
+	<table class="admin-table">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -14,7 +19,7 @@
 				<th>Plan</th>
 				<th>Début</th>
 				<th>Fin</th>
-				<th>Actions</th>
+				<th>État</th><th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +30,7 @@
 					<td>{{ subscription.plan }}</td>
 					<td>{{ subscription.startDate|date('d/m/Y') }}</td>
 					<td>{{ subscription.endDate|date('d/m/Y') }}</td>
-					<td>
+					<td>{{ subscription.active ? 'Actif' : 'Inactif' }}</td><td>
 						<a href="{{ path('admin_subscriptions_edit', {id: subscription.id}) }}">Modifier</a>
 						|
 						<a href="{{ path('admin_subscriptions_delete', {id: subscription.id}) }}" onclick="return confirm('Supprimer cet abonnement ?')">Supprimer</a>
@@ -33,10 +38,10 @@
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="6">Aucun abonnement trouvé.</td>
+					<td colspan="7">Aucun abonnement trouvé.</td>
 				</tr>
 			{% endfor %}
 		</tbody>
-	</table>
+	</table></section></section>
 {% endblock %}
 

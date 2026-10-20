@@ -1,4 +1,7 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {attr: {class: 'admin-form'}}) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.pseudo) }}
+    {{ form_row(form.roles) }}
+    {{ form_row(form.plainPassword) }}
+    <button class="admin-primary">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

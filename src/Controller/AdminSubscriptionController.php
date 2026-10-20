@@ -63,6 +63,7 @@ class AdminSubscriptionController extends AbstractController
  #[Route('/admin/subscription/{id}/edit', name: 'admin_subscriptions_edit')]
 public function edit(Request $request, Subscription $subscription, EntityManagerInterface $em): Response
 {
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
     $form = $this->createForm(SubscriptionType::class, $subscription);
     $form->handleRequest($request);
 

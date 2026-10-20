@@ -3,10 +3,10 @@
 namespace App\Form;
 
 use App\Entity\User;
-use App\Entity\UserProfile;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
@@ -15,13 +15,19 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
-            ->add('password')
-            ->add('pseudo')
-            ->add('profile', EntityType::class, [
-                'class' => UserProfile::class,
-                'choice_label' => 'id',
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Rôles',
+                'choices' => ['Administrateur' => 'ROLE_ADMIN', 'Premium' => 'ROLE_PREMIUM'],
+                'multiple' => true,
+                'expanded' => true,
             ])
+            ->add('plainPassword', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'mapped' => false,
+                'required' => $options['require_password'],
+                'help' => $options['require_password'] ? null : 'Laisser vide pour conserver le mot de passe actuel.',
+            ])
+            ->add('pseudo')
         ;
     }
 
@@ -29,6 +35,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'require_password' => false,
         ]);
     }
 }
