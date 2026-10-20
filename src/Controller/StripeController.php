@@ -61,6 +61,9 @@ class StripeController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true) ?? [];
+        if (!$this->isCsrfTokenValid('stripe_checkout', (string) ($data['_token'] ?? ''))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide'], Response::HTTP_FORBIDDEN);
+        }
         $plan = (string) ($data['plan'] ?? '');
 
         if ($plan === '') {

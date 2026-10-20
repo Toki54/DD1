@@ -66,9 +66,14 @@ class MessageController extends AbstractController
     #[Route('/request/{id}', name: 'app_message_request', methods: ['POST'])]
     public function requestChat(
         int $id,
+        Request $request,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository
     ): Response {
+        if (!$this->isCsrfTokenValid('message_request' . $id, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+
         $sender = $this->getUser();
         $receiver = $userRepository->find($id);
 
@@ -101,14 +106,30 @@ class MessageController extends AbstractController
     public function respondToChat(
         int $id,
         string $status,
+        Request $request,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository
     ): Response {
+        if (!in_array($status, ['accept', 'refuse'], true)
+            || !$this->isCsrfTokenValid('message_response' . $id, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Action non autorisée.');
+        }
+
         $receiver = $this->getUser();
         $sender = $userRepository->find($id);
 
         if (!$sender) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        $pendingRequest = $entityManager->getRepository(Message::class)->findOneBy([
+            'sender' => $sender,
+            'receiver' => $receiver,
+            'isChatRequest' => true,
+            'content' => 'Demande de discussion en attente...',
+        ]);
+        if (!$pendingRequest) {
+            throw $this->createAccessDeniedException('Aucune demande de discussion en attente.');
         }
 
         $message = new Message();
@@ -133,6 +154,10 @@ class MessageController extends AbstractController
         MessageRepository $messageRepository,
         MessageQuotaService $messageQuotaService
     ): Response {
+        if (!$this->isCsrfTokenValid('message_send' . $id, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+
         $sender = $this->getUser();
         $receiver = $userRepository->find($id);
 
@@ -179,11 +204,16 @@ class MessageController extends AbstractController
     #[Route('/delete-conversation/{id}', name: 'app_delete_conversation', methods: ['POST'])]
     public function deleteConversation(
         int $id,
+        Request $request,
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
         DeletedConversationRepository $deletedConversationRepository,
         MessageRepository $messageRepository
     ): Response {
+        if (!$this->isCsrfTokenValid('message_delete' . $id, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+
         $user = $this->getUser();
         $interlocutor = $userRepository->find($id);
 

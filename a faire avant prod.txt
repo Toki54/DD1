@@ -1,0 +1,1 @@
+php bin/console app:premium-men-promotion:reset --force

@@ -382,6 +382,7 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         const stripe = Stripe("{{ stripe_public_key }}");
+        const csrfToken = "{{ csrf_token('stripe_checkout') }}";
 
         const payBtn = document.getElementById('payBtn');
 
@@ -477,7 +478,8 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         body: JSON.stringify({
-                            plan: selectedPlan
+                            plan: selectedPlan,
+                            _token: csrfToken
                         })
                     }
                 );

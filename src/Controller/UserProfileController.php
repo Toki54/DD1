@@ -258,8 +258,11 @@ class UserProfileController extends AbstractController
     }
 
     #[Route('/profile/like/{id}', name: 'app_profile_like', methods: ['POST'])]
-    public function like(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function like(int $id, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        if (!$this->isCsrfTokenValid('like' . $id, (string) $request->request->get('_token'))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide'], Response::HTTP_FORBIDDEN);
+        }
         /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) {
@@ -299,8 +302,11 @@ class UserProfileController extends AbstractController
     }
 
     #[Route('/profile/unlike/{id}', name: 'app_profile_unlike', methods: ['POST'])]
-    public function unlike(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function unlike(int $id, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        if (!$this->isCsrfTokenValid('unlike' . $id, (string) $request->request->get('_token'))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide'], Response::HTTP_FORBIDDEN);
+        }
         /** @var User|null $user */
         $user = $this->getUser();
         if (!$user) {
@@ -387,9 +393,12 @@ class UserProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo')]
-    public function deletePhoto(string $photoFilename, EntityManagerInterface $entityManager): Response
+    #[Route('/profile/delete-photo/{photoFilename}', name: 'app_profile_delete_photo', methods: ['POST'])]
+    public function deletePhoto(string $photoFilename, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isCsrfTokenValid('delete_photo' . $photoFilename, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
         /** @var User|null $user */
         $user = $this->getUser();
 

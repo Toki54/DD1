@@ -57,6 +57,7 @@
                     
                         <form action="{{ path('app_delete_conversation', { 'id': conversation.user.id }) }}" method="POST"
                             onsubmit="return confirm('Voulez-vous vraiment supprimer cette conversation ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('message_delete' ~ conversation.user.id) }}">
                             <button type="submit" class="btn btn-danger btn-sm w-100">
                                 Supprimer
                             </button>
@@ -135,6 +136,7 @@
                                                     'id': message.sender.id,
                                                     'status': 'accept'
                                                 }) }}" method="POST">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('message_response' ~ message.sender.id) }}">
                                                     <button type="submit" class="btn btn-success btn-sm">Accepter</button>
                                                 </form>
 
@@ -142,6 +144,7 @@
                                                     'id': message.sender.id,
                                                     'status': 'refuse'
                                                 }) }}" method="POST">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('message_response' ~ message.sender.id) }}">
                                                     <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
                                                 </form>
                                             </div>
@@ -176,6 +179,7 @@
                         <form action="{{ path('app_message_send', { 'id': receiver.id }) }}"
                               method="POST"
                               class="send-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('message_send' ~ receiver.id) }}">
                             <input
                                 type="text"
                                 name="content"
@@ -199,6 +203,7 @@
                         </form>
                     {% else %}
                         <form action="{{ path('app_message_request', { 'id': receiver.id }) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('message_request' ~ receiver.id) }}">
                             <button type="submit" class="btn btn-warning w-100">
                                 Demander une discussion
                             </button>

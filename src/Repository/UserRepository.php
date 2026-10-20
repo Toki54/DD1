@@ -33,6 +33,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function countMenRegisteredAfterId(int $startUserId): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->innerJoin('u.profile', 'profile')
+            ->andWhere('profile.sex = :sex')
+            ->andWhere('u.id > :startUserId')
+            ->setParameter('sex', 'Homme')
+            ->setParameter('startUserId', $startUserId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getHighestId(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COALESCE(MAX(u.id), 0)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

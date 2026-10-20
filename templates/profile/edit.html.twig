@@ -96,10 +96,10 @@
                     {% for photo in userProfile.photos %}
                     <div class="photo-item">
                         <img src="{{ asset('uploads/photos/' ~ photo) }}" class="photo-thumbnail">
-                        <a href="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}"
-                            class="btn btn-danger delete-photo-btn">
-                            Supprimer
-                        </a>
+                        <form method="post" action="{{ path('app_profile_delete_photo', {'photoFilename': photo}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_photo' ~ photo) }}">
+                            <button type="submit" class="btn btn-danger delete-photo-btn">Supprimer</button>
+                        </form>
                     </div>
                     {% else %}
                     <div class="empty">Aucune photo</div>

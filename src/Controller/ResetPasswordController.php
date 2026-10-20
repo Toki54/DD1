@@ -12,6 +12,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ResetPasswordController extends AbstractController
 {
@@ -20,9 +22,20 @@ class ResetPasswordController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         MailerInterface $mailer,
-        ParameterBagInterface $params
+        ParameterBagInterface $params,
+        #[Autowire(service: 'limiter.password_reset')] RateLimiterFactory $passwordResetLimiter
     ): Response {
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('forgot_password', (string) $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+
+            $limit = $passwordResetLimiter->create((string) ($request->getClientIp() ?? 'unknown'))->consume();
+            if (!$limit->isAccepted()) {
+                $this->addFlash('error', 'Trop de demandes. Réessayez dans quelques instants.');
+                return $this->render('security/forgot_password.html.twig');
+            }
+
             $email = trim((string) $request->request->get('email'));
 
             /** @var User|null $user */
@@ -82,6 +95,10 @@ class ResetPasswordController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('reset_password', (string) $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+
             $password = (string) $request->request->get('password');
 
             if (mb_strlen($password) < 8) {

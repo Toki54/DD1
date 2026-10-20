@@ -79,10 +79,14 @@ public function edit(Request $request, Subscription $subscription, EntityManager
     ]);
 }
 
- #[Route('/delete/{id}', name: 'admin_subscriptions_delete')]
- public function delete(int $id, EntityManagerInterface $entityManager): Response
+ #[Route('/delete/{id}', name: 'admin_subscriptions_delete', methods: ['POST'])]
+ public function delete(int $id, Request $request, EntityManagerInterface $entityManager): Response
  {
   $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+  if (!$this->isCsrfTokenValid('delete_subscription' . $id, (string) $request->request->get('_token'))) {
+   throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+  }
 
   $subscription = $entityManager->getRepository(Subscription::class)->find($id);
 

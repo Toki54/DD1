@@ -105,6 +105,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
+
+        // A Premium role linked to a subscription is valid only while that
+        // subscription is active and has not reached its end date.
+        if ($this->subscription !== null
+            && (!$this->subscription->isActive()
+                || ($this->subscription->getEndDate() !== null
+                    && $this->subscription->getEndDate() <= new \DateTimeImmutable()))) {
+            $roles = array_values(array_filter(
+                $roles,
+                static fn (string $role): bool => $role !== 'ROLE_PREMIUM'
+            ));
+        }
+
         $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
