@@ -232,6 +232,15 @@ body {
     overflow: hidden;
 }
 
+.lightbox-open > .site-header,
+.lightbox-open > .navbar {
+    display: none !important;
+}
+
+.lightbox-open .container {
+    z-index: 200;
+}
+
 .profile-lightbox {
     position: fixed;
     inset: 0;

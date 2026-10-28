@@ -272,6 +272,15 @@
     overflow: hidden;
 }
 
+.lightbox-open > .site-header,
+.lightbox-open > .navbar {
+    display: none !important;
+}
+
+.lightbox-open .container {
+    z-index: 200;
+}
+
 .profile-lightbox {
     position: fixed;
     inset: 0;
@@ -328,11 +337,13 @@
 .profile-lightbox-close {
     top: 0;
     right: 0;
+    z-index: 30;
     width: 42px;
     height: 42px;
     border-radius: 50%;
     font-size: 30px;
     line-height: 1;
+    pointer-events: auto;
 }
 
 .profile-lightbox-close:hover {
