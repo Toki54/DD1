@@ -19,8 +19,8 @@
 			{% for conversation in deletedConversations %}
 				<tr>
 					<td>{{ conversation.id }}</td>
-					<td>{{ conversation.user.email }}</td>
-					<td>{{ conversation.deletedWith.email }}</td>
+					<td>{{ conversation.user ? conversation.user.email : 'Compte supprimé' }}</td>
+					<td>{{ conversation.deletedWith ? conversation.deletedWith.email : 'Compte supprimé' }}</td>
 					<td>{{ conversation.deletedAt|date('d/m/Y H:i') }}</td>
 				</tr>
 			{% else %}
@@ -48,8 +48,8 @@
 			{% for message in deletedMessages %}
 				<tr>
 					<td>{{ message.id }}</td>
-					<td>{{ message.sender.email }}</td>
-					<td>{{ message.receiver.email }}</td>
+					<td>{{ message.sender ? message.sender.email : 'Compte supprimé' }}</td>
+					<td>{{ message.receiver ? message.receiver.email : 'Compte supprimé' }}</td>
 					<td>{{ message.content }}</td>
 					<td>{{ message.sentAt|date('d/m/Y H:i') }}</td>
 					<td>{{ message.deletedAt|date('d/m/Y H:i') }}</td>

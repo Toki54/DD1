@@ -14,12 +14,12 @@ class ProfileLike
 
 // Profil qui like
 #[ORM\ManyToOne(targetEntity: UserProfile::class, inversedBy: "likesSent")]
-#[ORM\JoinColumn(nullable: false)]
+#[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
 private ?UserProfile $liker = null;
 
 // Profil qui est liké
 #[ORM\ManyToOne(targetEntity: UserProfile::class, inversedBy: "likesReceived")]
-#[ORM\JoinColumn(nullable: false)]
+#[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
 private ?UserProfile $liked = null;
 
  #[ORM\Column(type: 'datetime')]

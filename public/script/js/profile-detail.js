@@ -1,8 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
+const initializeProfileDetail = () => {
 	// =========================
 	// CAROUSEL PHOTOS
 	// =========================
 	const lightbox = document.getElementById("photoCarousel");
+	if (lightbox && lightbox.dataset.initialized !== "true") {
+		lightbox.dataset.initialized = "true";
 	const images = Array.from(document.querySelectorAll(".profile-lightbox-image"));
 	const closeButton = document.getElementById("closePhotoCarousel");
 	const previousButton = document.getElementById("profileCarouselPrevious");
@@ -35,15 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	nextButton?.addEventListener("click", () => displayImage(currentIndex + 1));
 	closeButton?.addEventListener("click", closeLightbox);
 
-	lightbox?.addEventListener("click", (event) => {
+	lightbox.addEventListener("click", (event) => {
 		if (event.target === lightbox) closeLightbox();
 	});
-
-	// =========================
-	// LIKE AJAX
-	// =========================
+	}
 
 	document.querySelectorAll(".js-like-btn").forEach((btn) => {
+		if (btn.dataset.initialized === "true") {
+			return;
+		}
+
+		btn.dataset.initialized = "true";
 		btn.addEventListener("click", async () => {
 			const url = btn.dataset.url;
 			const token = btn.dataset.token;
@@ -101,4 +105,15 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		});
 	});
-});
+};
+
+// Le profil public peut être chargé après DOMContentLoaded via Turbo.
+// Dans ce cas, initialise immédiatement le carrousel ; lors d'un chargement
+// classique, attends que le DOM soit prêt.
+if (document.readyState === "loading") {
+	document.addEventListener("DOMContentLoaded", initializeProfileDetail, { once: true });
+} else {
+	initializeProfileDetail();
+}
+
+document.addEventListener("turbo:load", initializeProfileDetail);

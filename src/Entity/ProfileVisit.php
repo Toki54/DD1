@@ -15,11 +15,11 @@ class ProfileVisit
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: UserProfile::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?UserProfile $visited = null;
 
     #[ORM\ManyToOne(targetEntity: UserProfile::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?UserProfile $visitor = null;
 
     #[ORM\Column(type: 'datetime')]

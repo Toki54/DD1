@@ -15,7 +15,7 @@ class Subscription
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'subscription', targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column(type: 'datetime')]

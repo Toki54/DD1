@@ -58,7 +58,7 @@ class UserProfile
     private ?string $city = null;
 
     #[ORM\OneToOne(inversedBy: 'profile', targetEntity: User::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]

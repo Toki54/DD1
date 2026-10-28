@@ -38,7 +38,15 @@ class MessageRepository extends ServiceEntityRepository
 
   $deletedWithTimestamps = [];
   foreach ($deletedConversations as $dc) {
-   $deletedWithTimestamps[$dc->getDeletedWith()->getId()] = $dc->getDeletedAt();
+   // An archived conversation is retained when the other account is deleted.
+   // Its relation is then NULL (ON DELETE SET NULL), so it must not be shown
+   // as an active conversation or dereferenced here.
+   $deletedWith = $dc->getDeletedWith();
+   if ($deletedWith === null) {
+    continue;
+   }
+
+   $deletedWithTimestamps[$deletedWith->getId()] = $dc->getDeletedAt();
   }
 
   foreach ($messages as $message) {

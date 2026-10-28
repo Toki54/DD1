@@ -15,11 +15,11 @@ class DeletedConversation
  private ?int $id = null;
 
  #[ORM\ManyToOne(targetEntity: User::class)]
- #[ORM\JoinColumn(nullable: false)]
+ #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
  private ?User $user = null;
 
  #[ORM\ManyToOne(targetEntity: User::class)]
- #[ORM\JoinColumn(nullable: false)]
+ #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
  private ?User $deletedWith = null;
 
  #[ORM\Column(type: 'datetime_immutable', nullable: true)]

@@ -335,6 +335,11 @@
     line-height: 1;
 }
 
+.profile-lightbox-close:hover {
+
+    background-color: #00e6c8;
+}
+
 .profile-lightbox-nav {
     top: 50%;
     width: 48px;
