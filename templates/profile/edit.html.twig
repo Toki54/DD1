@@ -72,11 +72,18 @@
 
                 <div class="form-row">
                     <div class="field">
-                        {{ form_row(form.department) }}
+                        {{ form_label(form.department) }}
+                        {{ form_widget(form.department, {'attr': {
+                            'class': 'form-control',
+                            'data-cities-url': path('app_profile_cities', {'department': 'ZZ'})
+                        }}) }}
+                        {{ form_errors(form.department) }}
                     </div>
 
                     <div class="field">
-                        {{ form_row(form.city) }}
+                        {{ form_label(form.city) }}
+                        {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.city) }}
                     </div>
                 </div>
 
@@ -127,34 +134,83 @@
         const avatarButton = document.querySelector('[data-avatar-upload-label]');
         const avatarPreview = document.querySelector('[data-avatar-preview]');
 
-        if (!avatarInput || !avatarButton || !avatarPreview) {
+        if (avatarInput && avatarButton && avatarPreview) {
+            let previewUrl = null;
+
+            avatarInput.addEventListener('change', () => {
+                const [selectedFile] = avatarInput.files;
+
+                if (!selectedFile) {
+                    return;
+                }
+
+                avatarButton.textContent = 'Changer la photo de profil';
+
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+
+                previewUrl = URL.createObjectURL(selectedFile);
+                avatarPreview.src = previewUrl;
+            });
+
+            window.addEventListener('beforeunload', () => {
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+            });
+        }
+
+        const departmentInput = document.getElementById('{{ form.department.vars.id }}');
+        const cityInput = document.getElementById('{{ form.city.vars.id }}');
+
+        if (!departmentInput || !cityInput) {
             return;
         }
 
-        let previewUrl = null;
+        const cityUrlTemplate = departmentInput.dataset.citiesUrl;
 
-        avatarInput.addEventListener('change', () => {
-            const [selectedFile] = avatarInput.files;
+        const loadCities = async () => {
+            const department = departmentInput.value;
+            cityInput.replaceChildren();
 
-            if (!selectedFile) {
+            if (!department) {
+                cityInput.add(new Option('Choisir d’abord un département', ''));
+                cityInput.disabled = true;
                 return;
             }
 
-            avatarButton.textContent = 'Changer la photo de profil';
+            cityInput.disabled = true;
+            cityInput.add(new Option('Chargement des villes…', ''));
 
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
+            try {
+                const response = await fetch(
+                    cityUrlTemplate.replace('ZZ', encodeURIComponent(department)),
+                    {headers: {'Accept': 'application/json'}}
+                );
+
+                if (!response.ok) {
+                    throw new Error('Unable to load cities.');
+                }
+
+                const {cities} = await response.json();
+                cityInput.replaceChildren(new Option('Choisir une ville', ''));
+
+                cities.forEach((city) => {
+                    cityInput.add(new Option(city, city));
+                });
+
+                cityInput.disabled = false;
+            } catch (error) {
+                cityInput.replaceChildren(new Option('Villes indisponibles', ''));
             }
+        };
 
-            previewUrl = URL.createObjectURL(selectedFile);
-            avatarPreview.src = previewUrl;
-        });
+        if (!departmentInput.value) {
+            cityInput.disabled = true;
+        }
 
-        window.addEventListener('beforeunload', () => {
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        });
+        departmentInput.addEventListener('change', loadCities);
     })();
 </script>
 {% endblock %}

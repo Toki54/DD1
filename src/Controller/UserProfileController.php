@@ -16,6 +16,7 @@ use App\Entity\ProfileLike;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Services\ProfileViewQuotaService;
+use App\Support\CityCatalog;
 use App\Support\DepartmentCatalog;
 
 class UserProfileController extends AbstractController
@@ -156,6 +157,16 @@ class UserProfileController extends AbstractController
         ]);
     }
 
+    #[Route('/profile/cities/{department}', name: 'app_profile_cities', methods: ['GET'], requirements: ['department' => '[0-9A-Z]{2,3}'])]
+    public function cities(string $department): JsonResponse
+    {
+        if (!DepartmentCatalog::isValidCode($department)) {
+            return $this->json(['cities' => []]);
+        }
+
+        return $this->json(['cities' => CityCatalog::forDepartment($department)]);
+    }
+
     #[Route('/profile/{id}', name: 'app_profile_view', requirements: ['id' => '\d+'])]
     public function view(
         int $id,
@@ -218,12 +229,18 @@ class UserProfileController extends AbstractController
     {
         $sexFilters       = $request->query->all('sex');
         $situationFilters = $request->query->all('situation');
-        $city             = $request->query->get('city');
         $researchFilters  = $request->query->all('research');
         $department       = trim((string) $request->query->get('department', ''));
 
         if ($department !== '' && !DepartmentCatalog::isValidCode($department)) {
             $department = '';
+        }
+
+        $cities = CityCatalog::forDepartment($department ?: null);
+        $city = trim((string) $request->query->get('city', ''));
+
+        if ($city !== '' && !in_array($city, $cities, true)) {
+            $city = '';
         }
 
         $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
@@ -236,12 +253,12 @@ class UserProfileController extends AbstractController
             $qb->andWhere('p.situation IN (:situation)')->setParameter('situation', $situationFilters);
         }
 
-        if (!empty($city)) {
-            $qb->andWhere('p.city = :city')->setParameter('city', $city);
-        }
-
         if ($department !== '') {
             $qb->andWhere('p.department = :department')->setParameter('department', $department);
+        }
+
+        if ($city !== '') {
+            $qb->andWhere('p.city = :city')->setParameter('city', $city);
         }
 
         if (!empty($researchFilters)) {
@@ -278,6 +295,7 @@ class UserProfileController extends AbstractController
             'city'            => $city,
             'department'      => $department,
             'departments'     => DepartmentCatalog::CHOICES,
+            'cities'          => $cities,
             'research'        => $researchFilters,
             'isSubscribed'    => $isSubscribed,
         ]);

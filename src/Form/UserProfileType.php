@@ -3,13 +3,16 @@
 namespace App\Form;
 
 use App\Entity\UserProfile;
+use App\Support\CityCatalog;
 use App\Support\DepartmentCatalog;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\All;
@@ -22,6 +25,35 @@ class UserProfileType extends AbstractType
         for ($i = 18; $i <= 99; $i++) {
             $ageChoices[$i] = $i;
         }
+
+        $profile = $options['data'] instanceof UserProfile ? $options['data'] : null;
+
+        $addCityField = static function (
+            FormBuilderInterface|FormInterface $form,
+            ?string $department,
+            ?string $currentCity = null,
+        ): void {
+            $cities = CityCatalog::forDepartment($department);
+
+            if ($currentCity !== null && $currentCity !== '' && !in_array($currentCity, $cities, true)) {
+                $cities[] = $currentCity;
+                sort($cities, SORT_NATURAL | SORT_FLAG_CASE);
+            }
+
+            $form->add('city', ChoiceType::class, [
+                'label' => 'Ville',
+                'choices' => array_combine($cities, $cities) ?: [],
+                'placeholder' => $department ? 'Choisir une ville' : 'Choisir d’abord un département',
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+            ]);
+        };
+
+        $addCityField(
+            $builder,
+            $profile?->getDepartment(),
+            $profile?->getCity(),
+        );
 
         $builder
             ->add('age', ChoiceType::class, [
@@ -75,14 +107,6 @@ class UserProfileType extends AbstractType
                 'attr' => ['class' => 'form-control'],
             ])
 
-            ->add('city', TextType::class, [
-                'label' => 'Ville',
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Ta ville'
-                ],
-            ])
-
             ->add('avatarFile', FileType::class, [
                 'label' => 'Avatar',
                 'required' => false,
@@ -113,6 +137,13 @@ class UserProfileType extends AbstractType
                     ])
                 ],
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) use ($addCityField): void {
+            $data = $event->getData();
+            $department = is_array($data) ? trim((string) ($data['department'] ?? '')) : '';
+
+            $addCityField($event->getForm(), $department ?: null);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

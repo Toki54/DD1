@@ -77,19 +77,30 @@
                     </div>
     
                     <div class="filter-group">
-                        <div class="filter-label">Ville</div>
-    
-                        <input type="text" name="city" value="{{ city }}" placeholder="Ville">
-                    </div>
+                        <label class="filter-label" for="filter-department">Département</label>
 
-                    <div class="filter-group">
-                        <label class="filter-label" for="department">Département</label>
-
-                        <select id="department" name="department">
+                        <select
+                            id="filter-department"
+                            name="department"
+                            data-cities-url="{{ path('app_profile_cities', {'department': 'ZZ'}) }}"
+                        >
                             <option value="">Tous les départements</option>
                             {% for label, code in departments %}
                                 <option value="{{ code }}" {% if department == code %}selected{% endif %}>
                                     {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="filter-city">Ville</label>
+
+                        <select id="filter-city" name="city" {% if not department %}disabled{% endif %}>
+                            <option value="">Toutes les villes</option>
+                            {% for availableCity in cities %}
+                                <option value="{{ availableCity }}" {% if city == availableCity %}selected{% endif %}>
+                                    {{ availableCity }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -151,6 +162,50 @@
                 text.textContent = 'Masquer les filtres';
             }
 
+        });
+
+        const department = document.getElementById('filter-department');
+        const city = document.getElementById('filter-city');
+
+        if (!department || !city) {
+            return;
+        }
+
+        const cityUrlTemplate = department.dataset.citiesUrl;
+
+        department.addEventListener('change', async () => {
+            city.replaceChildren();
+
+            if (!department.value) {
+                city.add(new Option('Toutes les villes', ''));
+                city.disabled = true;
+                return;
+            }
+
+            city.disabled = true;
+            city.add(new Option('Chargement des villes…', ''));
+
+            try {
+                const response = await fetch(
+                    cityUrlTemplate.replace('ZZ', encodeURIComponent(department.value)),
+                    {headers: {'Accept': 'application/json'}}
+                );
+
+                if (!response.ok) {
+                    throw new Error('Unable to load cities.');
+                }
+
+                const {cities} = await response.json();
+                city.replaceChildren(new Option('Toutes les villes', ''));
+
+                cities.forEach((availableCity) => {
+                    city.add(new Option(availableCity, availableCity));
+                });
+
+                city.disabled = false;
+            } catch (error) {
+                city.replaceChildren(new Option('Villes indisponibles', ''));
+            }
         });
 
     });
