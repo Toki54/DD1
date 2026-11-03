@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class MessageQuotaService
 {
-    public const DAILY_LIMIT_FREE = 10;
+    public const DAILY_LIMIT_FREE = 5;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

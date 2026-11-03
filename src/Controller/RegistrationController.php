@@ -117,15 +117,24 @@ class RegistrationController extends AbstractController
                 $registrationRank = $userRepository->countMenRegisteredAfterId($startUserId) + 1;
 
                 if ($registrationRank <= 50) {
-                    $duration = $registrationRank <= 5 ? '+1 year' : '+6 months';
                     $now = new \DateTimeImmutable();
 
                     $subscription = new Subscription();
                     $subscription->setUser($user);
-                    $subscription->setPlan($registrationRank <= 5 ? 'Offre lancement Homme - 1 an' : 'Offre lancement Homme - 6 mois');
                     $subscription->setPrice(0);
                     $subscription->setStartDate($now);
-                    $subscription->setEndDate($now->modify($duration));
+
+                    if ($registrationRank <= 5) {
+                        $subscription->setPlan('Offre lancement Homme - À vie');
+                        $subscription->setEndDate(new \DateTimeImmutable('9999-12-31 23:59:59'));
+                    } elseif ($registrationRank <= 10) {
+                        $subscription->setPlan('Offre lancement Homme - 6 mois');
+                        $subscription->setEndDate($now->modify('+6 months'));
+                    } else {
+                        $subscription->setPlan('Offre lancement Homme - 1 mois');
+                        $subscription->setEndDate($now->modify('+1 month'));
+                    }
+
                     $subscription->setActive(true);
                     $user->setSubscription($subscription);
                     $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);

@@ -147,7 +147,8 @@ body {
 }
 
 /* INPUT */
-input[type="text"] {
+input[type="text"],
+.filter-group select {
   width: 100%;
   padding: 10px 12px;
   border-radius: 12px;
@@ -157,9 +158,15 @@ input[type="text"] {
   outline: none;
 }
 
-input:focus {
+input:focus,
+.filter-group select:focus {
   border-color: var(--cyan);
   box-shadow: 0 0 0 3px rgba(0, 230, 199, 0.755);
+}
+
+.filter-group select option {
+  background: #10131b;
+  color: var(--text);
 }
 
 /* ACTIONS */

@@ -3,5 +3,7 @@
   "workbench.editor.autoLockGroups": {
     "default": true
   },
-  "php.executablePath": "C:\\wamp64\\bin\\php\\php8.3.14\\php.exe"
+  "php.executablePath": "C:\\wamp64\\bin\\php\\php8.5.12.1\\php.exe",
+  "phpserver.phpPath": "C:\\wamp64\\bin\\php\\php8.5.12.1\\php.exe",
+  "phpserver.phpConfigPath": "C:\\wamp64\\bin\\php\\php8.5.12.1\\php.ini"
 }

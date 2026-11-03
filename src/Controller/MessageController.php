@@ -177,12 +177,15 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('app_messages', ['id' => $receiver->getId()]);
         }
 
-        // ✅ Limite 10 messages / jour pour non-premium
+        // Limite quotidienne pour les non-premium.
         if (!$this->isGranted('ROLE_PREMIUM')) {
             if ($messageQuotaService->hasReachedLimit($sender)) {
                 $this->addFlash(
                     'danger',
-                    'Limite atteinte : 10 messages par jour. Abonnez-vous pour continuer.'
+                    sprintf(
+                        'Limite atteinte : %d messages par jour. Abonnez-vous pour continuer.',
+                        $messageQuotaService->getDailyLimitFor($sender)
+                    )
                 );
                 return $this->redirectToRoute('app_stripe_subscribe');
             }

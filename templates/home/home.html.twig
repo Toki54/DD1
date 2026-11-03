@@ -23,15 +23,29 @@
             La vraie connexion commence par une vraie conversation.
         </p>
 
-        <div class="special-offer">
-            <span>
-                🎁 Les <strong>100 premiers inscrits</strong> sont
-                <span class="premium">✦ premium à vie</span>
-            </span>
-            <strong class="vie">
-                ⚡ {{ premiumRemaining }} abonnement{% if premiumRemaining > 1 %}s{% endif %} à vie restant{% if
-                premiumRemaining > 1 %}s{% endif %}
-            </strong>
+        <div class="special-offer" aria-label="Offre de lancement réservée aux hommes">
+            <p class="offer-title">🎁 Offre de lancement pour les nouveaux profils Homme</p>
+            <p class="offer-intro">Les 50 premiers hommes inscrits reçoivent automatiquement Premium :</p>
+
+            <ul class="offer-tiers">
+                <li>
+                    <span class="offer-rank">1<sup>er</sup> à 5</span>
+                    <strong class="premium">✦ Premium à vie</strong>
+                    <span class="offer-remaining">{{ lifetimeRemaining }} place{% if lifetimeRemaining > 1 %}s{% endif %} restante{% if lifetimeRemaining > 1 %}s{% endif %}</span>
+                </li>
+                <li>
+                    <span class="offer-rank">6 à 10</span>
+                    <strong>Premium 6 mois</strong>
+                    <span class="offer-remaining">{{ sixMonthsRemaining }} place{% if sixMonthsRemaining > 1 %}s{% endif %} restante{% if sixMonthsRemaining > 1 %}s{% endif %}</span>
+                </li>
+                <li>
+                    <span class="offer-rank">11 à 50</span>
+                    <strong>Premium 1 mois</strong>
+                    <span class="offer-remaining">{{ oneMonthRemaining }} place{% if oneMonthRemaining > 1 %}s{% endif %} restante{% if oneMonthRemaining > 1 %}s{% endif %}</span>
+                </li>
+            </ul>
+
+            <p class="offer-note">Offre limitée aux 50 premiers nouveaux profils Homme inscrits.</p>
         </div>
     </div>
 

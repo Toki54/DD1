@@ -16,6 +16,7 @@ use App\Entity\ProfileLike;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use App\Services\ProfileViewQuotaService;
+use App\Support\DepartmentCatalog;
 
 class UserProfileController extends AbstractController
 {
@@ -77,6 +78,7 @@ class UserProfileController extends AbstractController
             $avatarFile = $form->get('avatarFile')->getData();
 
             if ($avatarFile) {
+                $previousAvatar = $userProfile->getAvatar();
                 $avatarFilename = uniqid() . '.' . $avatarFile->guessExtension();
 
                 $avatarFile->move(
@@ -85,6 +87,16 @@ class UserProfileController extends AbstractController
                 );
 
                 $userProfile->setAvatar($avatarFilename);
+
+                if ($previousAvatar && basename($previousAvatar) === $previousAvatar) {
+                    $previousAvatarPath = $this->getParameter('avatars_directory')
+                        . DIRECTORY_SEPARATOR
+                        . $previousAvatar;
+
+                    if (is_file($previousAvatarPath)) {
+                        unlink($previousAvatarPath);
+                    }
+                }
             }
 
             $photoFiles = $form->get('photoFiles')->getData();
@@ -160,7 +172,7 @@ class UserProfileController extends AbstractController
         $user = $this->getUser();
         $isSubscribed = $this->isGranted('ROLE_PREMIUM');
 
-        // ✅ Quota : 10 profils/jour si pas premium (uniquement si connecté)
+        // Quota quotidien de profils pour les non-premium connectés.
         if ($user && !$isSubscribed) {
             $visitorProfile = $user->getProfile();
 
@@ -170,7 +182,10 @@ class UserProfileController extends AbstractController
                 if ($profileViewQuotaService->isBlockedForNewProfileToday($visitorProfile, $userProfile)) {
                     $this->addFlash(
                         'danger',
-                        'Limite atteinte : 10 profils par jour. Abonnez-vous pour voir des profils en illimité.'
+                        sprintf(
+                            'Limite atteinte : %d profils par jour. Abonnez-vous pour voir des profils en illimité.',
+                            $profileViewQuotaService->getDailyLimit()
+                        )
                     );
                     return $this->redirectToRoute('app_stripe_subscribe');
                 }
@@ -205,6 +220,11 @@ class UserProfileController extends AbstractController
         $situationFilters = $request->query->all('situation');
         $city             = $request->query->get('city');
         $researchFilters  = $request->query->all('research');
+        $department       = trim((string) $request->query->get('department', ''));
+
+        if ($department !== '' && !DepartmentCatalog::isValidCode($department)) {
+            $department = '';
+        }
 
         $qb = $entityManager->getRepository(UserProfile::class)->createQueryBuilder('p');
 
@@ -218,6 +238,10 @@ class UserProfileController extends AbstractController
 
         if (!empty($city)) {
             $qb->andWhere('p.city = :city')->setParameter('city', $city);
+        }
+
+        if ($department !== '') {
+            $qb->andWhere('p.department = :department')->setParameter('department', $department);
         }
 
         if (!empty($researchFilters)) {
@@ -252,6 +276,8 @@ class UserProfileController extends AbstractController
             'sex'             => $sexFilters,
             'situation'       => $situationFilters,
             'city'            => $city,
+            'department'      => $department,
+            'departments'     => DepartmentCatalog::CHOICES,
             'research'        => $researchFilters,
             'isSubscribed'    => $isSubscribed,
         ]);
@@ -415,10 +441,10 @@ class UserProfileController extends AbstractController
         }
 
         if (in_array($photoFilename, $userProfile->getPhotos(), true)) {
-            $userProfile->setPhotos(array_diff($userProfile->getPhotos(), [$photoFilename]));
+            $userProfile->setPhotos(array_values(array_diff($userProfile->getPhotos(), [$photoFilename])));
 
-            $photoPath = $this->getParameter('photos_directory') . '/' . $photoFilename;
-            if (file_exists($photoPath)) {
+            $photoPath = $this->getParameter('photos_directory') . DIRECTORY_SEPARATOR . basename($photoFilename);
+            if (basename($photoFilename) === $photoFilename && is_file($photoPath)) {
                 unlink($photoPath);
             }
 

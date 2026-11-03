@@ -20,7 +20,7 @@
             <strong>{{ profileViewQuota.usedToday }}/{{ profileViewQuota.limit }}</strong>
             — Restants :
             <strong>{{ profileViewQuota.remaining }}</strong>
-            <span class="premium-text">Abonnement = illimité</span>
+            <span class="premium-text">    - Abonnement = illimité</span>
         </div>
         {% endif %}
     </header>
@@ -80,6 +80,19 @@
                         <div class="filter-label">Ville</div>
     
                         <input type="text" name="city" value="{{ city }}" placeholder="Ville">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="department">Département</label>
+
+                        <select id="department" name="department">
+                            <option value="">Tous les départements</option>
+                            {% for label, code in departments %}
+                                <option value="{{ code }}" {% if department == code %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
     
                 </div>

@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\PromotionCampaign;
+use App\Repository\PromotionCampaignRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -11,16 +12,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(
+        UserRepository $userRepository,
+        PromotionCampaignRepository $promotionCampaignRepository,
+    ): Response
     {
-        $totalUsers = (int) $entityManager->getRepository(User::class)->count([]);
-
-        // 100 premières inscriptions => offre "premium à vie"
-        $premiumRemaining = max(0, 100 - $totalUsers);
+        $campaign = $promotionCampaignRepository->find(PromotionCampaign::MEN_PREMIUM);
+        $registeredMen = $userRepository->countMenRegisteredAfterId($campaign?->getStartUserId() ?? 0);
 
         return $this->render('home/home.html.twig', [
-            'controller_name'   => 'HomeController',
-            'premiumRemaining'  => $premiumRemaining,
+            'lifetimeRemaining' => max(0, 5 - $registeredMen),
+            'sixMonthsRemaining' => max(0, min(5, 10 - $registeredMen)),
+            'oneMonthRemaining' => max(0, min(40, 50 - $registeredMen)),
         ]);
     }
 }
