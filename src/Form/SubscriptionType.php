@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Subscription;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -26,7 +27,18 @@ class SubscriptionType extends AbstractType
         ];
 
         $builder
-            ->add('plan', HiddenType::class)
+            ->add('plan', ChoiceType::class, [
+                'label' => 'Formule Premium',
+                'choices' => [
+                    '1 semaine' => '1 semaine - 5 €',
+                    '1 mois' => '1 mois - 15 €',
+                    '3 mois' => '3 mois - 30 €',
+                    '6 mois' => '6 mois - 50 €',
+                    '1 an' => '1 an - 80 €',
+                    'À vie' => 'À vie - 100 €',
+                ],
+                'placeholder' => 'Choisir une formule',
+            ])
             ->add('price', HiddenType::class, [
                 'mapped' => false,
                 'required' => false,

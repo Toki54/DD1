@@ -56,6 +56,7 @@
 .highlight {
   background: linear-gradient(110deg, var(--cyan), var(--violet));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

@@ -47,6 +47,7 @@ class AdminSubscriptionController extends AbstractController
   $form->handleRequest($request);
 
   if ($form->isSubmitted() && $form->isValid()) {
+   $this->synchronizePremiumRole($subscription);
    $entityManager->persist($subscription);
    $entityManager->flush();
 
@@ -68,6 +69,7 @@ public function edit(Request $request, Subscription $subscription, EntityManager
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+        $this->synchronizePremiumRole($subscription);
         $em->flush();
         $this->addFlash('success', 'Abonnement modifié avec succès.');
         return $this->redirectToRoute('admin_subscriptions_index');
@@ -94,10 +96,36 @@ public function edit(Request $request, Subscription $subscription, EntityManager
    throw $this->createNotFoundException('Abonnement non trouvé.');
   }
 
+  $this->synchronizePremiumRole($subscription, false);
   $entityManager->remove($subscription);
   $entityManager->flush();
 
   $this->addFlash('success', 'Abonnement supprimé avec succès.');
   return $this->redirectToRoute('admin_subscriptions_index');
+ }
+
+ private function synchronizePremiumRole(Subscription $subscription, ?bool $isActive = null): void
+ {
+  $user = $subscription->getUser();
+  if (!$user) {
+   return;
+  }
+
+  $hasActiveSubscription = $isActive ?? (
+   $subscription->isActive()
+   && $subscription->getEndDate() !== null
+   && $subscription->getEndDate() > new \DateTimeImmutable()
+  );
+
+  $roles = array_values(array_filter(
+   $user->getRoles(),
+   static fn (string $role): bool => $role !== 'ROLE_PREMIUM'
+  ));
+
+  if ($hasActiveSubscription) {
+   $roles[] = 'ROLE_PREMIUM';
+  }
+
+  $user->setRoles(array_values(array_unique($roles)));
  }
 }

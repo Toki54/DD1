@@ -1,20 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un abonnement
-{% endblock %}
+{% block title %}Créer un abonnement · Administration{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
 {% block body %}
-	<h1>Créer un abonnement pour
-		{{ user.username }}</h1>
+	<section class="admin-page">
+		<header class="admin-hero">
+			<div>
+				<div class="admin-kicker">Abonnements</div>
+				<h1 class="admin-title">Créer un abonnement</h1>
+				<p class="admin-subtitle">Attribuez Premium à {{ user.pseudo }} et choisissez sa durée.</p>
+			</div>
+		</header>
 
-	{{ form_start(form) }}
-	{{ form_row(form.plan) }}
-	{{ form_row(form.startDate) }}
-	{{ form_row(form.endDate) }}
+		<section class="admin-panel">
+			{{ form_start(form, {attr: {class: 'admin-form'}}) }}
+				{{ form_row(form.plan) }}
+				<button type="submit" class="admin-primary">Créer l’abonnement</button>
+			{{ form_end(form) }}
+		</section>
 
-	<button type="submit">Créer</button>
-	{{ form_end(form) }}
-
-	<a href="{{ path('admin_subscriptions_index') }}">← Retour à la liste</a>
+		<p style="margin-top:16px"><a class="admin-button" href="{{ path('admin_subscriptions_index') }}">← Retour aux abonnements</a></p>
+	</section>
 {% endblock %}
 

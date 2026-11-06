@@ -1,7 +1,59 @@
 {{ form_start(form, {attr: {class: 'admin-form'}}) }}
     {{ form_row(form.email) }}
     {{ form_row(form.pseudo) }}
-    {{ form_row(form.roles) }}
+    <div class="admin-field admin-role-field">
+        {{ form_label(form.roles) }}
+        <p class="admin-field-help">Sélectionnez les accès à accorder à ce compte.</p>
+
+        <div class="admin-role-options">
+            {% for role in form.roles %}
+                <label class="admin-role-option" for="{{ role.vars.id }}">
+                    {{ form_widget(role, {'attr': {'class': 'admin-role-checkbox'}}) }}
+                    <span class="admin-role-content">
+                        <span class="admin-role-name">{{ role.vars.label }}</span>
+                        <span class="admin-role-description">
+                            {{ role.vars.value == 'ROLE_ADMIN' ? 'Accès complet à l’administration' : 'Accès aux fonctions Premium' }}
+                        </span>
+                    </span>
+                </label>
+            {% endfor %}
+        </div>
+
+        {{ form_errors(form.roles) }}
+    </div>
+
+    <div class="admin-field admin-premium-duration-field" data-premium-duration>
+        {{ form_label(form.premiumDuration) }}
+        {{ form_widget(form.premiumDuration, {'attr': {'class': 'admin-premium-duration-select'}}) }}
+        {{ form_errors(form.premiumDuration) }}
+        <p class="admin-field-help">Le nouvel accès commence aujourd’hui. Sans durée choisie, un abonnement Premium actif est conservé.</p>
+    </div>
+
     {% if form.plainPassword is defined %}{{ form_row(form.plainPassword) }}{% endif %}
     <button class="admin-primary">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
+
+<script>
+    (() => {
+        const premiumCheckbox = document.querySelector('.admin-role-checkbox[value="ROLE_PREMIUM"]');
+        const durationField = document.querySelector('[data-premium-duration]');
+        const durationSelect = document.querySelector('.admin-premium-duration-select');
+
+        if (!premiumCheckbox || !durationField || !durationSelect) {
+            return;
+        }
+
+        const updatePremiumDurationVisibility = () => {
+            const isPremiumSelected = premiumCheckbox.checked;
+            durationField.hidden = !isPremiumSelected;
+            durationSelect.disabled = !isPremiumSelected;
+
+            if (!isPremiumSelected) {
+                durationSelect.value = '';
+            }
+        };
+
+        premiumCheckbox.addEventListener('change', updatePremiumDurationVisibility);
+        updatePremiumDurationVisibility();
+    })();
+</script>

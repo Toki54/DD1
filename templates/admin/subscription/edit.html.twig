@@ -1,14 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier un abonnement
-{% endblock %}
+{% block title %}Modifier un abonnement · Administration{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
 {% block body %}
-	<h1>Modifier l'abonnement</h1>
+	<section class="admin-page">
+		<header class="admin-hero">
+			<div>
+				<div class="admin-kicker">Abonnements</div>
+				<h1 class="admin-title">Modifier l’abonnement</h1>
+				<p class="admin-subtitle">Choisissez la nouvelle formule Premium de {{ subscription.user.pseudo }}.</p>
+			</div>
+		</header>
 
-	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	<button class="btn btn-success">Enregistrer</button>
-	{{ form_end(form) }}
+		<section class="admin-panel">
+			{{ form_start(form, {attr: {class: 'admin-form'}}) }}
+				{{ form_row(form.plan) }}
+				<button type="submit" class="admin-primary">Enregistrer</button>
+			{{ form_end(form) }}
+		</section>
+
+		<p style="margin-top:16px"><a class="admin-button" href="{{ path('admin_subscriptions_index') }}">← Retour aux abonnements</a></p>
+	</section>
 {% endblock %}
 

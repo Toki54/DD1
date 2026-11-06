@@ -21,6 +21,20 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('premiumDuration', ChoiceType::class, [
+                'label' => 'Durée de l’abonnement Premium',
+                'mapped' => false,
+                'required' => false,
+                'placeholder' => 'Choisir une durée',
+                'choices' => [
+                    '1 semaine' => 'week',
+                    '1 mois' => 'month',
+                    '3 mois' => 'three_months',
+                    '6 mois' => 'six_months',
+                    '1 an' => 'year',
+                    'À vie' => 'lifetime',
+                ],
+            ])
             ->add('pseudo')
         ;
 

@@ -1,65 +1,107 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conversations supprimées
-{% endblock %}
+{% block title %}Conversations · Administration{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
 {% block body %}
-	<h1>Conversations Supprimées</h1>
+	<section class="admin-page conversations-admin-page">
+		<header class="admin-hero">
+			<div>
+				<div class="admin-kicker">Modération</div>
+				<h1 class="admin-title">Conversations</h1>
+				<p class="admin-subtitle">Consultez séparément les messages en cours et les archives supprimées.</p>
+			</div>
+			<a class="admin-primary" href="{{ path('admin_dashboard') }}">Tableau de bord</a>
+		</header>
 
-	<table border="1" cellpadding="10">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Utilisateur</th>
-				<th>Supprimé avec</th>
-				<th>Date de suppression</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for conversation in deletedConversations %}
-				<tr>
-					<td>{{ conversation.id }}</td>
-					<td>{{ conversation.user ? conversation.user.email : 'Compte supprimé' }}</td>
-					<td>{{ conversation.deletedWith ? conversation.deletedWith.email : 'Compte supprimé' }}</td>
-					<td>{{ conversation.deletedAt|date('d/m/Y H:i') }}</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="4">Aucune conversation supprimée.</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+		<div class="conversations-admin-layout">
+			<aside class="admin-panel conversations-users-panel">
+				<div class="conversations-panel-heading">
+					<h2>Utilisateurs</h2>
+					<span>{{ users|length }}</span>
+				</div>
 
-	<h2>Messages échangés</h2>
+				<div class="conversation-user-list">
+					{% for user in users %}
+						<a class="conversation-user{{ selectedUser and selectedUser.id == user.id ? ' is-selected' : '' }}" href="{{ path('app_deleted_conversations', {user: user.id}) }}">
+							<span class="conversation-user-avatar">{{ user.pseudo|slice(0, 1)|upper }}</span>
+							<span>
+								<strong>{{ user.pseudo }}</strong>
+								<small>{{ user.email }}</small>
+							</span>
+						</a>
+					{% else %}
+						<p class="admin-empty">Aucun utilisateur n’a de message actif ou archivé.</p>
+					{% endfor %}
+				</div>
+			</aside>
 
-	<table border="1" cellpadding="10">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Expéditeur</th>
-				<th>Destinataire</th>
-				<th>Message</th>
-				<th>Date d'envoi</th>
-				<th>Date de suppression</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for message in deletedMessages %}
-				<tr>
-					<td>{{ message.id }}</td>
-					<td>{{ message.sender ? message.sender.email : 'Compte supprimé' }}</td>
-					<td>{{ message.receiver ? message.receiver.email : 'Compte supprimé' }}</td>
-					<td>{{ message.content }}</td>
-					<td>{{ message.sentAt|date('d/m/Y H:i') }}</td>
-					<td>{{ message.deletedAt|date('d/m/Y H:i') }}</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="6">Aucun message supprimé.</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+			<section class="conversations-detail">
+				{% if selectedUser %}
+					<header class="conversation-detail-header">
+						<div>
+							<div class="admin-kicker">Historique de discussion</div>
+							<h2>{{ selectedUser.pseudo }}</h2>
+							<p>{{ selectedUser.email }}</p>
+						</div>
+					</header>
+
+					<section class="admin-panel conversation-table-panel">
+						<div class="conversation-table-heading">
+							<h3>Messages en cours</h3>
+							<span class="conversation-state active">{{ activeMessages|length }}</span>
+						</div>
+						<div class="conversation-table-scroll">
+							<table class="admin-table conversation-table">
+								<thead><tr><th>Expéditeur</th><th>Destinataire</th><th>Message</th><th>Envoyé le</th></tr></thead>
+								<tbody>
+									{% for message in activeMessages %}
+										<tr>
+											<td>{{ message.sender ? message.sender.pseudo : 'Compte supprimé' }}</td>
+											<td>{{ message.receiver ? message.receiver.pseudo : 'Compte supprimé' }}</td>
+											<td class="conversation-message">{{ message.content }}</td>
+											<td>{{ message.sentAt|date('d/m/Y H:i') }}</td>
+										</tr>
+									{% else %}
+										<tr><td colspan="4" class="admin-empty-cell">Aucun message en cours pour cet utilisateur.</td></tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+					<section class="admin-panel conversation-table-panel conversation-table-panel--archived">
+						<div class="conversation-table-heading">
+							<h3>Messages supprimés</h3>
+							<span class="conversation-state archived">{{ deletedMessages|length }}</span>
+						</div>
+						<div class="conversation-table-scroll">
+							<table class="admin-table conversation-table">
+								<thead><tr><th>Expéditeur</th><th>Destinataire</th><th>Message archivé</th><th>Envoyé le</th><th>Supprimé le</th></tr></thead>
+								<tbody>
+									{% for message in deletedMessages %}
+										<tr>
+											<td>{{ message.sender ? message.sender.pseudo : 'Compte supprimé' }}</td>
+											<td>{{ message.receiver ? message.receiver.pseudo : 'Compte supprimé' }}</td>
+											<td class="conversation-message">{{ message.content }}</td>
+											<td>{{ message.sentAt|date('d/m/Y H:i') }}</td>
+											<td>{{ message.deletedAt|date('d/m/Y H:i') }}</td>
+										</tr>
+									{% else %}
+										<tr><td colspan="5" class="admin-empty-cell">Aucun message supprimé pour cet utilisateur.</td></tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</section>
+				{% else %}
+					<section class="admin-panel conversations-placeholder">
+						<h2>Sélectionnez un utilisateur</h2>
+						<p>Choisissez un utilisateur dans la liste pour afficher ses messages en cours et supprimés dans deux tableaux séparés.</p>
+					</section>
+				{% endif %}
+			</section>
+		</div>
+	</section>
 {% endblock %}
 

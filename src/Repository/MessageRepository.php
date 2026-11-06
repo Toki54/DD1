@@ -85,6 +85,48 @@ class MessageRepository extends ServiceEntityRepository
  }
 
  /**
+  * @return list<int>
+  */
+ public function findParticipantIds(): array
+ {
+  $rows = $this->createQueryBuilder('m')
+   ->select('IDENTITY(m.sender) AS senderId, IDENTITY(m.receiver) AS receiverId')
+   ->getQuery()
+   ->getScalarResult();
+
+  $participantIds = [];
+  foreach ($rows as $row) {
+   foreach (['senderId', 'receiverId'] as $key) {
+    if (isset($row[$key])) {
+     $participantIds[(int) $row[$key]] = true;
+    }
+   }
+  }
+
+  return array_keys($participantIds);
+ }
+
+ /**
+  * Returns the messages still visible to the selected user after their
+  * conversation-deletion timestamps have been applied.
+  *
+  * @return list<Message>
+  */
+ public function findActiveMessagesForUser(User $user): array
+ {
+  $messages = [];
+  foreach ($this->findUserConversations($user) as $conversation) {
+   foreach ($conversation['messages'] as $message) {
+    $messages[] = $message;
+   }
+  }
+
+  usort($messages, static fn (Message $left, Message $right): int => $right->getSentAt() <=> $left->getSentAt());
+
+  return $messages;
+ }
+
+ /**
   * Récupère les derniers messages entre deux utilisateurs
   */
  public function findLatestMessages(User $user1, User $user2, int $limit = 2): array
