@@ -101,13 +101,13 @@
 
                 <div class="field media-upload gallery-upload">
                     {{ form_widget(form.photoFiles, {'attr': {'class': 'media-file-input', 'accept': 'image/jpeg,image/png', 'form': 'profile-edit-form'}}) }}
-                    <label for="{{ form.photoFiles.vars.id }}" class="btn btn-primary media-upload-btn">
+                    <label for="{{ form.photoFiles.vars.id }}" class="btn btn-primary media-upload-btn" data-gallery-upload-label>
                         Ajouter des photos
                     </label>
                     {{ form_errors(form.photoFiles) }}
                 </div>
 
-                <div class="photo-gallery">
+                <div class="photo-gallery" data-gallery-preview>
                     {% for photo in userProfile.photos %}
                         <div class="photo-item">
                             <img src="{{ asset('uploads/photos/' ~ photo) }}" class="photo-thumbnail" alt="Photo de galerie">
@@ -117,7 +117,7 @@
                             </form>
                         </div>
                     {% else %}
-                        <div class="empty">Aucune photo</div>
+                        <div class="empty" data-gallery-empty>Aucune photo</div>
                     {% endfor %}
                 </div>
 
@@ -158,6 +158,64 @@
                 if (previewUrl) {
                     URL.revokeObjectURL(previewUrl);
                 }
+            });
+        }
+
+        const galleryInput = document.getElementById('{{ form.photoFiles.vars.id }}');
+        const galleryPreview = document.querySelector('[data-gallery-preview]');
+        const galleryButton = document.querySelector('[data-gallery-upload-label]');
+
+        if (galleryInput && galleryPreview) {
+            let galleryPreviewUrls = [];
+
+            galleryInput.addEventListener('change', () => {
+                galleryPreview.querySelectorAll('[data-pending-gallery-preview]').forEach((preview) => {
+                    preview.remove();
+                });
+
+                galleryPreviewUrls.forEach((previewUrl) => URL.revokeObjectURL(previewUrl));
+                galleryPreviewUrls = [];
+
+                const selectedPhotos = Array.from(galleryInput.files).filter((file) => {
+                    return ['image/jpeg', 'image/png'].includes(file.type);
+                });
+
+                if (galleryButton) {
+                    galleryButton.textContent = selectedPhotos.length
+                        ? `Modifier la sélection (${selectedPhotos.length})`
+                        : 'Ajouter des photos';
+                }
+
+                if (!selectedPhotos.length) {
+                    return;
+                }
+
+                galleryPreview.querySelector('[data-gallery-empty]')?.remove();
+
+                selectedPhotos.forEach((file) => {
+                    const previewUrl = URL.createObjectURL(file);
+                    galleryPreviewUrls.push(previewUrl);
+
+                    const item = document.createElement('div');
+                    item.className = 'photo-item photo-item--pending';
+                    item.dataset.pendingGalleryPreview = 'true';
+
+                    const image = document.createElement('img');
+                    image.src = previewUrl;
+                    image.className = 'photo-thumbnail';
+                    image.alt = `Aperçu de ${file.name}`;
+
+                    const status = document.createElement('span');
+                    status.className = 'pending-photo-status';
+                    status.textContent = 'À enregistrer';
+
+                    item.append(image, status);
+                    galleryPreview.append(item);
+                });
+            });
+
+            window.addEventListener('beforeunload', () => {
+                galleryPreviewUrls.forEach((previewUrl) => URL.revokeObjectURL(previewUrl));
             });
         }
 
