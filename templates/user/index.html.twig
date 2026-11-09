@@ -4,7 +4,7 @@
 {% block stylesheets %}<link rel="stylesheet" href="{{ asset('css/admin.css') }}">{% endblock %}
 
 {% block body %}
-    <section class="admin-page"><header class="admin-hero"><div><div class="admin-kicker">Administration</div><h1 class="admin-title">Utilisateurs</h1><p class="admin-subtitle">Gestion des comptes membres.</p></div><a class="admin-primary" href="{{ path('app_user_new') }}">Créer un compte</a></header><section class="admin-panel">
+    <section class="admin-page"><header class="admin-hero"><div><div class="admin-kicker">Administration</div><h1 class="admin-title">Utilisateurs</h1><p class="admin-subtitle">Gestion des comptes membres.</p></div><div class="admin-hero-actions"><a class="admin-secondary" href="{{ path('admin_dashboard') }}">← Tableau de bord</a><a class="admin-primary" href="{{ path('app_user_new') }}">Créer un compte</a></div></header><section class="admin-panel">
 
     <table class="admin-table">
         <thead>
