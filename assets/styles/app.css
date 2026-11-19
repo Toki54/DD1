@@ -1,4 +1,4 @@
 /* Point d'entrée Asset Mapper/Webpack : il reste cohérent avec les feuilles publiques. */
 @import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Poppins:wght@400;500;600;700;800&display=swap");
 
-:root { --app-ink: #21084b; --app-purple: #740bb4; --app-cream: #fffaf5; }
+:root { --app-ink: #fff7fc; --app-purple: #ff1685; --app-cream: #211d20; }
